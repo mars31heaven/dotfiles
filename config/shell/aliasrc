@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Utilities configuration
+# Colored output, verbosity and protection
+# against overwriting.
+alias \
+	ls="ls --color=auto --group-directories-first" \
+	grep="grep --color=auto" \
+	diff="diff --color=auto" \
+	rm="rm -I" \
+	cp="cp -i" \
+	mv="mv -i" \
+	vidir="vidir -v"
+
+
+# XBPS Package Manager (Void Linux specific)
+# abbreviations
+alias  \
+	xI="doas xbps-install -S" \
+	xR="doas xbps-remove -R" \
+	xQ="xbps-query -Rs" \
+	xiu="doas xbps-install -Syu"
+
+# Browse the offline Void Linux handbook with w3m
+alias wvoid="w3m /usr/share/doc/void/html/print.html"
+
+# External storage
+alias \
+	m3m="pmount -e /dev/sdb1 m3 && m3" \
+	sdm="pmount -e /dev/mmcblk1 sd && sd" \
+	m3u="pumount /media/m3" \
+	sdu="pumount /media/sd"
+
+# Other aliases
+alias \
+	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	wt="curl https://wttr.in" \
+	wi="vim -c VimwikiIndex"

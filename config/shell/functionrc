@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# open files with fzf
+o() {
+	open "$(find -type f | fzf)"
+}
+
+# cd with fzf
+fcd() {
+	cd "$(find -type d | fzf)"
+}
+
+# Autogenerate .m3u playlist files
+play() {
+	for f in *.mp3; do echo "$f" >> play.m3u; done
+}
+
+# Open another terminal on the current working directory
+samedir() {
+	setsid -f "$TERMINAL"
+}

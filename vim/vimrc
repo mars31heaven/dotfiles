@@ -1,0 +1,38 @@
+let mapleader =","
+
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+" Declare the list of plugins.
+Plug 'voldikss/vim-translator'
+Plug 'vimwiki/vimwiki'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
+" Basic configuration
+set nocompatible
+set relativenumber
+set clipboard+=unnamedplus
+
+	syntax on
+	filetype plugin on
+	filetype indent on
+
+" Enable autocompletion:
+ 	set wildmode=longest,list,full
+" Disables automatic commenting on newline:
+ 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Perform dot commands over visual blocks:
+ 	vnoremap . :normal .<CR>
+
+" Vimwiki and Calcurse configuration
+	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+	map <leader>v :VimwikiIndex
+ 	let g:vimwiki_list = [{'path': '~/docs/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
+
+" Automatically deletes all trailing whitespace and newlines at end of file on save.
+ 	autocmd BufWritePre * %s/\s\+$//e
+ 	autocmd BufWritePre * %s/\n\+\%$//e
+ 	autocmd BufWritePre *.[ch] %s/\%$/\r/e

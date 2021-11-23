@@ -1,0 +1,74 @@
+super + Insert
+	clipmenu -l 20
+
+super + w
+	firefox
+
+super + shift + w
+	st -e w3m -B
+
+super + shift + Home
+	st -e htop
+
+super + shift + n
+	st -e newsboat
+
+super + m
+	st -e vimpc
+
+super + shift + v
+	ytfzf -D
+
+super + shift + p
+	passmenu
+
+super + F1
+	bothmonitors
+
+super + F2
+	laptopmononly
+
+super + F3
+	extmononly
+
+super + F4
+	dim
+
+super + shift + x
+	slock
+
+Print
+	maim -u ~/pics/screenshots/full_$(date "+%Y_%m_%d_%s").png
+
+shift + Print
+	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
+
+XF86AudioRaiseVolume
+	pamixer --increase 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+super + equal
+	pamixer --increase 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86AudioLowerVolume
+	pamixer --decrease 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+super + minus
+	pamixer --decrease 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86AudioMute
+	pamixer --toggle-mute ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+super + shift + m
+	pamixer --toggle-mute ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86MonBrightnessUp
+	xbacklight -inc 2
+
+XF86MonBrightnessDown
+	xbacklight -dec 2

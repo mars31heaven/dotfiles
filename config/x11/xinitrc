@@ -1,0 +1,14 @@
+numlockx
+remaps &
+xbacklight -set 5%
+unclutter -noevents &
+clipmenud &
+sxhkd &
+batsignal -c 5 -d 4 -f 100 -D "doas zzz" -e &
+sbar &
+xrdb .config/x11/xresources
+xwallpaper --zoom pics/dump/NazcaLines.jpg --daemon
+exec dwm
+
+# Ensure that xrdb has finished running before moving on to start the WM/DE.
+[ -n "$xrdbpid" ] && wait "$xrdbpid"

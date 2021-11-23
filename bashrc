@@ -8,42 +8,21 @@ for command in zzz shutdown sv ; do
 	alias $command="doas $command"
 done; unset command
 
-# Test if ~/.config/shell/shortcutrc and ~/.config/shell/aliasrc exists and source them
+# Test if files for aliases, shortcuts and
+# functions exists and source them
 [ -f ~/.config/shell/aliasrc ] && source ~/.config/shell/aliasrc
 [ -f ~/.config/shell/shortcutrc ] && source ~/.config/shell/shortcutrc
+[ -f ~/.config/shell/functionrc ] && source ~/.config/shell/functionrc
 
 PS1='\w > '
 
-# Infinite history
-HISTSIZE= HISTFILESIZE=
+# Infinite history size (line count) and file size
+export HISTSIZE="-"
+export HISTFILESIZE="-"
 # Keep repeated identical commands from being logged
 export HISTCONTROL=ignoredups
+# Commands to be ignore from being logged altogether
+export HISTIGNORE="cd:cd ..:ls:clear:exit:* --help:man *:o"
 
 # For mpc tab completion
 source "/usr/share/doc/mpc/contrib/mpc-completion.bash"
-
-# open files with fzf
-o() {
-	open "$(find -type f | fzf)"
-}
-
-# cd with fzf
-fcd() {
-	cd "$(find -type d | fzf)"
-}
-
-# fff cd on exit
-f() {
-	fff "$@"
-	cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
-}
-
-# Autogenerate .m3u playlist files
-play() {
-	for f in *.mp3; do echo "$f" >> play.m3u; done
-}
-
-# Open another terminal on the current working directory
-samedir() {
-	setsid -f "$TERMINAL"
-}

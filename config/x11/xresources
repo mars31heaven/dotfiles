@@ -1,0 +1,107 @@
+!! st
+! *.color0: #111
+! st.font: monoscape:pixelsize=14:antialias=true:autohint=true
+! st.alpha: 1.0
+
+!! dwm
+dwm.normbgcolor: #222222
+dwm.normbordercolor: #444444
+dwm.normfgcolor: #ebdbb2
+dwm.selbgcolor: #d8c27a
+dwm.selbordercolor: #d8c27a
+dwm.selfgcolor: #101112
+
+!! dmenu
+!dmenu.font: font or font set
+dmenu.background: #222222
+dmenu.foreground: #ebdbb2
+dmenu.selbackground: #d8c27a
+dmenu.selforeground: #101112
+
+!! nsxiv
+!! Color of the window background
+!window.background
+!! Color of the window foreground
+!window.foreground
+!! Name of Xft bar font
+!bar.font
+!! Color of the bar backgrounds. Defaults to window.foreground
+!bar.background
+!! Color of the bar foreground. Defaults to window.background
+!bar.foreground
+!! Color of the mark foreground. Defaults to window.foreground
+!mark.foreground
+
+!! URxvt
+URxvt.cursorBlink: 0
+URxvt.cursorUnderline: 0
+!URxvt.letterSpace: -1
+!URxvt.lineSpace: 4
+URxvt.font: xft:Hermit:size=10
+URxvt.scrollBar: false
+URxvt.intensityStyles: false
+URxvt*saveLines: 1000
+!! Real transparency (comporite):
+!urxvt*depth: 32
+!urxvt*background: rgba:0000/0000/0200/c800
+!! Fake transparency
+urxvt*transparent: true
+urxvt*shading: 2
+!! Navigation keybindings
+URxvt.keysym.M-k: command:\033]720;1\007
+URxvt.keysym.M-j: command:\033]721;1\007
+!! Perl extensions
+URxvt.perl-ext-common: default,clipboard,keyboard-select,url-select
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.copyCommand: xclip -i selection clipboard
+URrvt.pasteCommand: xclip -o selection clipboard
+URxvt.keysym.M-v: perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.keysym.M-s: perl:keyboard-select:search
+URxvt.keysym.M.Escape: perl:keyboard-select:activate
+URxvt.keysym.M-U: perl:url-select:select_next
+URxvt.urlLauncher: firefox
+URxvt.underlineURLs: true
+URxvt.urlButton: 1
+URxvt.keysym.C-equal: font-size:increase
+URxvt.keysym.C-minus: font-size:decrease
+URxvt.keysym.C-S-equal: font-size:incglobal
+URxvt.keysym.C-S-minus: font-size:decglobal
+URxvt.keysym.C-R: font-size:reset
+URxvt.keysym.C-slash: font-size:show
+
+! -----------------------------------------------------------------------------
+! File: gruvbox-dark.xresources
+! Description: Retro groove colorscheme generalized
+! Author: morhetz <morhetz@gmail.com>
+! Source: https://github.com/morhetz/gruvbox-generalized
+! Last Modified: 6 Sep 2014
+! -----------------------------------------------------------------------------
+! hard contrast: *background: #1d2021
+*background: #282828
+! soft contrast: *background: #32302f
+*foreground: #ebdbb2
+! Black + DarkGrey
+*color0:  #282828
+*color8:  #928374
+! DarkRed + Red
+*color1:  #cc241d
+*color9:  #fb4934
+! DarkGreen + Green
+*color2:  #98971a
+*color10: #b8bb26
+! DarkYellow + Yellow
+*color3:  #d79921
+*color11: #fabd2f
+! DarkBlue + Blue
+*color4:  #458588
+*color12: #83a598
+! DarkMagenta + Magenta
+*color5:  #b16286
+*color13: #d3869b
+! DarkCyan + Cyan
+*color6:  #689d6a
+*color14: #8ec07c
+! LightGrey + White
+*color7:  #a89984
+*color15: #ebdbb2

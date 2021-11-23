@@ -1,0 +1,14 @@
+# vim: filetype=sh
+alias \
+	h="cd ~ && ls -A" \
+	d="cd ~/docs && ls" \
+	D="cd ~/dl && ls" \
+	m="cd ~/music && ls" \
+	p="cd ~/pics && ls" \
+	v="cd ~/vids && ls" \
+	m3="cd /media/m3 && ls" \
+	sd="cd /media/sd && ls" \
+	src="cd ~/.local/src && ls" \
+	dot="cd ~/.dotfiles && ls" \
+	x="cd ~/.local/bin && ls" \
+	cf="cd ~/.config && ls"

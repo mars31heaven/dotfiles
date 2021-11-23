@@ -1,0 +1,2 @@
+image/*;	nsxiv %s
+audio/*;	mpv %s
