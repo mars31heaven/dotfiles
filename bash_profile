@@ -4,10 +4,13 @@
 # Get the aliases and functions
 [ -f $HOME/.bashrc ] && . $HOME/.bashrc
 
-# Environment variables.
+# Environment variables
 export EDITOR="vim"
-export BROWSER="firefox"
+export BROWSER="qutebrowser"
 export TERMINAL="st"
+
+# This is for lf
+export OPENER="open"
 
 # Have less display colours
 export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
@@ -33,9 +36,12 @@ export LESSHISTFILE="-"
 export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME:-$HOME/.config}"/java
 
-export QT_QPA_PLATFORMTHEME="gtk2"	# Have QT use gtk2 theme.
-export QT_STYLE_OVERRIDE="gtk2"
-export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads.
+# Having a "gtk3" value works on Void Linux for the font size
+# (tested only with KeePassXC)
+# On Arch/Artix, having a "gtk2" value should work
+export QT_QPA_PLATFORMTHEME="gtk3"	# Have Qt use GTK theme
+
+export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads
 export _JAVA_AWT_WM_NONREPARENTING=1	# Fix for Java applications in dwm
 
 # Automatically start X session if logged on tty1.

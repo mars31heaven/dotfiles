@@ -2,7 +2,7 @@ super + Insert
 	clipmenu -l 20
 
 super + w
-	firefox
+	qutebrowser
 
 super + shift + w
 	st -e w3m -B
@@ -14,13 +14,16 @@ super + shift + n
 	st -e newsboat
 
 super + m
-	st -e vimpc
+	st -e ncmpcpp
 
 super + shift + v
 	ytfzf -D
 
 super + shift + p
 	passmenu
+
+super + shift + f
+	st -e lf
 
 super + F1
 	bothmonitors
@@ -33,6 +36,9 @@ super + F3
 
 super + F4
 	dim
+
+super + F5
+	touchpad
 
 super + shift + x
 	slock

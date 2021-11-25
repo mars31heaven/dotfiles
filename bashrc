@@ -4,7 +4,7 @@
 [[ $- != *i* ]] && return
 
 # doas not required for some system commands
-for command in zzz shutdown sv ; do
+for command in zzz reboot poweroff shutdown sv ; do
 	alias $command="doas $command"
 done; unset command
 

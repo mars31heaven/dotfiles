@@ -27,7 +27,7 @@ alias wvoid="w3m /usr/share/doc/void/html/print.html"
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3 && m3" \
-	sdm="pmount -e /dev/mmcblk1 sd && sd" \
+	sdm="pmount -e /dev/mmcblk* sd && sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd"
 
@@ -35,4 +35,5 @@ alias \
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
 	wt="curl https://wttr.in" \
-	wi="vim -c VimwikiIndex"
+	wi="vim -c VimwikiIndex" \
+	www="w3m -B"

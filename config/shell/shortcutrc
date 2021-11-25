@@ -1,4 +1,6 @@
 # vim: filetype=sh
+
+# Directories shortcuts
 alias \
 	h="cd ~ && ls -A" \
 	d="cd ~/docs && ls" \
@@ -12,3 +14,8 @@ alias \
 	dot="cd ~/.dotfiles && ls" \
 	x="cd ~/.local/bin && ls" \
 	cf="cd ~/.config && ls"
+
+# Files shortcuts
+alias \
+	n="$EDITOR ~/docs/notes" \
+	eq="$EDITOR ~/.config/qutebrowser/config.py"
