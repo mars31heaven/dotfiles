@@ -2,19 +2,22 @@ super + Insert
 	clipmenu -l 20
 
 super + w
-	qutebrowser
+	$BROWSER
+
+super + e
+	$TERMINAL -e vim
 
 super + shift + w
-	st -e w3m -B
+	$TERMINAL -e w3m -B
 
 super + shift + Home
-	st -e htop
+	$TERMINAL -e htop
 
 super + shift + n
-	st -e newsboat
+	$TERMINAL -e newsboat
 
 super + m
-	st -e ncmpcpp
+	$TERMINAL -e ncmpcpp
 
 super + shift + v
 	ytfzf -D
@@ -23,7 +26,7 @@ super + shift + p
 	passmenu
 
 super + shift + f
-	st -e lf
+	$TERMINAL -e lf
 
 super + F1
 	bothmonitors
@@ -36,9 +39,6 @@ super + F3
 
 super + F4
 	dim
-
-super + F5
-	touchpad
 
 super + shift + x
 	slock
@@ -78,3 +78,6 @@ XF86MonBrightnessUp
 
 XF86MonBrightnessDown
 	xbacklight -dec 2
+
+ctrl + space
+	dunstctl close-all
