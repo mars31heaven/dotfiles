@@ -23,7 +23,7 @@ export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
 # Percentage and line count for man pages
 export MANPAGER='less -s -M +Gg'
 
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
