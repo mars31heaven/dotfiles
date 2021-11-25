@@ -9,7 +9,6 @@ sxhkd &
 batsignal -c 5 -d 4 -f 100 -D "doas zzz" -e &
 sbar &
 xrdb .config/x11/xresources
-xinput --disable 12
 xwallpaper --zoom pics/dump/NazcaLines.jpg --daemon
 exec dwm
 
