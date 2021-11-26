@@ -1,13 +1,29 @@
+set shell bash
+set shellopts '-eu'
 set icons
+set scrolloff 10
+set ifs "\n"
 
+# Source previewer script
+set previewer ~/.config/lf/preview
+
+# open script
 map o open
 
+# use enter for shell commands
+map <enter> shell
+
+# Rename
 map A rename # at the very end
 map I push A<c-a> # at the very beginning
 map i push A<a-b><a-b><a-f> # before extention
 map a push A<a-b> # after extention
 map B bulkrename
 
+# Search with fzf
+map <c-f> $lf -remote "send $id select '$(fzf)'"
+
 cmd bulkrename $vidir
 
+# Source shortcuts file
 source "~/.config/lf/shortcutrc"

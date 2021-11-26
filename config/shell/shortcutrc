@@ -7,15 +7,19 @@ alias \
 	D="cd ~/dl && ls" \
 	m="cd ~/music && ls" \
 	p="cd ~/pics && ls" \
-	v="cd ~/vids && ls" \
+	vv="cd ~/vids && ls" \
 	m3="cd /media/m3 && ls" \
 	sd="cd /media/sd && ls" \
-	src="cd ~/.local/src && ls" \
-	dot="cd ~/.dotfiles && ls" \
+	df="cd ~/.dotfiles && ls && git status" \
+	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
-	cf="cd ~/.config && ls"
+	sha="cd ~/.local/share && ls" \
+	src="cd ~/.local/src && ls" \
+	cf="cd ~/.config && ls" \
+	ca="cd ~/.cache && ls"
 
 # Files shortcuts
 alias \
 	n="$EDITOR ~/docs/notes" \
-	eq="$EDITOR ~/.config/qutebrowser/config.py"
+	eq="$EDITOR ~/.config/qutebrowser/config.py" \
+	enu="$EDITOR ~/.config/newsboat/urls"

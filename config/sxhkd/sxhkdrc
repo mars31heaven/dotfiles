@@ -28,6 +28,9 @@ super + shift + p
 super + shift + f
 	$TERMINAL -e lf
 
+super + shift + k
+	pkill mpv
+
 super + F1
 	bothmonitors
 
@@ -39,6 +42,9 @@ super + F3
 
 super + F4
 	dim
+
+super + F5
+	touchpad
 
 super + shift + x
 	slock

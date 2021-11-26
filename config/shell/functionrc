@@ -10,6 +10,11 @@ fcd() {
 	cd "$(find -type d | fzf)"
 }
 
+# rm with fzf
+frm() {
+	rm -rvI "$(ls | fzf)"
+}
+
 # Autogenerate .m3u playlist files
 play() {
 	for f in *.mp3; do echo "$f" >> play.m3u; done

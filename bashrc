@@ -16,6 +16,9 @@ done; unset command
 
 PS1='\w > '
 
+# Auto cd when entering a path
+shopt -s autocd
+
 # Infinite history size (line count) and file size
 export HISTSIZE="-"
 export HISTFILESIZE="-"
