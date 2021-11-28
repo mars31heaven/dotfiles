@@ -1,0 +1,18 @@
+#!/bin/sh
+while read file
+do
+        case "$1" in
+        "C-d")
+                rm "$file" ;;
+        "C-r")
+                convert -rotate 90 "$file" "$file" ;;
+        "C-y")
+                echo -n "$file" | xclip -selection clipboard ;;
+        "C-w")
+                xwallpaper --zoom "$file" ;;
+	"C-m")
+		mv "$file" ~ ;;
+	"C-c")
+		cp "$file" ~ ;;
+        esac
+done
