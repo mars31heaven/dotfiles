@@ -19,7 +19,7 @@ case "$1" in
 		;;
 
 	*.png|*.gif|*.jpg|*.jpe|*.jpeg|*.JPG|*.PNG)
-		rotdir "$1" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | setsid -f nsxiv -aio 2>/dev/null
+		nsxiv-rifle "$1"
 
 		;;
 
