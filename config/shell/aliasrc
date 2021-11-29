@@ -16,26 +16,36 @@ alias \
 # XBPS Package Manager (Void Linux specific)
 # abbreviations
 alias  \
-	xI="doas xbps-install -S" \
-	xR="doas xbps-remove -R" \
-	xQ="xbps-query -Rs" \
-	xiu="doas xbps-install -Syu"
+	xis="doas xbps-install -S" \
+	xiu="doas xbps-install -Syu" \
+	xrr="doas xbps-remove -R" \
+	xq="xbps-query" \
+	xqr="xbps-query -R" \
+	xqs="xbps-query -Rs" \
+	xql="xbps-query -l"
 
 # Browse the offline Void Linux handbook with w3m
 alias wvoid="w3m /usr/share/doc/void/html/print.html"
 
 # Other abbreviations
 alias \
-	v="vim" \
+	v="$EDITOR" \
+	l="ls" \
+	ll="ls -A" \
+	lll=" ls -lAcht" \
+	lr="ls -R" \
 	g="git" \
-	gs="git status"
+	gst="git status"
 
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3 && m3" \
 	sdm="pmount -e /dev/mmcblk* sd && sd" \
 	m3u="pumount /media/m3" \
-	sdu="pumount /media/sd"
+	sdu="pumount /media/sd" \
+	uum="pumount /media/*" \
+	mtpm="simple-mtpfs --device 1 /media/android" \
+	mtpu="fusermount -u /media/android"
 
 # Other aliases
 alias \
@@ -43,4 +53,5 @@ alias \
 	wt="curl https://wttr.in" \
 	wi="vim -c VimwikiIndex" \
 	www="w3m -B" \
-	mdcat="mdcat -p"
+	mdcat="mdcat -p" \
+	ccat="highlight -O ansi"
