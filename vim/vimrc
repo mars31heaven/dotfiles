@@ -5,18 +5,24 @@ call plug#begin('~/.vim/plugged')
 " Declare the list of plugins.
 Plug 'voldikss/vim-translator'
 Plug 'vimwiki/vimwiki'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'ap/vim-css-color'
-Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+" vim-airline theme
+let g:airline_theme='base16_gruvbox_dark_hard'
+
+" limelight configuration
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
 " This is for the vimwiki plugin
 	filetype plugin on
-
-" This is for the seoul256 color scheme plugin
-let g:seoul256_background = 233
-colo seoul256
 
 " Leader key
 let mapleader =","
@@ -26,6 +32,7 @@ set nocompatible
 set relativenumber
 set clipboard+=unnamedplus
 set background=light
+set noshowmode
 
 " Turn on syntax highlighting and identation
 	syntax on
