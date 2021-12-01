@@ -7,9 +7,9 @@ alias \
 	ls="ls --color=auto --group-directories-first" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
-	rm="rm -I" \
-	cp="cp -i" \
-	mv="mv -i" \
+	rm="rm -Iv" \
+	cp="cp -iv" \
+	mv="mv -iv" \
 	vidir="vidir -v"
 
 
@@ -35,7 +35,8 @@ alias \
 	lll=" ls -lAcht" \
 	lr="ls -R" \
 	g="git" \
-	gst="git status"
+	gst="git status" \
+	qtb="qutebrowser"
 
 # External storage
 alias \

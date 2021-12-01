@@ -33,8 +33,8 @@ keymap C-d NEXT_PAGE
 keymap C-u PREV_PAGE
 keymap gg BEGIN
 keymap G END
-keymap K PREV_TAB
-keymap J NEXT_TAB
+keymap gt NEXT_TAB
+keymap gT PREV_TAB
 keymap t NEW_TAB
 keymap F TAB_LINK
 keymap d CLOSE_TAB

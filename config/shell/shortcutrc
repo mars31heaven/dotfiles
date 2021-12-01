@@ -10,10 +10,10 @@ alias \
 	vv="cd ~/vids && ls" \
 	m3="cd /media/m3 && ls" \
 	sd="cd /media/sd && ls" \
-	df="cd ~/.dotfiles && ls && git status" \
+	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
-	sha="cd ~/.local/share && ls" \
+	shr="cd ~/.local/share && ls" \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls"

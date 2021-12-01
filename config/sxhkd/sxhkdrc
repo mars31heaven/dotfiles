@@ -5,7 +5,10 @@ super + w
 	$BROWSER
 
 super + e
-	$TERMINAL -e vim
+	$TERMINAL -e $EDITOR
+
+super + p
+	dmenu_run_i
 
 super + shift + w
 	$TERMINAL -e w3m -B
@@ -17,7 +20,7 @@ super + shift + n
 	$TERMINAL -e newsboat
 
 super + m
-	$TERMINAL -e ncmpcpp
+	mpdmenu
 
 super + shift + v
 	ytfzf -D
@@ -25,26 +28,50 @@ super + shift + v
 super + shift + p
 	passmenu
 
+super + shift + d
+	todo
+
+super + shift + e
+	dmenuconfigs
+
+super + shift + c
+	dmenucalc
+
 super + shift + f
 	$TERMINAL -e lf
 
-super + shift + k
-	pkill mpv
+super + F11
+	pkill -USR1 mpv
+
+super + shift + F11
+	pkill -USR1 mpd
 
 super + F1
+	laptopmononly
+
+super + shift + F1
 	bothmonitors
 
 super + F2
-	laptopmononly
-
-super + F3
 	extmononly
 
+super + F3
+	brownout 500
+
+super + shift + F3
+	brownout 0
+
 super + F4
-	dim
+	$TERMINAL -e pulsemixer
+
+super + shift + F4
+	pkill pulseaudio
 
 super + F5
-	touchpad
+	$TERMINAL -e ncmpcpp
+
+super + shift + p
+	mpdmenu -p
 
 super + shift + x
 	slock
@@ -85,5 +112,23 @@ XF86MonBrightnessUp
 XF86MonBrightnessDown
 	xbacklight -dec 2
 
+XF86AudioPlay
+	mpc toggle
+
+XF86AudioStop
+	mpc stop
+
+XF86AudioNext
+	mpc next
+
+XF86AudioPrev
+	mpc prev
+
+super + slash
+  	dunstify -h string:x-canonical-private-synchronous:mpd-audio "MPD Notification" "`mpc --format '<b>%title%</b>\nby <i>%artist%</i>\nfrom <i>%album%</i>' current`"
+
 ctrl + space
 	dunstctl close-all
+
+super + shift + BackSpace
+	dmenupower

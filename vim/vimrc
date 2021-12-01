@@ -1,34 +1,80 @@
-let mapleader =","
-
+" vim-plug plugin manager
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
 Plug 'voldikss/vim-translator'
 Plug 'vimwiki/vimwiki'
+Plug 'ap/vim-css-color'
+Plug 'junegunn/seoul256.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+" This is for the vimwiki plugin
+	filetype plugin on
+
+" This is for the seoul256 color scheme plugin
+let g:seoul256_background = 233
+colo seoul256
+
+" Leader key
+let mapleader =","
 
 " Basic configuration
 set nocompatible
 set relativenumber
 set clipboard+=unnamedplus
+set background=light
 
+" Turn on syntax highlighting and identation
 	syntax on
-	filetype plugin on
 	filetype indent on
+
+" Disable the default Vim startup message
+set shortmess+=I
+
+" Disable Ex mode
+nmap Q <Nop>
+
+" Always show the status line at the bottom
+set laststatus=2
+
+" Backspace over anything
+set backspace=indent,eol,start
+
+" Enable hidden buffers
+set hidden
+
+" Case-insensitive search when all characters in the string being search are
+" lowecase. Case-sensitive if it contains any capital letters.
+set ignorecase
+set smartcase
+
+" Enable searching while typing
+set incsearch
 
 " Enable autocompletion:
  	set wildmode=longest,list,full
+
 " Disables automatic commenting on newline:
  	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " Perform dot commands over visual blocks:
  	vnoremap . :normal .<CR>
 
+" Replace all alias
+	nnoremap S :%s//g<Left><Left>
+
+" Open files with fzf on the press of 'f'
+	nnoremap f :F<CR>
+
+" Open ~/.dotilfes with fzf on the press of 'F'
+	nnoremap df :F ~/.dotfiles<CR>
+
 " Vimwiki and Calcurse configuration
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-	map <leader>v :VimwikiIndex
+	map <leader>w :VimwikiIndex<CR>
  	let g:vimwiki_list = [{'path': '~/docs/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 
@@ -36,3 +82,7 @@ set clipboard+=unnamedplus
  	autocmd BufWritePre * %s/\s\+$//e
  	autocmd BufWritePre * %s/\n\+\%$//e
  	autocmd BufWritePre *.[ch] %s/\%$/\r/e
+
+" Run xrdb whenever Xdefaults or Xresources are updated.
+	autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
+	autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %

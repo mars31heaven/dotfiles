@@ -22,14 +22,14 @@ case "$1" in
 		nsxiv-rifle "$1"
 
 		;;
+	*.pdf)
+		zathura "$1" >/dev/null 2>&1
+		;;
 
 	*.html|*.htm)
 		w3m "$1"
 		;;
 
-	*.pdf)
-		zathura "$1" >/dev/null 2>&1
-		;;
 
 	http*)
 		setsid -f "$BROWSER" "$1" >/dev/null 2>&1

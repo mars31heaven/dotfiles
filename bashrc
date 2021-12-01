@@ -4,7 +4,7 @@
 [[ $- != *i* ]] && return
 
 # doas not required for some system commands
-for command in zzz reboot poweroff shutdown sv ; do
+for command in zzz reboot poweroff shutdown sv vsv ; do
 	alias $command="doas $command"
 done; unset command
 
@@ -25,7 +25,10 @@ export HISTFILESIZE="-"
 # Keep repeated identical commands from being logged
 export HISTCONTROL=ignoredups
 # Commands to be ignore from being logged altogether
-export HISTIGNORE="cd:cd ..:ls:clear:exit:* --help:man *:o"
+export HISTIGNORE="cd:cd ..:ls:clear:o:fcd"
+
+# dbdb - dmenu-based directory browser
+bind '"\C-o":"source $HOME/.local/bin/dbdb\n"'
 
 # For mpc tab completion
 source "/usr/share/doc/mpc/contrib/mpc-completion.bash"

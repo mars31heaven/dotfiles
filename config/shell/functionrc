@@ -10,11 +10,6 @@ fcd() {
 	cd "$(find -type d | fzf)"
 }
 
-# rm with fzf
-frm() {
-	rm -rvI "$(ls | fzf)"
-}
-
 # Autogenerate .m3u playlist files
 play() {
 	for f in *.mp3; do echo "$f" >> play.m3u; done
@@ -26,6 +21,22 @@ mag2torrent() {
 }
 
 # Open another terminal on the current working directory
-samedir() {
+smdir() {
 	setsid -f "$TERMINAL"
+}
+
+# Play a random internet radio station
+radio() {
+	pkill mpv; cat ~/.local/share/internetradio | shuf | sed -n 1p | xargs bgmus
+}
+
+# Use lf to switch directories and bind it to ctrl-o
+lfcd() {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp" >/dev/null
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
 }
