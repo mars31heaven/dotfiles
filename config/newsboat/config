@@ -1,0 +1,70 @@
+# vim: filetype=conf
+
+auto-reload yes
+reload-threads 20
+reload-time 1200
+refresh-on-startup yes
+datetime-format "%b %e %y" # strftime
+show-title-bar no
+show-keymap-hint no
+
+external-url-viewer "urlscan -dc -r 'open {}'"
+
+save-path ~/.local/share/newsboat/saved/
+
+bind-key j down
+bind-key k up
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key G end
+bind-key g home
+bind-key d pagedown
+bind-key u pageup
+bind-key l open
+bind-key h quit
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key D pb-download
+bind-key U show-urls
+bind-key x pb-delete
+bind-key r reload
+bind-key R reload-all
+
+browser open
+macro , open-in-browser
+macro o set browser "open" ; open-in-browser ; set browser open
+macro b set browser "$BROWSER" ; open-in-browser ; set browser open
+macro a set browser "ts youtube-dl --add-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser open
+macro d set browser "ts youtube-dl" ; open-in-browser ; set browser open
+macro v set browser "setsid -f umpv --quiet" ; open-in-browser ; set browser open
+macro m set browser "ts $TERMINAL -e mpv --no-video" ; open-in-browser ; set browser open
+macro w set browser "w3m" ; open-in-browser ; set browser open
+macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser open
+macro i set browser "nsxiv-url" ; open-in-browser ; set browser open
+
+color info              white   color237 bold
+color listfocus         white   color237
+color listfocus_unread  color4  color237
+color listnormal        white   default
+color listnormal_unread color4  default
+search-highlight-colors yellow 	black    bold
+color article		default	default
+
+highlight all "---.*---" yellow
+highlight feedlist ".*(0/0))" black
+#highlight article "(^Feed:.*|^Title:.*|^Author:.*)" red default
+highlight article "^Feed:.*" magenta default
+highlight article "^Title:.*" red default
+highlight article "^(Title):.*$" red default
+highlight article "^Author:.*" cyan default
+highlight article "(^Link:.*|^Date:.*)" white default
+highlight article "https?://[^ ]+" blue default
+highlight article "\\[[0-9][0-9]*\\]" magenta default bold
+highlight article "\\[image\\ [0-9]+\\]" green default bold
+highlight article "\\[embedded flash: [0-9][0-9]*\\]" green default bold
+highlight article ":.*\\(link\\)$" blue default
+highlight article ":.*\\(image\\)$" blue default
+highlight article ":.*\\(embedded flash\\)$" magenta default
