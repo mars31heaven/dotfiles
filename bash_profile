@@ -25,11 +25,10 @@ export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
 export PASSWORD_STORE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/password-store"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
 export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
-
 export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export INPUTRC="${XDG_CONFIG_HOME:-$HOME/.config}/shell/inputrc"
 export LESSHISTFILE="-"
-export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
+export HISTFILE="${XDG_CACHE_HOME:-$HOME/.local/cache}/bash_history"
 export _JAVA_OPTIONS="-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME:-$HOME/.config}"/java"
 export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 
@@ -42,7 +41,7 @@ export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads
 export _JAVA_AWT_WM_NONREPARENTING=1	# Fix for Java applications in dwm
 export JAVA_FONTS="/usr/share/fonts/TTF"
 
-export FZF_DEFAULT_OPTS="-i --layout=reverse --border"
+export FZF_DEFAULT_OPTS="-i --layout=reverse"
 
 # Have less display colours
 #export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
