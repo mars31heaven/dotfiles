@@ -8,7 +8,7 @@ super + e
 	$TERMINAL -e $EDITOR
 
 super + p
-	dmenu_run_i
+	dmenu_path_i
 
 super + shift + w
 	$TERMINAL -e w3m -B
@@ -16,7 +16,10 @@ super + shift + w
 super + shift + Home
 	$TERMINAL -e htop
 
-super + shift + n
+super + n
+	$TERMINAL $EDITOR -c VimwikiIndex
+
+super + r
 	$TERMINAL -e newsboat
 
 super + m
@@ -121,8 +124,8 @@ XF86AudioStop
 XF86AudioNext
 	mpc next
 
-XF86AudioPrev
-	mpc prev
+super + Next
+	mpc next
 
 super + slash
   	dunstify -h string:x-canonical-private-synchronous:mpd-audio "MPD Notification" "`mpc --format '<b>%title%</b>\nby <i>%artist%</i>\nfrom <i>%album%</i>' current`"

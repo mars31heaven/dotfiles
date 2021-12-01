@@ -3,25 +3,25 @@
 ! st.alpha: 1.0
 
 !! dwm
-!dwm.normbgcolor: #222222
-!dwm.normbordercolor: #444444
-!dwm.normfgcolor: #ebdbb2
-!dwm.selbgcolor: #d8c27a
-!dwm.selbordercolor: #d8c27a
-!dwm.selfgcolor: #101112
-
-dwm.normbgcolor: #121212
-dwm.normbordercolor: #4e4e4e
-dwm.normfgcolor: #d0d0d0
-dwm.selbgcolor: #d8af5f
-dwm.selbordercolor: #d8af5f
+dwm.normbgcolor: #282828
+dwm.normbordercolor: #444444
+dwm.normfgcolor: #ebdbb2
+dwm.selbgcolor: #d8c27a
+dwm.selbordercolor: #d8c27a
 dwm.selfgcolor: #101112
+
+!dwm.normbgcolor: #121212
+!dwm.normbordercolor: #4e4e4e
+!dwm.normfgcolor: #d0d0d0
+!dwm.selbgcolor: #d8af5f
+!dwm.selbordercolor: #d8af5f
+!!dwm.selfgcolor: #101112
 
 !! dmenu
 !dmenu.font: font or font set
-dmenu.background: #121212
-dmenu.foreground: #d0d0d0
-dmenu.selbackground: #d8af5f
+dmenu.background: #282828
+dmenu.foreground: #ebdbb2
+dmenu.selbackground: #d8c17a
 dmenu.selforeground: #101112
 
 !! nsxiv
@@ -83,55 +83,55 @@ URxvt.keysym.C-slash: font-size:show
 ! Source: https://github.com/morhetz/gruvbox-generalized
 ! Last Modified: 6 Sep 2014
 ! -----------------------------------------------------------------------------
-!! hard contrast: *background: #1d2021
+! hard contrast: *background: #1d2021
 !*background: #282828
-!! soft contrast: *background: #32302f
-!*foreground: #ebdbb2
-!! Black + DarkGrey
-!*color0:  #282828
-!*color8:  #928374
-!! DarkRed + Red
-!*color1:  #cc241d
-!*color9:  #fb4934
-!! DarkGreen + Green
-!*color2:  #98971a
-!*color10: #b8bb26
-!! DarkYellow + Yellow
-!*color3:  #d79921
-!*color11: #fabd2f
-!! DarkBlue + Blue
-!*color4:  #458588
-!*color12: #83a598
-!! DarkMagenta + Magenta
-!*color5:  #b16286
-!*color13: #d3869b
-!! DarkCyan + Cyan
-!*color6:  #689d6a
-!*color14: #8ec07c
-!! LightGrey + White
-!*color7:  #a89984
-!*color15: #ebdbb2
+! soft contrast: *background: #32302f
+*foreground: #ebdbb2
+! Black + DarkGrey
+*color0:  #282828
+*color8:  #928374
+! DarkRed + Red
+*color1:  #cc241d
+*color9:  #fb4934
+! DarkGreen + Green
+*color2:  #98971a
+*color10: #b8bb26
+! DarkYellow + Yellow
+*color3:  #d79921
+*color11: #fabd2f
+! DarkBlue + Blue
+*color4:  #458588
+*color12: #83a598
+! DarkMagenta + Magenta
+*color5:  #b16286
+*color13: #d3869b
+! DarkCyan + Cyan
+*color6:  #689d6a
+*color14: #8ec07c
+! LightGrey + White
+*color7:  #a89984
+*color15: #ebdbb2
 
 !! seoul256 (dark) theme
 !*background: #3a3a3a
-*background: #121212
-*foreground: #d0d0d0
-*color0: #4e4e4e
-*color1: #d68787
-*color2: #5f865f
-*color3: #d8af5f
-*color4: #85add4
-*color5: #d7afaf
-*color6: #87afaf
-*color7: #d0d0d0
-*color8: #626262
-*color9: #d75f87
-*color10: #87af87
-*color11: #ffd787
-*color12: #add4fb
-*color13: #ffafaf
-*color14: #87d7d7
-*color15: #e4e4e4
-*cursorColor: #d0d0d0
-*cursorColor2: #3a3a3a
-*colorBD: #e4e4e4
+!*background: #121212
+!*foreground: #d0d0d0
+!*color0: #4e4e4e
+!*color1: #d68787
+!*color2: #5f865f
+!*color3: #d8af5f
+!*color4: #85add4
+!*color5: #d7afaf
+!*color6: #87afaf
+!*color7: #d0d0d0
+!*color8: #626262
+!*color9: #d75f87
+!*color10: #87af87
+!*color11: #ffd787
+!*color12: #add4fb
+!*color13: #ffafaf
+!*color14: #87d7d7
+!*color15: #e4e4e4
+!*cursorColor: #d0d0d0
+!*cursorColor2: #3a3a3a
+!*colorBD: #e4e4e4

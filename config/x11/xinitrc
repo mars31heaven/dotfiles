@@ -9,8 +9,8 @@ sxhkd &
 batsignal -c 5 -d 4 -f 100 -D "doas zzz" -e &
 sbar &
 xrdb .config/x11/xresources
-xwallpaper --zoom pics/dump/NazcaLines.jpg --daemon
-#xrandr --dpi 96
+#xwallpaper --zoom pics/dump/NazcaLines.jpg --daemon
+xsetroot -solid "#282828"
 brownout 400
 exec dwm
 

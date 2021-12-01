@@ -19,7 +19,7 @@ alias  \
 	xis="doas xbps-install -S" \
 	xiu="doas xbps-install -Syu" \
 	xrr="doas xbps-remove -R" \
-	xq="xbps-query" \
+	xq="xbps-query -s" \
 	xqr="xbps-query -R" \
 	xqs="xbps-query -Rs" \
 	xql="xbps-query -l"
