@@ -1,54 +1,3 @@
-super + Insert
-	clipmenu -l 20
-
-super + w
-	$BROWSER
-
-super + e
-	$TERMINAL -e $EDITOR
-
-super + p
-	dmenu_path_i
-
-super + shift + w
-	$TERMINAL -e w3m -B
-
-super + shift + Home
-	$TERMINAL -e htop
-
-super + n
-	$TERMINAL $EDITOR -c VimwikiIndex
-
-super + r
-	$TERMINAL -e newsboat
-
-super + m
-	mpdmenu
-
-super + shift + v
-	ytfzf -D
-
-super + shift + p
-	passmenu
-
-super + shift + d
-	todo
-
-super + shift + e
-	dmenuconfigs
-
-super + shift + c
-	dmenucalc
-
-super + shift + f
-	$TERMINAL -e lf
-
-super + F11
-	pkill -USR1 mpv
-
-super + shift + F11
-	pkill -USR1 mpd
-
 super + F1
 	laptopmononly
 
@@ -73,58 +22,79 @@ super + shift + F4
 super + F5
 	$TERMINAL -e ncmpcpp
 
-super + shift + p
-	mpdmenu -p
+super + F11
+	pkill -USR1 mpv
 
-super + shift + x
-	slock
-
-Print
-	maim -u ~/pics/screenshots/full_$(date "+%Y_%m_%d_%s").png
-
-shift + Print
-	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
-
-XF86AudioRaiseVolume
-	pamixer --increase 5 ; \
-	kill -34 "$(cat ~/.cache/pidofbar)"
-
-super + equal
-	pamixer --increase 5 ; \
-	kill -34 "$(cat ~/.cache/pidofbar)"
-
-XF86AudioLowerVolume
-	pamixer --decrease 5 ; \
-	kill -34 "$(cat ~/.cache/pidofbar)"
+super + shift + F11
+	pkill -USR1 mpd
 
 super + minus
 	pamixer --decrease 5 ; \
 	kill -34 "$(cat ~/.cache/pidofbar)"
 
-XF86AudioMute
-	pamixer --toggle-mute ; \
+super + plus
+	pamixer --increase 5 ; \
 	kill -34 "$(cat ~/.cache/pidofbar)"
+
+super + shift + BackSpace
+	dmenupower
+
+super + w
+	$BROWSER
+
+super + shift + w
+	$TERMINAL -e w3m -B
+
+super + e
+	$TERMINAL -e $EDITOR
+
+super + shift + e
+	$TERMINAL -e neomutt
+
+super + p
+	dmenu_run_i
+
+super + shift + p
+	passmenu
+
+super + shift + a
+	$TERMINAL -e abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
+
+super + shift + d
+	dmenutodo
+
+super + shift + f
+	$TERMINAL -e lf
+
+super + shift + x
+	slock
+
+super + c
+	dmenucalc
+
+super + shift + c
+	dmenuconfigs
+
+super + shift + v
+	ytfzf -D
+
+super + n
+	$TERMINAL $EDITOR -c VimwikiIndex
+
+super + shift + n
+	$TERMINAL -e newsboat
+
+super + m
+	mpdmenu
 
 super + shift + m
 	pamixer --toggle-mute ; \
 	kill -34 "$(cat ~/.cache/pidofbar)"
 
-XF86MonBrightnessUp
-	xbacklight -inc 2
+super + shift + less
+	mpc prev
 
-XF86MonBrightnessDown
-	xbacklight -dec 2
-
-XF86AudioPlay
-	mpc toggle
-
-XF86AudioStop
-	mpc stop
-
-XF86AudioNext
-	mpc next
-
-super + Next
+super + shift + greater
 	mpc next
 
 super + slash
@@ -133,5 +103,50 @@ super + slash
 ctrl + space
 	dunstctl close-all
 
-super + shift + BackSpace
-	dmenupower
+Print
+	maim -u ~/pics/screenshots/full_$(date "+%Y_%m_%d_%s").png
+
+shift + Print
+	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
+
+super + Insert
+	clipmenu -l 20
+
+super + shift + Home
+	$TERMINAL -e htop
+
+XF86AudioMute
+	pamixer --toggle-mute ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86AudioLowerVolume
+	pamixer --decrease 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86AudioRaiseVolume
+	pamixer --increase 5 ; \
+	kill -34 "$(cat ~/.cache/pidofbar)"
+
+XF86MonBrightnessDown
+	xbacklight -dec 2
+
+XF86MonBrightnessUp
+	xbacklight -inc 2
+
+XF86AudioPlay
+	mpc toggle
+
+XF86AudioStop
+	mpc stop
+
+XF86AudioPrev
+	mpc prev
+
+XF86AudioNext
+	mpc next
+
+XF86Mail
+	$TERMINAL -e neomutt
+
+XF86HomePage
+	$BROWSER
