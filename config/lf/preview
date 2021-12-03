@@ -17,6 +17,7 @@ case "$1" in
 	*.pdf) pdftotext "$1" -;;
 	*.odt) odt2txt "$1" ;;
 	*.zip) zipinfo "$1";;
+	*.tar.xz) tar -tf "$1" ;;
 	*.tar.gz) tar -ztvf "$1";;
 	*.tar.bz2) tar -jtvf "$1";;
 	*.tar) tar -tvf "$1";;

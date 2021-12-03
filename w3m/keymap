@@ -31,6 +31,8 @@ keymap ] NEXT_LINK
 keymap [ PREV_LINK
 keymap C-d NEXT_PAGE
 keymap C-u PREV_PAGE
+keymap } NEXT_PAGE
+keymap { PREV_PAGE
 keymap gg BEGIN
 keymap G END
 keymap gt NEXT_TAB
