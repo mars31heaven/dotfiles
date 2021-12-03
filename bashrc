@@ -27,8 +27,5 @@ export HISTCONTROL=ignoredups
 # Commands to be ignore from being logged altogether
 export HISTIGNORE="cd:cd ..:ls:clear:o:fcd"
 
-# dbdb - dmenu-based directory browser
-bind '"\C-o":"source $HOME/.local/bin/dbdb\n"'
-
 # For mpc tab completion
 source "/usr/share/doc/mpc/contrib/mpc-completion.bash"
