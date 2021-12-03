@@ -22,7 +22,8 @@ alias  \
 	xq="xbps-query -s" \
 	xqr="xbps-query -R" \
 	xqs="xbps-query -Rs" \
-	xql="xbps-query -l"
+	xql="xbps-query -l" \
+	xf="xbps-fetch"
 
 # Browse the offline Void Linux handbook with w3m
 alias wvoid="w3m /usr/share/doc/void/html/print.html"
@@ -36,7 +37,8 @@ alias \
 	lr="ls -R" \
 	g="git" \
 	gst="git status" \
-	qtb="qutebrowser"
+	qtb="qutebrowser" \
+	z="zathura"
 
 # External storage
 alias \
