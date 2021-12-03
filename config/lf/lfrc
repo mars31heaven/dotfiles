@@ -6,6 +6,8 @@ set icons
 set ifs "\n"
 set hidden true
 
+$lf -remote "send $id set previewer ${XDG_CONFIG_HOME:-$HOME/.config}/lf/preview"
+
 # open script
 map o open
 
