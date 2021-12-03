@@ -10,6 +10,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
+Plug 'preservim/nerdtree'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -29,12 +30,12 @@ let mapleader =","
 
 " Basic configuration
 set nocompatible
-set relativenumber
+set number relativenumber
 set clipboard+=unnamedplus
 set background=light
 set noshowmode
 
-" Turn on syntax highlighting and identation
+" Turn on syntax highlighting and indentation
 	syntax on
 	filetype indent on
 
@@ -54,7 +55,7 @@ set backspace=indent,eol,start
 set hidden
 
 " Case-insensitive search when all characters in the string being search are
-" lowecase. Case-sensitive if it contains any capital letters.
+" lowercase. Case-sensitive if it contains any capital letters.
 set ignorecase
 set smartcase
 
@@ -71,13 +72,13 @@ set incsearch
  	vnoremap . :normal .<CR>
 
 " Replace all alias
-	nnoremap S :%s//g<Left><Left>
+	nnoremap <leader>S :%s//g<Left><Left>
 
 " Open files with fzf on the press of 'f'
-	nnoremap f :F<CR>
+	nnoremap <leader>f :F<CR>
 
 " Open ~/.dotilfes with fzf on the press of 'F'
-	nnoremap df :F ~/.dotfiles<CR>
+	nnoremap <leader>df :F ~/.dotfiles<CR>
 
 " Vimwiki and Calcurse configuration
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -93,3 +94,15 @@ set incsearch
 " Run xrdb whenever Xdefaults or Xresources are updated.
 	autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
 	autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
+
+" English spell-check set to <leader>en:
+	map <leader>en :setlocal spell! spelllang=en_us<CR>
+
+" Portuguese spell-check set to <leader>pt:
+	map <leader>pt :setlocal spell! spelllang=pt_br<CR>
+
+" Shortcut for split navigation:
+	map <C-h> <C-w>h
+	map <C-j> <C-w>j
+	map <C-k> <C-w>k
+	map <C-l> <C-w>l
