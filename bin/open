@@ -10,7 +10,7 @@ case "$1" in
 		ts "$TERMINAL" -e mpv --no-video "$1" >/dev/null 2>&1
 		;;
 
-	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*/watch?*|*/playlist?*)
+	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu*|*/watch?*|*/playlist?*)
 		setsid -f umpv "$1"
 		;;
 
@@ -23,15 +23,16 @@ case "$1" in
 
 		;;
 	*.pdf)
-		zathura "$1"
+		zathura "$1" >/dev/null 2>&1
+
 		;;
 
 	*.html|*.htm)
-		w3m "$1"
+		setsid -f "$TERMINAL" w3m "$1"
 		;;
 
 
-	http*)
+	http*|www*)
 		setsid -f "$BROWSER" "$1" >/dev/null 2>&1
 		;;
 
