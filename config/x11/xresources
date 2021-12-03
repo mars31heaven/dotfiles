@@ -1,6 +1,6 @@
 !! st
-! st.font: monoscape:pixelsize=14:antialias=true:autohint=true
-! st.alpha: 1.0
+!st.font: monoscape:pixelsize=14:antialias=true:autohint=true
+!st.alpha: 1.0
 
 !! dwm
 dwm.normbgcolor: #282828
@@ -9,13 +9,6 @@ dwm.normfgcolor: #ebdbb2
 dwm.selbgcolor: #d8c27a
 dwm.selbordercolor: #d8c27a
 dwm.selfgcolor: #101112
-
-!dwm.normbgcolor: #121212
-!dwm.normbordercolor: #4e4e4e
-!dwm.normfgcolor: #d0d0d0
-!dwm.selbgcolor: #d8af5f
-!dwm.selbordercolor: #d8af5f
-!!dwm.selfgcolor: #101112
 
 !! dmenu
 !dmenu.font: font or font set
@@ -39,42 +32,42 @@ dmenu.selforeground: #101112
 !mark.foreground
 
 !! URxvt
-URxvt.cursorBlink: 0
-URxvt.cursorUnderline: 0
+!URxvt.cursorBlink: 0
+!URxvt.cursorUnderline: 0
 !URxvt.letterSpace: -1
 !URxvt.lineSpace: 4
-URxvt.font: xft:Hermit:size=10
-URxvt.scrollBar: false
-URxvt.intensityStyles: false
-URxvt*saveLines: 1000
-!! Real transparency (comporite):
+!URxvt.font: xft:Hermit:size=10
+!URxvt.scrollBar: false
+!URxvt.intensityStyles: false
+!URxvt*saveLines: 1000
+!! Real transparency (composite):
 !urxvt*depth: 32
 !urxvt*background: rgba:0000/0000/0200/c800
 !! Fake transparency
-urxvt*transparent: true
-urxvt*shading: 2
+!urxvt*transparent: true
+!urxvt*shading: 2
 !! Navigation keybindings
-URxvt.keysym.M-k: command:\033]720;1\007
-URxvt.keysym.M-j: command:\033]721;1\007
+!URxvt.keysym.M-k: command:\033]720;1\007
+!URxvt.keysym.M-j: command:\033]721;1\007
 !! Perl extensions
-URxvt.perl-ext-common: default,clipboard,keyboard-select,url-select
-URxvt.keysym.M-c: perl:clipboard:copy
-URxvt.copyCommand: xclip -i selection clipboard
-URrvt.pasteCommand: xclip -o selection clipboard
-URxvt.keysym.M-v: perl:clipboard:paste
-URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
-URxvt.keysym.M-s: perl:keyboard-select:search
-URxvt.keysym.M.Escape: perl:keyboard-select:activate
-URxvt.keysym.M-U: perl:url-select:select_next
-URxvt.urlLauncher: firefox
-URxvt.underlineURLs: true
-URxvt.urlButton: 1
-URxvt.keysym.C-equal: font-size:increase
-URxvt.keysym.C-minus: font-size:decrease
-URxvt.keysym.C-S-equal: font-size:incglobal
-URxvt.keysym.C-S-minus: font-size:decglobal
-URxvt.keysym.C-R: font-size:reset
-URxvt.keysym.C-slash: font-size:show
+!URxvt.perl-ext-common: default,clipboard,keyboard-select,url-select
+!URxvt.keysym.M-c: perl:clipboard:copy
+!URxvt.copyCommand: xclip -i selection clipboard
+!URrvt.pasteCommand: xclip -o selection clipboard
+!URxvt.keysym.M-v: perl:clipboard:paste
+!URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+!URxvt.keysym.M-s: perl:keyboard-select:search
+!URxvt.keysym.M.Escape: perl:keyboard-select:activate
+!URxvt.keysym.M-U: perl:url-select:select_next
+!URxvt.urlLauncher: firefox
+!URxvt.underlineURLs: true
+!URxvt.urlButton: 1
+!URxvt.keysym.C-equal: font-size:increase
+!URxvt.keysym.C-minus: font-size:decrease
+!URxvt.keysym.C-S-equal: font-size:incglobal
+!URxvt.keysym.C-S-minus: font-size:decglobal
+!URxvt.keysym.C-R: font-size:reset
+!URxvt.keysym.C-slash: font-size:show
 
 ! -----------------------------------------------------------------------------
 ! File: gruvbox-dark.xresources
@@ -84,7 +77,7 @@ URxvt.keysym.C-slash: font-size:show
 ! Last Modified: 6 Sep 2014
 ! -----------------------------------------------------------------------------
 ! hard contrast: *background: #1d2021
-!*background: #282828
+*background: #282828
 ! soft contrast: *background: #32302f
 *foreground: #ebdbb2
 ! Black + DarkGrey
