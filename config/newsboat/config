@@ -8,10 +8,12 @@ datetime-format "%b %e %y" # strftime
 show-title-bar no
 show-keymap-hint no
 
-external-url-viewer "urlscan -dc -r 'open {}'"
+external-url-viewer "urlscan -d -r 'open {}'"
 
 save-path ~/.local/share/newsboat/saved/
 
+unbind-key ^B bookmark
+bind-key B bookmark
 bind-key j down
 bind-key k up
 bind-key j next articlelist
@@ -28,7 +30,7 @@ bind-key a toggle-article-read
 bind-key n next-unread
 bind-key N prev-unread
 bind-key D pb-download
-bind-key U show-urls
+bind-key ^B show-urls
 bind-key x pb-delete
 bind-key r reload
 bind-key R reload-all
@@ -36,12 +38,12 @@ bind-key R reload-all
 browser open
 macro , open-in-browser
 macro o set browser "open" ; open-in-browser ; set browser open
+macro w set browser "w3m" ; open-in-browser ; set browser open
 macro b set browser "$BROWSER" ; open-in-browser ; set browser open
 macro a set browser "ts youtube-dl --add-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser open
 macro d set browser "ts youtube-dl" ; open-in-browser ; set browser open
 macro v set browser "setsid -f umpv --quiet" ; open-in-browser ; set browser open
 macro m set browser "ts $TERMINAL -e mpv --no-video" ; open-in-browser ; set browser open
-macro w set browser "w3m" ; open-in-browser ; set browser open
 macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser open
 macro i set browser "nsxiv-url" ; open-in-browser ; set browser open
 
@@ -55,7 +57,6 @@ color article		default	default
 
 highlight all "---.*---" yellow
 highlight feedlist ".*(0/0))" black
-#highlight article "(^Feed:.*|^Title:.*|^Author:.*)" red default
 highlight article "^Feed:.*" magenta default
 highlight article "^Title:.*" red default
 highlight article "^(Title):.*$" red default
