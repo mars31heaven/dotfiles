@@ -1,63 +1,60 @@
 #!/bin/bash
 
-dotdir="$HOME/.dotfiles"
-confdir="$HOME/.config"
-
-ln -s "$dotdir"/bashrc $HOME/.bashrc \
-	"$dotdir"/bash_profile $HOME/.profile
-
 mkdir -p $HOME/.vim/autoload \
 	$HOME/.w3m
 
-ln -s "$dotdir"/vim/vimrc $HOME/.vim/vimrc \
-	"$dotdir"/vim/autoload/plug.vim $HOME/.vim/autoload/plug.vim \
-	"$dotdir"/w3m/config $HOME/.w3m/config \
-	"$dotdir"/w3m/keymap $HOME/.w3m/keymap \
-	"$dotdir"/w3m/mailcap $HOME/.w3m/mailcap
+mkdir -p $HOME/.config/abook \
+	$HOME/.config/dunst \
+	$HOME/.config/fontconfig \
+	$HOME/.config/lf \
+	$HOME/.config/mpd \
+	$HOME/.config/mpv \
+	$HOME/.config/mutt \
+	$HOME/.config/ncmpcpp \
+	$HOME/.config/newsboat \
+	$HOME/.config/nsxiv/exec \
+	$HOME/.config/qutebrowser \
+	$HOME/.config/shell \
+	$HOME/.config/surfraw \
+	$HOME/.config/sxhkd \
+	$HOME/.config/urlscan \
+	$HOME/.config/x11 \
+	$HOME/.config/yt-dlp \
+	$HOME/.config/zathura
 
-mkdir -p "$confdir"/abook \
-	"$confdir"/dunst \
-	"$confdir"/fontconfig \
-	"$confdir"/lf \
-	"$confdir"/mpd \
-	"$confdir"/mpv \
-	"$confdir"/mutt \
-	"$confdir"/ncmpcpp \
-	"$confdir"/newsboat \
-	"$confdir"/nsxiv/exec \
-	"$confdir"/qutebrowser \
-	"$confdir"/shell \
-	"$confdir"/surfraw \
-	"$confdir"/sxhkd \
-	"$confdir"/urlscan \
-	"$confdir"/x11 \
-	"$confdir"/yt-dlp \
-	"$confdir"/zathura
+ln -s $HOME/.dotfiles/bashrc $HOME/.bashrc
+ln -s $HOME/.dotfiles/bash_profile $HOME/.profile
 
-ln -s "$dotdir"/abook/abookrc "$confdir"/abook/abookrc \
-	"$dotdir"/dunst/dunstrc "$confdir"/dunst/dunstrc \
-	"$dotdir"/fontconfig/font.conf "$confdir"/fontconfig/fonts.conf \
-	"$dotdir"/lf/lfrc "$confdir"/lf/lfrc\
-	"$dotdir"/lf/preview "$confdir"/lf/preview \
-	"$dotdir"/lf/shortcutrc "$confdir"/lf/shortcutrc\
-	"$dotdir"/mpd/mpd.conf "$confdir"/mpd/mpd.conf \
-	"$dotdir"/mpv/input.conf "$confdir"/mpv/input.conf\
-	"$dotdir"/mutt/mailcap "$confdir"/mutt/mailcap \
-	"$dotdir"/mutt/muttrc "$confdir"/mutt/muttrc\
-	"$dotdir"/ncmpcpp/bindings "$confdir"/ncmpcpp/bindings \
-	"$dotdir"/ncmpcpp/config "$confdir"/ncmpcpp/config\
-	"$dotdir"/nsxiv/exec/image-info "$confdir"/nsxiv/exec/image-info \
-	"$dotdir"/nsxiv/exec/key-handler "$confdir"/nsxiv/exec/key-handler\
-	"$dotdir"/shell/aliasrc "$confdir"/shell/aliasrc \
-	"$dotdir"/shell/functionrc "$confdir"/shell/functionrc\
-	"$dotdir"/shell/inputrc "$confdir"/shell/inputrc \
-	"$dotdir"/shell/shortcutrc "$confdir"/shell/shortcutrc\
-	"$dotdir"/surfraw/conf  "$confdir"/surfraw/conf \
-	"$dotdir"/sxhkd/sxhkdrc "$confdir"/sxhkd/sxhkdrc\
-	"$dotdir"/urlscan/config.json "$confdir"/urlscan/config.json \
-	"$dotdir"/x11/xinitrc "$confdir"/x11/xinitrc \
-	"$dotdir"/x11/xresources "$confdir"/x11/xresources \
-	"$dotdir"/yt-dlp/config "$confdir"/yt-dlp/config\
-	"$dotdir"/zathura/zathurarc "$confdir"/zathura/zathurarc
+ln -s $HOME/.dotfiles/vim/vimrc $HOME/.vim/vimrc
+ln -s $HOME/.dotfiles/vim/autoload/plug.vim $HOME/.vim/autoload/plug.vim
+ln -s $HOME/.dotfiles/w3m/config $HOME/.w3m/config
+ln -s $HOME/.dotfiles/w3m/keymap $HOME/.w3m/keymap
+ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
-vim +PluginInstall +qall
+ln -s $HOME/.dotfiles/config/abook/abookrc $HOME/.config/abook/abookrc
+ln -s $HOME/.dotfiles/config/dunst/dunstrc $HOME/.config/dunst/dunstrc
+ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
+ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
+ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
+ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
+ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
+ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
+ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
+ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
+ln -s $HOME/.dotfiles/config/mutt/muttrc $HOME/.config/mutt/muttrc
+ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
+ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
+ln -s $HOME/.dotfiles/config/newsboat/config $HOME/.config/newsboat/config
+ln -s $HOME/.dotfiles/config/nsxiv/exec/image-info $HOME/.config/nsxiv/exec/image-info
+ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key-handler
+ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
+ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc
+ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
+ln -s $HOME/.dotfiles/config/shell/shortcutrc $HOME/.config/shell/shortcutrc
+ln -s $HOME/.dotfiles/config/surfraw/conf  $HOME/.config/surfraw/conf
+ln -s $HOME/.dotfiles/config/sxhkd/sxhkdrc $HOME/.config/sxhkd/sxhkdrc
+ln -s $HOME/.dotfiles/config/urlscan/config.json $HOME/.config/urlscan/config.json
+ln -s $HOME/.dotfiles/config/x11/xinitrc $HOME/.config/x11/xinitrc
+ln -s $HOME/.dotfiles/config/x11/xresources $HOME/.config/x11/xresources
+ln -s $HOME/.dotfiles/config/yt-dlp/config $HOME/.config/yt-dlp/config
+ln -s $HOME/.dotfiles/config/zathura/zathurarc $HOME/.config/zathura/zathurarc
