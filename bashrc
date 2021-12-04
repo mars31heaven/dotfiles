@@ -26,6 +26,3 @@ export HISTFILESIZE="-"
 export HISTCONTROL=ignoredups
 # Commands to be ignore from being logged altogether
 export HISTIGNORE="cd:cd ..:ls:clear:o:fcd"
-
-# For mpc tab completion
-source "/usr/share/doc/mpc/contrib/mpc-completion.bash"
