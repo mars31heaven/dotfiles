@@ -5,8 +5,8 @@
 [ -f $HOME/.bashrc ] && . $HOME/.bashrc
 
 # Environment variables
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="vim"
+export VISUAL="vim"
 export BROWSER="qutebrowser"
 export TERMINAL="st"
 export READER="zathura"
