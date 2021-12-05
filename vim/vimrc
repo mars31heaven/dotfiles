@@ -18,6 +18,9 @@ call plug#end()
 " vim-airline theme
 let g:airline_theme='base16_gruvbox_dark_hard'
 
+" general theme
+colorscheme gruvbox
+
 " limelight configuration
 let g:limelight_conceal_ctermfg = 'gray'
 let g:limelight_conceal_ctermfg = 240
@@ -32,7 +35,7 @@ let mapleader =","
 set nocompatible
 set number relativenumber
 set clipboard+=unnamedplus
-set background=light
+set background=dark
 set noshowmode
 " Turn on syntax highlighting and indentation
 syntax on
@@ -57,6 +60,10 @@ set incsearch
 " Enable autocompletion:
 set wildmode=longest,list,full
 
+" Group all swp files and backups into a dir
+set backupdir=~/.vim/backups
+set directory=~/.vim/backups
+
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -65,13 +72,21 @@ vnoremap . :normal .<CR>
 
 " Replace all alias
 nnoremap <leader>S :%s//g<Left><Left>
-
 " Open files with fzf
 nnoremap <leader>f :F<CR>
 " Open ~/.dotilfes with fzf
 nnoremap <leader>df :F ~/.dotfiles<CR>
 " Open vimwiki index
 map <leader>w :VimwikiIndex<CR>
+" English spell-check set to <leader>en:
+map <leader>en :setlocal spell! spelllang=en_us<CR>
+" Portuguese spell-check set to <leader>pt:
+map <leader>pt :setlocal spell! spelllang=pt_br<CR>
+" Shortcut for split navigation:
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -86,14 +101,3 @@ autocmd BufWritePre *.[ch] %s/\%$/\r/e
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
 autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
-
-" English spell-check set to <leader>en:
-map <leader>en :setlocal spell! spelllang=en_us<CR>
-" Portuguese spell-check set to <leader>pt:
-map <leader>pt :setlocal spell! spelllang=pt_br<CR>
-
-" Shortcut for split navigation:
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
