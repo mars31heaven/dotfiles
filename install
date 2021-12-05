@@ -58,3 +58,5 @@ ln -s $HOME/.dotfiles/config/x11/xinitrc $HOME/.config/x11/xinitrc
 ln -s $HOME/.dotfiles/config/x11/xresources $HOME/.config/x11/xresources
 ln -s $HOME/.dotfiles/config/yt-dlp/config $HOME/.config/yt-dlp/config
 ln -s $HOME/.dotfiles/config/zathura/zathurarc $HOME/.config/zathura/zathurarc
+
+vim +PlugInstall +qall
