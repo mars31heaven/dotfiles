@@ -27,7 +27,8 @@ map Y copyto
 map M moveto
 map R reload
 map U unselect
-map <c-n> push :mkdir<space>
+map <c-m> push :mkdir<space>
+map <c-o> fzf_jump
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>
 
@@ -37,9 +38,6 @@ map I push A<c-a> # at the very beginning
 map i push A<a-b><a-b><a-f> # before extention
 map a push A<a-b> # after extention
 map B bulkrename
-
-# Search with fzf
-map <c-f> $lf -remote "send $id select '$(fzf)'"
 
 # Put lf into background
 map <c-z> $ kill -STOP $PPID
@@ -52,6 +50,16 @@ cmd bulkrename $vidir
 
 # Type mkdir and give the new directory a name
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
+
+cmd fzf_jump ${{
+	res="$(find $HOME . | fzf --reverse)"
+	if [ -f "$res" ]; then
+		cmd="select"
+	elif [ -d "$res" ]; then
+		cmd="cd"
+	fi
+	lf -remote "send $id $cmd \"$res\""
+}}
 
 cmd moveto ${{
 	clear; tput cup $(($(tput lines)/3))
@@ -70,15 +78,15 @@ cmd copyto ${{
 }}
 
 cmd extract ${{
-case "$f" in
-	*.zip) unzip "$f" ;;
-      	*.7z) 7z x "$f" ;;
-      	*.tar.gz) tar -xzvf "$f" ;;
-      	*.tar.bz2) tar -xjvf "$f" ;;
-      	*.tar) tar -xvf "$f" ;;
-      	*.rar) unrar x "$f" ;;
-      	*) echo "Unsupported format" ;;
-esac
+	case "$f" in
+		*.zip) unzip "$f" ;;
+	      	*.7z) 7z x "$f" ;;
+	      	*.tar.gz) tar -xzvf "$f" ;;
+	      	*.tar.bz2) tar -xjvf "$f" ;;
+	      	*.tar) tar -xvf "$f" ;;
+	      	*.rar) unrar x "$f" ;;
+	      	*) echo "Unsupported format" ;;
+	esac
 }}
 
 # Source file for bound bookmarked directories
