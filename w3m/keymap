@@ -70,6 +70,7 @@ keymap C-b BOOKMARK
 # Runs extbrowser command defined at the config (if
 # none was set, prompts for a custom command)
 keymap o EXTERN
+keymap E EXTERN '$EDITOR'
 # Runs extbrowser command to the URL under cursor (if
 # none was set, same as above)
 keymap O EXTERN_LINK
