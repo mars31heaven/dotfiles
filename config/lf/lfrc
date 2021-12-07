@@ -16,6 +16,8 @@ map <enter> shell
 
 # Basic functions
 map . set hidden!
+map u half-up
+map d half-down
 map D delete
 map p paste
 map x cut
@@ -24,10 +26,10 @@ map y copy
 map Y copyto
 map M moveto
 map R reload
-map u unselect
+map U unselect
+map <c-n> push :mkdir<space>
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>
-map <c-n> push :mkdir<space>
 
 # Rename
 map A rename # at the very end
@@ -52,33 +54,31 @@ cmd bulkrename $vidir
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
 cmd moveto ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	clear; echo "Move to where?"
-	dest="$(find $HOME -type d |  fzf)" &&
+	clear; tput cup $(($(tput lines)/3))
+	dest="$(find $HOME /media -type d | fzf)" &&
 	for x in $fx; do
 		eval mv -iv \"$x\" \"$dest\"
 	done
 }}
 
 cmd copyto ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	clear; echo "Copy to where?"
-	dest="$(find $HOME -type d |  fzf)" &&
+	clear; tput cup $(($(tput lines)/3))
+	dest="$(find $HOME /media -type d | fzf)" &&
 	for x in $fx; do
 		eval cp -ivr \"$x\" \"$dest\"
 	done
 }}
 
 cmd extract ${{
-  case "$f" in
-      *.zip) unzip "$f" ;;
-      *.tar.gz) tar -xzvf "$f" ;;
-      *.tar.bz2) tar -xjvf "$f" ;;
-      *.tar) tar -xvf "$f" ;;
-      *) echo "Unsupported format" ;;
-  esac
+case "$f" in
+	*.zip) unzip "$f" ;;
+      	*.7z) 7z x "$f" ;;
+      	*.tar.gz) tar -xzvf "$f" ;;
+      	*.tar.bz2) tar -xjvf "$f" ;;
+      	*.tar) tar -xvf "$f" ;;
+      	*.rar) unrar x "$f" ;;
+      	*) echo "Unsupported format" ;;
+esac
 }}
 
 # Source file for bound bookmarked directories
