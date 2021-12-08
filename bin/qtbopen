@@ -1,0 +1,51 @@
+#!/bin/sh -e
+#
+# opener script for files downloaded with qutebrowser
+
+case "$1" in
+
+	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.m4a|*.m3u|*.pls)
+		ts "$TERMINAL" -e mpv --no-video "$1"
+		;;
+
+	*.mp4|*.mkv|*.webm|*.avi|*.mpg)
+		umpv "$1"
+		;;
+
+	*.png|*.gif|*.jpg|*.jpe|*.jpeg)
+		nsxiv "$1"
+		;;
+
+	*.pdf|*.cbr|*.epub)
+		zathura "$1"
+		;;
+
+	*.zip)
+		"$TERMINAL" -e unzip "$1"
+		;;
+
+	*.7z)
+		"$TERMINAL" -e 7z x "$1"
+		;;
+
+      	*.tar.gz)
+	      	"$TERMINAL" -e tar -xzvf "$f"
+	      	;;
+
+      	*.tar.bz2)
+	      	"$TERMINAL" -e tar -xjvf "$f"
+	      	;;
+
+      	*.tar)
+	      	"$TERMINAL" -e tar -xvf "$f"
+	      	;;
+
+	*.rar)
+		"$TERMINAL" -e unrar x "$1"
+		;;
+
+	*)
+		"$EDITOR" "$1"
+		;;
+
+esac

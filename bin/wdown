@@ -1,0 +1,4 @@
+#!/bin/sh
+
+doas sv down iwd
+doas ip link set dev wlp3s0 down
