@@ -3,10 +3,7 @@
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
-Plug 'voldikss/vim-translator'
 Plug 'vimwiki/vimwiki'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -15,18 +12,8 @@ Plug 'preservim/nerdtree'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-" vim-airline theme
-let g:airline_theme='base16_gruvbox_dark_hard'
-
-" general theme
+" General theme
 colorscheme gruvbox
-
-" limelight configuration
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-
-" This is for the vimwiki plugin
-filetype plugin on
 
 " Leader key
 let mapleader =","
@@ -36,10 +23,11 @@ set nocompatible
 set number relativenumber
 set clipboard+=unnamedplus
 set background=dark
-set noshowmode
 " Turn on syntax highlighting and indentation
 syntax on
 filetype indent on
+" This is for the vimwiki plugin
+filetype plugin on
 " Disable the default Vim startup message
 set shortmess+=I
 " Disable Ex mode
@@ -56,37 +44,37 @@ set ignorecase
 set smartcase
 " Enable searching while typing
 set incsearch
-
 " Enable autocompletion:
 set wildmode=longest,list,full
-
 " Group all swp files and backups into a dir
 set backupdir=~/.vim/backups
 set directory=~/.vim/backups
-
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
 " Perform dot commands over visual blocks:
 vnoremap . :normal .<CR>
 
 " Replace all alias
 nnoremap <leader>S :%s//g<Left><Left>
 " Open files with fzf
-nnoremap <leader>f :F<CR>
-" Open ~/.dotilfes with fzf
+nnoremap <leader>o :F ~<CR>
+" Open ~/.dotfiles with fzf
 nnoremap <leader>df :F ~/.dotfiles<CR>
 " Open vimwiki index
 map <leader>w :VimwikiIndex<CR>
+" Open vimwiki diary index
+map <leader>D :VimwikiDiaryIndex<CR>
 " English spell-check set to <leader>en:
 map <leader>en :setlocal spell! spelllang=en_us<CR>
 " Portuguese spell-check set to <leader>pt:
 map <leader>pt :setlocal spell! spelllang=pt_br<CR>
-" Shortcut for split navigation:
+" Shortcuts for split navigation:
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+" New tab shortcut
+map <leader>t :tabnew<CR>
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -101,3 +89,18 @@ autocmd BufWritePre *.[ch] %s/\%$/\r/e
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
 autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
+
+" NERDTree configuration and shortcuts
+let NERDTreeShowHidden=1
+nnoremap <leader>N :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFind<CR>
+
+" limelight configuration
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
+" Toggle limelight plugin
+nnoremap <leader>l :Limelight!!<CR>
+
+" Toggle Goyo plugin
+nnoremap <leader>g :Goyo<CR>

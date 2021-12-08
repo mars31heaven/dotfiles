@@ -6,7 +6,7 @@ set shell bash
 set shellopts '-eu'
 set icons
 set ifs "\n"
-set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set hidden
 
 # Open script
 map o open
@@ -27,7 +27,7 @@ map Y copyto
 map M moveto
 map R reload
 map U unselect
-map <c-m> push :mkdir<space>
+map m push :mkdir<space>
 map <c-o> fzf_jump
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>

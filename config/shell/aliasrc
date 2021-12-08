@@ -37,8 +37,13 @@ alias \
 	lr="ls -R" \
 	g="git" \
 	gst="git status" \
+	gdi="git diff" \
+	gad="git add" \
+	gcm="git commit -m" \
+	gca="git commit -a" \
 	qtb="qutebrowser" \
-	z="zathura"
+	z="zathura" \
+	ppv="pipe-viewer"
 
 # External storage
 alias \
@@ -55,6 +60,7 @@ alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
 	wt="curl https://wttr.in" \
 	wi="vim -c VimwikiIndex" \
+	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi"

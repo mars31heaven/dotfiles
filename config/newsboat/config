@@ -44,8 +44,9 @@ macro a set browser "ts youtube-dl --add-metadata -xic -f bestaudio/best" ; open
 macro d set browser "ts youtube-dl" ; open-in-browser ; set browser open
 macro v set browser "setsid -f umpv --quiet" ; open-in-browser ; set browser open
 macro m set browser "ts $TERMINAL -e mpv --no-video" ; open-in-browser ; set browser open
-macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser open
+macro y set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser open
 macro i set browser "nsxiv-url" ; open-in-browser ; set browser open
+macro C set browser "pipe-viewer --comments=%u" ; open-in-browser ; set browser linkhandler
 
 color info              white   color237 bold
 color listfocus         white   color237

@@ -1,9 +1,8 @@
 text/plain; $EDITOR %s ;
-text/html; openfile %s ; nametemplate=%s.html
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
-image/*; openfile %s ;
+image/*; nsxiv-url %s ; test=test -n "$DISPLAY";
 video/*; setsid mpv --quiet %s &; copiousoutput
 audio/*; mpv %s ;
-application/pdf; openfile %s ;
+application/pdf; open %s ;
 application/pgp-encrypted; gpg -d '%s'; copiousoutput;
 application/pgp-keys; gpg --import '%s'; copiousoutput;
