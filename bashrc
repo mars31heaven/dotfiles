@@ -19,6 +19,9 @@ PS1='\w > '
 # Auto cd when entering a path
 shopt -s autocd
 
+# Autocorrect typos in path names when using cd
+shopt -s cdspell
+
 # Infinite history size (line count) and file size
 export HISTSIZE="-"
 export HISTFILESIZE="-"
