@@ -5,10 +5,12 @@ o() {
 	open "$(find -type f | fzf)"
 }
 
-# cd with fzf
+# cd with fzf and bind it to ctrl+f
 fcd() {
 	cd "$(find -type d | fzf)"
 }
+
+bind '"\006":"fcd\n"'
 
 # Autogenerate .m3u playlist files
 play() {
@@ -21,11 +23,27 @@ mag2torrent() {
 }
 
 # Open another terminal on the current working directory
+# and bind it to ctrl+t
 smdir() {
 	setsid -f "$TERMINAL"
 }
+
+bind '"\024":"smdir\n"'
 
 # Play a random internet radio station
 radio() {
 	pkill mpv; cat ~/.local/share/internetradio | shuf | sed -n 1p | xargs bgmus
 }
+
+# Use lf to switch directories and bind it to ctrl+o
+lfcd() {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp" >/dev/null
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+bind '"\017":"lfcd\n"'
