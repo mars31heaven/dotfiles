@@ -41,9 +41,12 @@ alias \
 	gad="git add" \
 	gcm="git commit -m" \
 	gca="git commit -a" \
+	t="tmux" \
 	qtb="qutebrowser" \
 	z="zathura" \
-	ppv="pipe-viewer"
+	ppv="pipe-viewer" \
+	pph="pipe-viewer -wv" \
+	pps="pipe-viewer -S"
 
 # External storage
 alias \
@@ -63,4 +66,5 @@ alias \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
-	ccat="highlight -O ansi"
+	ccat="highlight -O ansi" \
+	sca="scrcpy"
