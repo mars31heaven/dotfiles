@@ -54,7 +54,6 @@ alias \
 	sdm="pmount -e /dev/mmcblk* sd && sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd" \
-	uum="pumount /media/*" \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
 

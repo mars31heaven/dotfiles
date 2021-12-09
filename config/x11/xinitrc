@@ -2,7 +2,6 @@
 
 numlockx
 remaps &
-mpd
 xbacklight -set 5%
 unclutter -noevents &
 clipmenud &

@@ -20,19 +20,15 @@ case $choice in
 		;;
 
 	poweroff)
-	lsblk | grep -qo media
-	if [ -d /media ]; then
-		pumount /media/* >/dev/null 2>&1
+		[ -d /media/sd ] && pumount /media/sd
+		[ -d /media/m3 ] && pumount /media/m3
 		doas poweroff
-	fi
 		;;
 
 	reboot)
-	lsblk | grep -qo media
-	if [ -d /media ]; then
-		pumount /media/* >/dev/null 2>&1
+		[ -d /media/sd ] && pumount /media/sd
+		[ -d /media/m3 ] && pumount /media/m3
 		doas reboot
-	fi
 		;;
 
 	suspend)
