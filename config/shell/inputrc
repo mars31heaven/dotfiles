@@ -13,14 +13,14 @@ set keymap vi-insert
 "\e[B": history-search-forward
 $endif
 
+# Having this as on will display a mode status on the prompt.
 set show-mode-in-prompt off
 
 Control-l: clear-screen
 Control-a: beginning-of-line
 
-# One tab hit instead two or three for completion.
-#set show-all-if-unmodified on
-# Single tab hit to partially complete a word and show all possible completions if it is still ambiguous.
+# Single tab hit to partially complete a word and show
+# all possible completions if it is still ambiguous.
 set show-all-if-ambiguous on
 
 # Color files by types.
