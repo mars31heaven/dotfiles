@@ -6,7 +6,7 @@ set shell bash
 set shellopts '-eu'
 set icons
 set ifs "\n"
-set hidden
+set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 
 # Open script
 map o open
