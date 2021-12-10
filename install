@@ -47,6 +47,12 @@ ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
 ln -s $HOME/.dotfiles/config/newsboat/config $HOME/.config/newsboat/config
 ln -s $HOME/.dotfiles/config/nsxiv/exec/image-info $HOME/.config/nsxiv/exec/image-info
 ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key-handler
+ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.instagram.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.instagram.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.reddit.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.reddit.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.twitter.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.twitter.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.wikipedia.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.wikipedia.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.youtube.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.youtube.user.js
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
 ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc
 ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
