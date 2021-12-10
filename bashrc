@@ -14,6 +14,8 @@ done; unset command
 [ -f ~/.config/shell/shortcutrc ] && source ~/.config/shell/shortcutrc
 [ -f ~/.config/shell/functionrc ] && source ~/.config/shell/functionrc
 
+[ -f ~/.config/shell/private ] && source ~/.config/shell/private
+
 PS1='\w > '
 
 # Auto cd when entering a path

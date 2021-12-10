@@ -11,8 +11,9 @@ set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 # Open script
 map o open
 
-# Use enter for shell commands
-map <enter> shell
+# Unbind these functions
+map r
+map w
 
 # Basic functions
 map . set hidden!
@@ -29,8 +30,9 @@ map R reload
 map U unselect
 map m push :mkdir<space>
 map <c-o> fzf_jump
-map W $setsid -f $TERMINAL >/dev/null 2>&1
+map T $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>
+map <enter> shell
 
 # Rename
 map A rename # at the very end
@@ -39,20 +41,14 @@ map i push A<a-b><a-b><a-f> # before extention
 map a push A<a-b> # after extention
 map B bulkrename
 
-# Put lf into background
-map <c-z> $ kill -STOP $PPID
-
 # cmd functions
 
-# Bulkrename files and directories with Vim
-# using the vidir command from the moreutils package
 cmd bulkrename $vidir
 
-# Type mkdir and give the new directory a name
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
 cmd fzf_jump ${{
-	res="$(find $HOME . | fzf --reverse)"
+	res="$(find $HOME . | fzf)"
 	if [ -f "$res" ]; then
 		cmd="select"
 	elif [ -d "$res" ]; then

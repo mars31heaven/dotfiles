@@ -60,7 +60,6 @@ alias \
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	wt="curl https://wttr.in" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \

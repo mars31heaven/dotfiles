@@ -19,9 +19,9 @@ update_time () {
 	time="$(date "+%b %d (%a) %R")"
 }
 
-update_weather () {
-	weather="$(curl -s "wttr.in?format=1"| sed -E "s/^(.).*\+/\1/")"
-}
+#update_weather () {
+#	weather="$(curl -s "wttr.in?format=1"| sed -E "s/^(.).*\+/\1/")"
+#}
 
 update_bat () {
 	# you might need to change the path depending on your device
@@ -61,7 +61,7 @@ update_vol
 
 display () {
 	#printf "%s\n" " $event [$weather] [$memory $cpu] [$bat] [$backlight] [$vol] $time "
-	xsetroot -name " / $free_space_root ~ $free_space_home V $vol R $memory CPU $cpu B $bat W $weather $time "
+	xsetroot -name " / $free_space_root ~ $free_space_home V $vol R $memory CPU $cpu B $bat $time "
 }
 
 # SIGNALLING
@@ -82,7 +82,7 @@ do
 		[ $((sec % 15)) -eq 0 ] && update_cpu 	# update cpu every 15 seconds
 		[ $((sec % 15)) -eq 0 ] && update_memory
 		[ $((sec % 60)) -eq 0 ] && update_bat
-		[ $((sec % 3600)) -eq 2 ] && update_weather
+		#[ $((sec % 3600)) -eq 2 ] && update_weather
 		[ $((sec % 3600)) -eq 2 ] && update_disk
 		#[ $((sec % 300)) -eq 1 ] && update_event
 

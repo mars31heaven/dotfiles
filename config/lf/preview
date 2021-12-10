@@ -12,7 +12,8 @@ handle() {
 }
 
 case "$1" in
-	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.m4a|*.mp4|*.mkv|*.webm|*.avi|*.mpg|*.png|*.gif|*.jpg|*.jpe|*.jpeg) mediainfo "$1" ;;
+	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.m4a|*.mp4|*.mkv|*.webm|*.avi|*.mpg) mediainfo "$1" ;;
+	*.png|*.gif|*.jpg|*.jpe|*.jpeg) exiv2 "$1" ;;
 	*.md) mdcat "$1";;
 	*.pdf) pdftotext "$1" -;;
 	*.odt) odt2txt "$1" ;;
@@ -23,6 +24,6 @@ case "$1" in
 	*.tar) tar -tvf "$1";;
 	*.rar) unrar l "$1";;
 	*.7z) 7z l "$1";;
-	*.html|*.html|*.xml) w3m -dump "$1";;
+	*.html|*.htm) w3m -dump "$1";;
 	*) handle "$1" ;;
 esac
