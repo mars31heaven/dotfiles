@@ -23,6 +23,7 @@ set nocompatible
 set number relativenumber
 set clipboard+=unnamedplus
 set background=dark
+set history=1000
 " Turn on syntax highlighting and indentation
 syntax on
 filetype indent on
@@ -49,11 +50,9 @@ set wildmode=longest,list,full
 " Group all swp files and backups into a dir
 set backupdir=~/.vim/backups
 set directory=~/.vim/backups
-" Disables automatic commenting on newline:
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-" Perform dot commands over visual blocks:
-vnoremap . :normal .<CR>
 
+" New tab shortcut
+map <leader>t :tabnew<CR>
 " Replace all alias
 nnoremap <leader>S :%s//g<Left><Left>
 " Open files with fzf
@@ -68,18 +67,22 @@ map <leader>D :VimwikiDiaryIndex<CR>
 map <leader>en :setlocal spell! spelllang=en_us<CR>
 " Portuguese spell-check set to <leader>pt:
 map <leader>pt :setlocal spell! spelllang=pt_br<CR>
+
 " Shortcuts for split navigation:
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
-" New tab shortcut
-map <leader>t :tabnew<CR>
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 let g:vimwiki_list = [{'path': '~/docs/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
+
+" Disables automatic commenting on newline:
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Perform dot commands over visual blocks:
+vnoremap . :normal .<CR>
 
 " Automatically deletes all trailing whitespace and newlines at end of file on save.
 autocmd BufWritePre * %s/\s\+$//e
@@ -104,3 +107,16 @@ nnoremap <leader>l :Limelight!!<CR>
 
 " Toggle Goyo plugin
 nnoremap <leader>g :Goyo<CR>
+
+" statusline settings
+set statusline=
+set statusline+=%1*
+set statusline+=\ %F
+set statusline+=%{&modified?'\ [+]':''}
+set statusline+=%{&readonly?'\ [RO]':''}
+set statusline+=%<
+set statusline+=%=
+set statusline+=%{&filetype!=#''?&filetype.'\ ':'none\ '}
+set statusline+=%2*
+set statusline+=%-7([%{&fileformat}]%)
+set statusline+=[%l/%L]

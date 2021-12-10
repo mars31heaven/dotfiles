@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[ -d /media/sd ] && pumount /media/sd
+[ -d /media/m3 ] && pumount /media/m3
