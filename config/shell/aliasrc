@@ -46,12 +46,13 @@ alias \
 	z="zathura" \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
-	pps="pipe-viewer -S"
+	pps="pipe-viewer -S" \
+	hstr="hh"
 
 # External storage
 alias \
-	m3m="pmount -e /dev/sdb1 m3 && m3" \
-	sdm="pmount -e /dev/mmcblk* sd && sd" \
+	m3m="pmount -e /dev/sdb1 m3" \
+	sdm="pmount -e /dev/mmcblk* sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd" \
 	mtpm="simple-mtpfs --device 1 /media/android" \

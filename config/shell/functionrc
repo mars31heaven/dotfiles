@@ -10,7 +10,7 @@ fcd() {
 	cd "$(find -type d | fzf)"
 }
 
-bind '"\006":"fcd\n"'
+bind '"\C-f":"fcd\n"'
 
 # Autogenerate .m3u playlist files
 play() {
@@ -28,7 +28,7 @@ smdir() {
 	setsid -f "$TERMINAL"
 }
 
-bind '"\024":"smdir\n"'
+bind '"\C-t":"smdir\n"'
 
 # Play a random internet radio station
 radio() {
@@ -46,4 +46,10 @@ lfcd() {
     fi
 }
 
-bind '"\017":"lfcd\n"'
+bind '"\C-o":"lfcd\n"'
+
+# Edit a command with vim when in insert mode
+bind '"\C-e": "\e^v \n"'
+
+# Open hstr with ctrl+r
+bind '"\C-r": "\e^ihstr -- \n"'

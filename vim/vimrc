@@ -58,7 +58,9 @@ nnoremap <leader>S :%s//g<Left><Left>
 " Open files with fzf
 nnoremap <leader>o :F ~<CR>
 " Open ~/.dotfiles with fzf
-nnoremap <leader>df :F ~/.dotfiles<CR>
+nnoremap <leader>d :F ~/.dotfiles<CR>
+" Open ~/.config with fzf
+nnoremap <leader>cf :F ~/.config<CR>
 " Open vimwiki index
 map <leader>w :VimwikiIndex<CR>
 " Open vimwiki diary index

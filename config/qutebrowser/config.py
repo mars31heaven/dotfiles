@@ -1,5 +1,4 @@
 # Source external configuration files
-#config.source("base16-gruvbox-dark-hard-minimal.py")
 config.source("search_engines.py")
 config.source("gruvbox.py")
 

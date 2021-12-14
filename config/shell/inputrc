@@ -15,9 +15,13 @@ $endif
 
 # Having this as on will display a mode status on the prompt.
 set show-mode-in-prompt off
+# Mode statuses may be customized here
+set vi-cmd-mode-string c
+set vi-ins-mode-string i
 
 Control-l: clear-screen
-Control-a: beginning-of-line
+Control-a: end-of-line
+#Control-i: beginning-of-line	# This line breaks tab completion
 
 # Single tab hit to partially complete a word and show
 # all possible completions if it is still ambiguous.
@@ -33,3 +37,8 @@ set mark-symlinked-directories on
 set colored-completion-prefix on
 # Color the common prefix in menu-complete.
 set menu-complete-display-prefix on
+# Ignore case during completion
+set completion-ignore-case on
+# Disable the use of internal pager when returning long
+# completion lists
+set page-completions off

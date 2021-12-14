@@ -27,7 +27,10 @@ shopt -s cdspell
 # Infinite history size (line count) and file size
 export HISTSIZE="-"
 export HISTFILESIZE="-"
-# Keep repeated identical commands from being logged
-export HISTCONTROL=ignoredups
+# Keep repeated identical commands and lines which
+# begin with space from being logged
+export HISTCONTROL=ignoreboth
 # Commands to be ignore from being logged altogether
 export HISTIGNORE="cd:cd ..:ls:clear:o:fcd"
+# Append new history items
+shopt -s histappend

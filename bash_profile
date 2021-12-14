@@ -45,6 +45,10 @@ export _JAVA_AWT_WM_NONREPARENTING=1	# Fix for Java applications in dwm
 export JAVA_FONTS="/usr/share/fonts/TTF"
 export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 export FZF_DEFAULT_OPTS="-i --layout=reverse"
+export HSTR_CONFIG="hicolor,raw-history-view"
+
+# Ensure synchronization between bash memory and history file
+export PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
 
 # Have less display colours
 export LESS="-R"

@@ -2,3 +2,5 @@
 
 [ -d /media/sd ] && pumount /media/sd
 [ -d /media/m3 ] && pumount /media/m3
+[ -d /media/mmcblk* ] && pumount /media/mmcblk*
+[ -d /media/sd* ] && pumount /media/sd*
