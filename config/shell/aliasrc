@@ -58,6 +58,15 @@ alias \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
 
+# Managing wi-fi and bluetooth
+alias \
+	wup="doas ip link set dev wlp3s0 up && doas sv up iwd" \
+	wdown="doas sv down iwd && doas ip link set dev wlp3s0 down" \
+	wscan="iwctl station wlp3s0 scan && iwctl station wlp3s0 get-networks" \
+	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
+	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd" \
+	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E"
+
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \

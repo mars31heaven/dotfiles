@@ -1,5 +1,0 @@
-#!/bin/sh
-
-bluetoothctl disconnect 4C:65:A8:97:2F:9E
-bluetoothctl power off
-doas sv down bluetoothd

@@ -1,4 +1,0 @@
-#!/bin/bash
-
-iwctl station wlp3s0 scan
-iwctl station wlp3s0 get-networks

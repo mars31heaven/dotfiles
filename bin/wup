@@ -1,4 +1,0 @@
-#!/bin/sh
-
-doas ip link set dev wlp3s0 up
-doas sv up iwd
