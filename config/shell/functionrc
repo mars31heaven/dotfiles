@@ -53,3 +53,8 @@ bind '"\C-e": "\e^v \n"'
 
 # Open hstr with ctrl+r
 bind '"\C-r": "\e^ihstr -- \n"'
+
+# Make prompt colorful
+cprompt() {
+	PS1="\e[38;5;81m[\u@\h] \w \e[0m"
+}
