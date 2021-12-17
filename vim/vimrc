@@ -8,12 +8,17 @@ Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
 " General theme
 colorscheme gruvbox
+
+" vim-airline theme
+let g:airline_theme='base16_gruvbox_dark_hard'
 
 " Leader key
 let mapleader =","
@@ -24,13 +29,17 @@ set number relativenumber
 set clipboard+=unnamedplus
 set background=dark
 set history=1000
+" Do not show current mode since there's a statusline
+set noshowmode
 " Turn on syntax highlighting and indentation
 syntax on
 filetype indent on
 " This is for the vimwiki plugin
 filetype plugin on
 " Disable the default Vim startup message
-set shortmess+=I
+" Use [+] instead of [Modified], [RO] instead of [readonly]
+" Don't give completion match messages
+set shortmess+=Imrc
 " Disable Ex mode
 nmap Q <Nop>
 " Always show the status line at the bottom
@@ -50,6 +59,15 @@ set wildmode=longest,list,full
 " Group all swp files and backups into a dir
 set backupdir=~/.vim/backups
 set directory=~/.vim/backups
+" Open new split panes to right and bottom
+set splitbelow
+set splitright
+
+" Resize splits when the window is resized
+augroup on_vim_resized
+	autocmd!
+	autocmd VimResized * wincmd =
+augroup END
 
 " New tab shortcut
 map <leader>t :tabnew<CR>
