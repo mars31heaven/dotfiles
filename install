@@ -6,6 +6,7 @@ mkdir -p $HOME/.vim/autoload \
 mkdir -p $HOME/.config/abook \
 	$HOME/.config/dunst \
 	$HOME/.config/fontconfig \
+	$HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpd \
 	$HOME/.config/mpv \
@@ -35,6 +36,7 @@ ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 ln -s $HOME/.dotfiles/config/abook/abookrc $HOME/.config/abook/abookrc
 ln -s $HOME/.dotfiles/config/dunst/dunstrc $HOME/.config/dunst/dunstrc
 ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
+ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
