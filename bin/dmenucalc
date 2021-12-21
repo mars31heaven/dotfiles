@@ -1,0 +1,21 @@
+#!/bin/sh
+
+result=$(printf "%s\n" "$@" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+select=$(printf "%s\n" "Copy" "Clear" | dmenu -b -l 3 -p "= $result")
+
+case $select in
+  "")
+    ;;
+
+  Clear)
+    "$0"
+    ;;
+
+  Copy)
+    printf "%s" "$result" | xclip -selection clipboard
+    ;;
+
+  *)
+    "$0" "$result $select"
+    ;;
+esac

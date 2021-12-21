@@ -1,0 +1,44 @@
+#!/bin/sh
+
+options="\
+bluetooth on
+bluetooth off
+bluetooth headphones connect
+bluetooth headphones disconnect
+wifi on
+wifi off"
+
+choice=$(printf '%s\n' "$options" | dmenu)
+
+case $choice in
+
+	"bluetooth on")
+		doas sv up bluetoothd
+		bluetoothctl power on
+		bluetoothctl connect 4C:65:A8:97:2F:9E
+		;;
+
+	"bluetooth off")
+		bluetoothctl power off
+		doas sv down bluetoothd
+		;;
+
+	"bluetooth headphones connect")
+		bluetoothctl connect 4C:65:A8:97:2F:9E
+		;;
+
+	"bluetooth headphones disconnect")
+		bluetoothctl disconnect 4C:65:A8:97:2F:9E
+		;;
+
+	"wifi on")
+		doas ip link set dev wlp3s0 up
+		doas sv up iwd
+	        ;;
+
+	"wifi off")
+		doas sv down iwd
+		doas ip link set dev wlp3s0 down
+		;;
+
+esac
