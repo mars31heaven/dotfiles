@@ -18,6 +18,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
 	$HOME/.config/sxhkd \
+	$HOME/.config/tmux \
 	$HOME/.config/urlscan \
 	$HOME/.config/x11 \
 	$HOME/.config/yt-dlp \
@@ -62,6 +63,7 @@ ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
 ln -s $HOME/.dotfiles/config/shell/shortcutrc $HOME/.config/shell/shortcutrc
 ln -s $HOME/.dotfiles/config/surfraw/conf  $HOME/.config/surfraw/conf
 ln -s $HOME/.dotfiles/config/sxhkd/sxhkdrc $HOME/.config/sxhkd/sxhkdrc
+ln -s $HOME/.dotfiles/config/tmux/tmux.conf $HOME/.config/tmux/tmux.conf
 ln -s $HOME/.dotfiles/config/urlscan/config.json $HOME/.config/urlscan/config.json
 ln -s $HOME/.dotfiles/config/x11/xinitrc $HOME/.config/x11/xinitrc
 ln -s $HOME/.dotfiles/config/x11/xresources $HOME/.config/x11/xresources
