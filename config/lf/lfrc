@@ -7,13 +7,12 @@ set shellopts '-eu'
 set icons
 set ifs "\n"
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set scrolloff 10
+set relativenumber
+set incsearch
 
 # Open script
 map o open
-
-# Unbind these functions
-map r
-map w
 
 # Basic functions
 map . set hidden!
@@ -28,9 +27,11 @@ map Y copyto
 map M moveto
 map R reload
 map U unselect
+map v toggle
+map V invert
 map m push :mkdir<space>
 map <c-o> fzf_jump
-map T $setsid -f $TERMINAL >/dev/null 2>&1
+map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>
 map <enter> shell
 
