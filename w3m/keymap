@@ -39,7 +39,7 @@ keymap gt NEXT_TAB
 keymap gT PREV_TAB
 keymap t NEW_TAB
 keymap F TAB_LINK
-keymap d CLOSE_TAB
+keymap dd CLOSE_TAB
 # Edit current URL
 keymap U GOTO
 # Lists every URL on the page,
@@ -75,10 +75,10 @@ keymap E EXTERN '$EDITOR'
 # none was set, same as above)
 keymap O EXTERN_LINK
 # Other external commands
-keymap ,v EXTERN 'mpv --quiet'
-keymap ,V EXTERN_LINK 'setsid -f umpv --quiet'
-keymap ,m EXTERN 'ts $TERMINAL -e mpv --no-video'
-keymap ,M EXTERN_LINK 'ts $TERMINAL -e mpv --no-video'
+keymap ,v EXTERN 'umpv'
+keymap ,V EXTERN_LINK 'setsid -f umpv'
+keymap ,m EXTERN 'ts $TERMINAL -e mpv'
+keymap ,M EXTERN_LINK 'ts $TERMINAL -e mpv'
 keymap ,o EXTERN 'setsid -f open'
 keymap ,O EXTERN_LINK 'setsid -f open'
 keymap ,b EXTERN 'setsid -f $BROWSER >/dev/null 2>&1'
