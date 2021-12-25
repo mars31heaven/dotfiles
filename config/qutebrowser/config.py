@@ -15,6 +15,8 @@ config.bind(";V", "hint --rapid links spawn umpv {hint-url}")
 config.bind(",m", "spawn st -e mpv --no-video {url}")
 config.bind(",M", "hint links spawn st -e mpv --no-video {hint-url}")
 config.bind(",do", "download-open")
+config.bind(",gd", "hint links download")
+config.bind(",Gd", "hint --rapid links download")
 
 ## Aliases for commands. The keys of the given dictionary are the
 ## aliases, while the values are the commands they map to.
@@ -1520,7 +1522,7 @@ c.url.default_page = 'about:blank'
 ## Open base URL of the searchengine if a searchengine shortcut is
 ## invoked without parameters.
 ## Type: Bool
-# c.url.open_base_url = False
+c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
@@ -1659,7 +1661,7 @@ config.bind('gT', 'tab-prev')
 # config.bind('b', 'set-cmd-text -s :quickmark-load')
 # config.bind('cd', 'download-clear')
 # config.bind('co', 'tab-only')
-# config.bind('d', 'tab-close')
+config.bind('dd', 'tab-close')
 # config.bind('f', 'hint')
 # config.bind('g$', 'tab-focus -1')
 # config.bind('g0', 'tab-focus 1')
