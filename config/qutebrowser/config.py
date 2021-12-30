@@ -17,6 +17,7 @@ config.bind(",M", "hint links spawn st -e mpv --no-video {hint-url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
 config.bind(",Gd", "hint --rapid links download")
+config.bind(",eu", "edit-url")
 
 ## Aliases for commands. The keys of the given dictionary are the
 ## aliases, while the values are the commands they map to.
@@ -1584,7 +1585,7 @@ c.url.start_pages = ['~/.config/qutebrowser/startpage/index.html']
 # config.bind(';h', 'hint all hover')
 # config.bind(';i', 'hint images')
 # config.bind(';o', 'hint links fill :open {hint-url}')
-# config.bind(';r', 'hint --rapid links tab-bg')
+config.bind(',F', 'hint --rapid links tab-bg')
 # config.bind(';t', 'hint inputs')
 # config.bind(';y', 'hint links yank')
 # config.bind('<Alt-1>', 'tab-focus 1')

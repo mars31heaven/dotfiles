@@ -2,10 +2,13 @@ super + F1
 	laptopmononly
 
 super + shift + F1
-	bothmonitors
+	bothmons
 
 super + F2
 	extmononly
+
+super + shift + F2
+	arandr
 
 super + F3
 	brownout 500
@@ -15,9 +18,6 @@ super + shift + F3
 
 super + F4
 	$TERMINAL -e pulsemixer
-
-super + shift + F4
-	pkill pulseaudio
 
 super + F5
 	$TERMINAL -e ncmpcpp
@@ -45,6 +45,9 @@ super + w
 super + shift + w
 	$TERMINAL -e w3m -B
 
+super + ctrl + w
+	dmenuwireless
+
 super + e
 	$TERMINAL -e $EDITOR
 
@@ -68,6 +71,9 @@ super + shift + d
 
 super + shift + f
 	$TERMINAL -e lf
+
+super + ctrl + k
+	dmenukill
 
 super + shift + x
 	slock
@@ -121,6 +127,9 @@ super + Insert
 super + shift + Home
 	$TERMINAL -e htop
 
+XF86Tools
+	$TERMINAL -e ncmpcpp
+
 XF86AudioMute
 	pamixer --toggle-mute ; \
 	kill -34 "$(cat ~/.cache/pidofbar)"
@@ -156,3 +165,6 @@ XF86Mail
 
 XF86HomePage
 	$BROWSER
+
+XF86Calculator
+	dmenucalc

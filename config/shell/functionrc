@@ -5,12 +5,23 @@ o() {
 	open "$(find -type f | fzf)"
 }
 
+# preview and open files with fzf
+O() {
+	fzf --preview="highlight -O ansi {}" --preview-window=right:70%:wrap --query="$given_file"
+
+}
+
 # cd with fzf and bind it to ctrl+f
 fcd() {
 	cd "$(find -type d | fzf)"
 }
 
 bind '"\C-f":"fcd\n"'
+
+# Remove files with fzf
+R() {
+	rm -rvI "$(ls | fzf -m)"
+}
 
 # Autogenerate .m3u playlist files
 play() {
@@ -23,16 +34,16 @@ mag2torrent() {
 }
 
 # Open another terminal on the current working directory
-# and bind it to ctrl+t
+# and bind it to ctrl+w
 smdir() {
 	setsid -f "$TERMINAL"
 }
 
-bind '"\C-t":"smdir\n"'
+bind '"\C-w":"smdir\n"'
 
 # Play a random internet radio station
 radio() {
-	pkill mpv; cat ~/.local/share/internetradio | shuf | sed -n 1p | xargs bgmus
+	pkill mpv; cat ~/.local/share/internet_radio | shuf | sed -n 1p | xargs bgmus
 }
 
 # Use lf to switch directories and bind it to ctrl+o
@@ -52,9 +63,14 @@ bind '"\C-o":"lfcd\n"'
 bind '"\C-e": "\e^v \n"'
 
 # Open hstr with ctrl+r
-bind '"\C-r": "\e^ihstr -- \n"'
+if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\e^ihstr -- \n"'; fi
 
-# Make prompt colorful
+# Get a colored prompt
 cprompt() {
-	PS1="\e[38;5;81m[\u@\h] \w \e[0m"
+	PS1='[\033[31m\u\033[34m@\033[m\033[01m\033[m\033[32m\h\033[1m\033[m]$ \033[34m\w \033[m'
+}
+
+# Get the current ip address
+ipa() {
+	ip addr | grep 192 | awk '{print $2}' | sed 's\/24\\'
 }

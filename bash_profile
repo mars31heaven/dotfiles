@@ -12,6 +12,7 @@ export TERMINAL="st"
 export READER="zathura"
 export IMAGE="nsxiv"
 export VIDEO="mpv"
+export PAGER="vimpager"
 export PATH="$PATH:$HOME/.local/bin":"$HOME/.dotfiles/bin"
 
 # This is for lf

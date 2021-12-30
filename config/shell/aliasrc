@@ -17,7 +17,7 @@ alias \
 # abbreviations
 alias  \
 	xis="doas xbps-install -S" \
-	xiu="doas xbps-install -Syu" \
+	xiu="doas xbps-install -Su" \
 	xrr="doas xbps-remove -R" \
 	xq="xbps-query -s" \
 	xqr="xbps-query -R" \
@@ -37,6 +37,7 @@ alias \
 	lr="ls -R" \
 	g="git" \
 	gst="git status" \
+	gcl="git clone" \
 	gdi="git diff" \
 	gad="git add" \
 	gcm="git commit -m" \
@@ -47,7 +48,8 @@ alias \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
-	hstr="hh"
+	hstr="hh" \
+	qbt="qbittorrent-nox"
 
 # External storage
 alias \
@@ -62,7 +64,8 @@ alias \
 alias \
 	wup="doas ip link set dev wlp3s0 up && doas sv up iwd" \
 	wdown="doas sv down iwd && doas ip link set dev wlp3s0 down" \
-	wscan="iwctl station wlp3s0 scan && iwctl station wlp3s0 get-networks" \
+	wscan="iwctl station wlp3s0 scan" \
+	wgn="iwctl station wlp3s0 get-networks" \
 	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
 	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd" \
 	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E"

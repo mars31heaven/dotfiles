@@ -31,6 +31,7 @@ map v toggle
 map V invert
 map m push :mkdir<space>
 map <c-o> fzf_jump
+map <c-y> path_yank
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!vim<space>
 map <enter> shell
@@ -84,6 +85,12 @@ cmd extract ${{
 	      	*.rar) unrar x "$f" ;;
 	      	*) echo "Unsupported format" ;;
 	esac
+}}
+
+cmd path_yank ${{
+	for x in $fx; do
+		echo $x | xclip -r -sel c
+	done
 }}
 
 # Source file for bound bookmarked directories
