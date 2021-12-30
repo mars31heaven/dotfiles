@@ -8,6 +8,8 @@ Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/nerdtree'
+Plug 'mhinz/vim-startify'
+Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -26,11 +28,11 @@ let mapleader =","
 " Basic configuration
 set nocompatible
 set number relativenumber
+set clipboard+=unnamed
 set clipboard+=unnamedplus
 set background=dark
 set history=1000
-" Do not show current mode since there's a statusline
-set noshowmode
+set scrolloff=10
 " Turn on syntax highlighting and indentation
 syntax on
 filetype indent on
@@ -59,9 +61,37 @@ set wildmode=longest,list,full
 " Group all swp files and backups into a dir
 set backupdir=~/.vim/backups
 set directory=~/.vim/backups
-" Open new split panes to right and bottom
-set splitbelow
-set splitright
+" Don't show the current mode
+set noshowmode
+
+" Ask for confirmation when handling unsaved or
+" read-only files
+set confirm
+
+" Quicker <Esc> in insert mode
+inoremap <silent> jk <Esc>
+
+" Insert a blank line below or above current line (do not move the cursor),
+" see https://stackoverflow.com/a/16136133/6064933
+nnoremap <expr> oo 'm`' . v:count1 . 'o<Esc>``'
+nnoremap <expr> OO 'm`' . v:count1 . 'O<Esc>``'
+
+" Yank from current cursor position to the end of the line (make it
+" consistent with the behavior of D, C)
+nnoremap Y y$
+
+" Do not include white space characters when using $ in visual mode,
+" see https://vi.stackexchange.com/a/18571/15292
+xnoremap $ g_
+
+" Return to last edit position when opening a file
+augroup resume_edit_position
+    autocmd!
+    autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+        \ | execute "normal! g`\"zvzz"
+        \ | endif
+augroup END
 
 " Resize splits when the window is resized
 augroup on_vim_resized
@@ -76,7 +106,7 @@ nnoremap <leader>S :%s//g<Left><Left>
 " Open files with fzf
 nnoremap <leader>o :F ~<CR>
 " Open ~/.dotfiles with fzf
-nnoremap <leader>d :F ~/.dotfiles<CR>
+nnoremap <leader>df :F ~/.dotfiles<CR>
 " Open ~/.config with fzf
 nnoremap <leader>cf :F ~/.config<CR>
 " Open vimwiki index
@@ -88,11 +118,23 @@ map <leader>en :setlocal spell! spelllang=en_us<CR>
 " Portuguese spell-check set to <leader>pt:
 map <leader>pt :setlocal spell! spelllang=pt_br<CR>
 
-" Shortcuts for split navigation:
+" Splitting
+set splitright
+set splitbelow
+map <leader>n :new<CR>
+map <leader>vn :vnew<CR>
+
+" Shortcuts for split navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+" Shortcuts for resizing windows
+nnoremap <silent> <C-<> <C-w><
+nnoremap <silent> <C->> <C-w>>
+nnoremap <silent> <C--> <C-w>-
+nnoremap <silent> <C-+> <C-w>+
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -101,6 +143,7 @@ autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markd
 
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " Perform dot commands over visual blocks:
 vnoremap . :normal .<CR>
 
@@ -113,12 +156,12 @@ autocmd BufWritePre *.[ch] %s/\%$/\r/e
 autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
 autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
 
-" NERDTree configuration and shortcuts
+" NERDTree plugin configuration and shortcuts
 let NERDTreeShowHidden=1
 nnoremap <leader>N :NERDTreeToggle<CR>
 nnoremap <leader>nf :NERDTreeFind<CR>
 
-" limelight configuration
+" limelight plugin configuration
 let g:limelight_conceal_ctermfg = 'gray'
 let g:limelight_conceal_ctermfg = 240
 
@@ -129,8 +172,21 @@ nnoremap <leader>l :Limelight!!<CR>
 nnoremap <leader>g :Goyo<CR>
 
 " statusline settings
+let g:currentmode={
+       \ 'n'  : 'NORMAL ',
+       \ 'v'  : 'VISUAL ',
+       \ 'V'  : 'V·Line ',
+       \ "\<C-V>" : 'V·Block ',
+       \ 'i'  : 'INSERT ',
+       \ 'R'  : 'R ',
+       \ 'Rv' : 'V·Replace ',
+       \ 'c'  : 'Command ',
+       \}
+
 set statusline=
 set statusline+=%1*
+set statusline+=\ %{toupper(g:currentmode[mode()])}
+set statusline+=%{&spell?'[SPELL]':''}
 set statusline+=\ %F
 set statusline+=%{&modified?'\ [+]':''}
 set statusline+=%{&readonly?'\ [RO]':''}
