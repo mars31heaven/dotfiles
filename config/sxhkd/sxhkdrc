@@ -8,10 +8,10 @@ super + F2
 	extmononly
 
 super + shift + F2
-	arandr
+	displayselect
 
 super + F3
-	brownout 500
+	brownout 400
 
 super + shift + F3
 	brownout 0

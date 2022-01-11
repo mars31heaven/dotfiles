@@ -2,7 +2,7 @@
 
 numlockx
 remaps &
-xbacklight -set 5%
+xbacklight -set 20%
 unclutter -noevents &
 clipmenud &
 sxhkd &
