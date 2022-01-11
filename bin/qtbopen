@@ -13,7 +13,7 @@ case "$1" in
 		;;
 
 	*.png|*.gif|*.jpg|*.jpe|*.jpeg)
-		nsxiv "$1"
+		nsxiv-rifle "$1"
 		;;
 
 	*.pdf|*.cbr|*.epub)
