@@ -1,0 +1,135 @@
+# Test if files for aliases, shortcuts and
+# functions exists and source them
+[ -f ~/.config/shell/aliasrc ] && source ~/.config/shell/aliasrc
+[ -f ~/.config/shell/shortcutrc ] && source ~/.config/shell/shortcutrc
+
+[ -f ~/.config/shell/private ] && source ~/.config/shell/private
+
+# Enable colors and change prompt:
+autoload -U colors && colors	# Load colors
+PS1="%~%  > "
+
+HISTFILE=$HISTFILE
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+autoload -U compinit && compinit
+zmodload -i zsh/complist
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+zle -N history-substring-search-up
+zle -N history-substring-search-down
+
+setopt autocd
+setopt auto_pushd
+setopt globdots
+setopt hist_expire_dups_first
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt share_history
+setopt correct
+setopt interactive_comments
+
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^?' backward-delete-char
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select () {
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q';;      # block
+        viins|main) echo -ne '\e[5 q';; # beam
+    esac
+}
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
+# open files with fzf
+o() {
+	open "$(find -type f | fzf)"
+}
+
+# Autogenerate .m3u playlist files
+play() {
+	for f in *.mp3; do echo "$f" >> play.m3u; done
+}
+
+# Convert magnet links into .torrent files
+mag2torrent() {
+	aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
+}
+
+# Open another terminal on the current working directory
+# and bind it to ctrl+w
+smdir() {
+	setsid -f "$TERMINAL"
+}
+
+bindkey -s '^w' 'smdir\n'
+
+# Play a random internet radio station
+radio() {
+	pkill -f "mpv --no-terminal http*"; cat ~/.local/share/internet_radio | shuf | sed -n 1p | xargs bgmus
+}
+
+# Get a colored prompt
+cprompt() {
+	PS1='\[\033[01;34m\]\w \[\033[00m\]\ \[\033[01;32m\]\u@\h$ '
+}
+
+# Get the current ip address
+ipa() {
+	ip addr | grep 192 | awk '{print $2}' | sed 's\/24\\'
+}
+
+# Use lf to switch directories and bind it to ctrl-o
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp" >/dev/null
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+bindkey -s '^o' 'lfcd\n'
+
+# bc shell
+bindkey -s '^a' 'bc -lq\n'
+
+# cd with fzf
+bindkey -s '^f' 'cd "$(find -type d | fzf)"\n'
+
+bindkey '^[[P' delete-char
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=magenta,underline'
+typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=yellow,underline'
+
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
