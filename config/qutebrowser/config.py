@@ -1437,12 +1437,12 @@ c.scrolling.bar = 'overlay'
 ##   - never: Always hide the tab bar.
 ##   - multiple: Hide the tab bar if only one tab is open.
 ##   - switching: Show the tab bar when switching tabs.
-# c.tabs.show = 'always'
+c.tabs.show = 'multiple'
 
 ## Duration (in milliseconds) to show the tab bar before hiding it when
 ## tabs.show is set to 'switching'.
 ## Type: Int
-# c.tabs.show_switching_delay = 800
+c.tabs.show_switching_delay = 8000
 
 ## Open a new window for every tab.
 ## Type: Bool

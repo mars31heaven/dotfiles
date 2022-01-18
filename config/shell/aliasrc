@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# doas not required for some system commands
+for command in mount umount zzz reboot poweroff shutdown sv vsv ; do
+	alias $command="doas $command"
+done; unset command
+
 # Utilities configuration
 # Colored output, verbosity and protection
 # against overwriting.
@@ -25,6 +30,9 @@ alias  \
 	xql="xbps-query -l" \
 	xf="xbps-fetch"
 
+# Use neovim for vim if present
+[ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
+
 # Browse the offline Void Linux handbook with w3m
 alias wvoid="w3m /usr/share/doc/void/html/print.html"
 
@@ -43,6 +51,8 @@ alias \
 	gcm="git commit -m" \
 	gca="git commit -a" \
 	t="tmux" \
+	ta="tmux attach-session" \
+	tl="tmux ls" \
 	qtb="qutebrowser" \
 	z="zathura" \
 	ppv="pipe-viewer" \
@@ -54,7 +64,7 @@ alias \
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3" \
-	sdm="pmount -e /dev/mmcblk* sd" \
+	sdm="pmount -e /dev/mmcblk1p* sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd" \
 	mtpm="simple-mtpfs --device 1 /media/android" \

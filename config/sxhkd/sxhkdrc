@@ -22,6 +22,9 @@ super + F4
 super + F5
 	$TERMINAL -e ncmpcpp
 
+super + F6
+	virt-manager
+
 super + F11
 	pkill -USR1 mpv
 

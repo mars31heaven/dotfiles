@@ -3,7 +3,7 @@
 numlockx
 remaps &
 xbacklight -set 20%
-unclutter -noevents &
+unclutter -noevents -root &
 clipmenud &
 sxhkd &
 batsignal -c 5 -d 4 -f 100 -D "doas zzz" -e &
