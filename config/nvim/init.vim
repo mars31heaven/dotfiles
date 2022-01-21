@@ -1,6 +1,6 @@
 " vim-plug plugin manager
 " Plugins will be downloaded under the specified directory.
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.local/share/nvim/plugged')
 
 " Declare the list of plugins.
 Plug 'vimwiki/vimwiki'
@@ -8,7 +8,6 @@ Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/nerdtree'
-Plug 'mhinz/vim-startify'
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -25,19 +24,27 @@ let g:airline_theme='base16_gruvbox_dark_hard'
 " Leader key
 let mapleader =","
 
-" Basic configuration
+" Disable compability with vi
 set nocompatible
+
 set number relativenumber
 set clipboard+=unnamed
 set clipboard+=unnamedplus
 set background=dark
 set history=1000
 set scrolloff=10
-" Turn on syntax highlighting and indentation
+set guicursor=
+
+" Enable plugins
+filetype plugin on
+
+" Enable syntax highlighting and indentation
 syntax on
 filetype indent on
-" This is for the vimwiki plugin
-filetype plugin on
+
+" When searching for files with the find command, search through recursively through every subdirectory
+set path+=**
+
 " Disable the default Vim startup message
 " Use [+] instead of [Modified], [RO] instead of [readonly]
 " Don't give completion match messages
@@ -56,8 +63,11 @@ set ignorecase
 set smartcase
 " Enable searching while typing
 set incsearch
-" Enable autocompletion:
+" Disable search highlighting
+set nohlsearch
+" Enable tab completion:
 set wildmode=longest,list,full
+set wildmenu
 " Group all swp files and backups into a dir
 set backupdir=~/.vim/backups
 set directory=~/.vim/backups
@@ -67,9 +77,6 @@ set noshowmode
 " Ask for confirmation when handling unsaved or
 " read-only files
 set confirm
-
-" Quicker <Esc> in insert mode
-inoremap <silent> jk <Esc>
 
 " Insert a blank line below or above current line (do not move the cursor),
 " see https://stackoverflow.com/a/16136133/6064933
