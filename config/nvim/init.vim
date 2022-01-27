@@ -68,9 +68,6 @@ set nohlsearch
 " Enable tab completion:
 set wildmode=longest,list,full
 set wildmenu
-" Group all swp files and backups into a dir
-set backupdir=~/.vim/backups
-set directory=~/.vim/backups
 " Don't show the current mode
 set noshowmode
 

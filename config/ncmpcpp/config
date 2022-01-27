@@ -503,7 +503,7 @@ mouse_support = "no"
 #
 #search_engine_default_search_mode = 1
 #
-external_editor = "vim"
+external_editor = "nvim"
 #
 ## Note: set to yes if external editor is a console application.
 ##
@@ -574,13 +574,11 @@ use_console_editor = "yes"
 #active_window_border = red
 #
 
-## Current Item ##
 current_item_prefix = "$(magenta)$r$b"
 current_item_suffix = "$/r$(end)$/b"
 current_item_inactive_column_prefix = "$(blue)$r"
 current_item_inactive_column_suffix = "$/r$(end)"
 
-## General Colors ##
 colors_enabled = "yes"
 header_window_color = "white"
 main_window_color = "white"
@@ -591,7 +589,6 @@ progressbar_elapsed_color = "green:b"
 progressbar_color = "black:b"
 discard_colors_if_item_is_selected = "yes"
 
-## Visibility ##
 header_visibility = "yes"
 statusbar_visibility = "yes"
 titles_visibility = "yes"

@@ -219,8 +219,8 @@ def_key "G"
 #def_key "space"
 #  add_item_to_playlist
 #
-#def_key "space"
-#  toggle_lyrics_update_on_song_change
+def_key "."
+  toggle_lyrics_update_on_song_change
 #
 #def_key "space"
 #  toggle_visualization_type

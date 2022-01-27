@@ -59,7 +59,7 @@ alias \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
 	hstr="hh" \
-	qbt="qbittorrent-nox"
+	qbt="qbittorrent-nox --daemon"
 
 # External storage
 alias \
@@ -83,6 +83,7 @@ alias \
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	mpd="mpd && mpdscribble --conf ~/.config/mpd/mpdscribble.conf" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \

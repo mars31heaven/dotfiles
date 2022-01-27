@@ -33,7 +33,7 @@ map m push :mkdir<space>
 map <c-o> fzf_jump
 map <c-y> path_yank
 map W $setsid -f $TERMINAL >/dev/null 2>&1
-map E push :!vim<space>
+map E push :!nvim<space>
 map <enter> shell
 
 # Rename
@@ -80,6 +80,7 @@ cmd extract ${{
 		*.zip) unzip "$f" ;;
 	      	*.7z) 7z x "$f" ;;
 	      	*.tar.gz) tar -xzvf "$f" ;;
+	      	*.tar.xz) tar -xvf "$f" ;;
 	      	*.tar.bz2) tar -xjvf "$f" ;;
 	      	*.tar) tar -xvf "$f" ;;
 	      	*.rar) unrar x "$f" ;;

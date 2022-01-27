@@ -32,6 +32,10 @@ case "$1" in
 	      	"$TERMINAL" -e tar -xzvf "$f"
 	      	;;
 
+      	*.tar.xz)
+	      	"$TERMINAL" -e tar -xfv "$f"
+	      	;;
+
       	*.tar.bz2)
 	      	"$TERMINAL" -e tar -xjvf "$f"
 	      	;;

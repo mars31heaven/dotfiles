@@ -12,8 +12,8 @@ config.bind(",cs", "config-source")
 config.bind(",v", "spawn setsid -f umpv {url}")
 config.bind(",V", "hint links spawn setsid -f umpv {hint-url}")
 config.bind(";V", "hint --rapid links spawn setsid -f umpv {hint-url}")
-config.bind(",m", "spawn setsid -f st -e mpv --no-video {url}")
-config.bind(",M", "hint links spawn setsid -f st -e mpv --no-video {hint-url}")
+config.bind(",m", "spawn ts st -e mpv --no-video {url}")
+config.bind(",M", "hint links spawn ts st -e mpv --no-video {hint-url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
 config.bind(",Gd", "hint --rapid links download")
@@ -695,7 +695,7 @@ c.downloads.open_dispatcher = 'qtbopen'
 ## `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 ## Same as `{column}`, but starting from index 0.
 ## Type: ShellCommand
-c.editor.command = ['st', '-e', 'vim', '{file}']
+c.editor.command = ['st', '-e', 'nvim', '{file}']
 
 ## Encoding to use for the editor.
 ## Type: Encoding
@@ -1346,7 +1346,7 @@ c.scrolling.bar = 'overlay'
 ##   - startpage: Load the start page.
 ##   - default-page: Load the default page.
 ##   - close: Close the window.
-# c.tabs.last_close = 'ignore'
+c.tabs.last_close = 'startpage'
 
 ## Maximum width (in pixels) of tabs (-1 for no maximum). This setting
 ## only applies when tabs are horizontal. This setting does not apply to
@@ -1662,7 +1662,7 @@ config.bind('gT', 'tab-prev')
 # config.bind('b', 'set-cmd-text -s :quickmark-load')
 # config.bind('cd', 'download-clear')
 # config.bind('co', 'tab-only')
-config.bind('dd', 'tab-close')
+config.bind('D', 'tab-close')
 # config.bind('f', 'hint')
 # config.bind('g$', 'tab-focus -1')
 # config.bind('g0', 'tab-focus 1')
