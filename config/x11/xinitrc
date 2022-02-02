@@ -11,8 +11,6 @@ sbar &
 xrdb .config/x11/xresources
 xsetroot -solid "#282828"
 brownout 400
-pipewire &
-pipewire-pulse &
 exec dwm
 
 # Ensure that xrdb has finished running before moving on to start the WM/DE.
