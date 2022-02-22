@@ -2,15 +2,16 @@
 
 numlockx
 remaps &
-xbacklight -set 20%
+xbacklight -set 10%
 unclutter -noevents -root &
 clipmenud &
 sxhkd &
 batsignal -c 5 -d 4 -f 100 -D "doas zzz" -e &
 sbar &
 xrdb .config/x11/xresources
+xset s 480
 xsetroot -solid "#282828"
-brownout 400
+brownout 600
 exec dwm
 
 # Ensure that xrdb has finished running before moving on to start the WM/DE.

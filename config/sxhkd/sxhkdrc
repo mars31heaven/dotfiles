@@ -85,7 +85,7 @@ super + c
 	dmenucalc
 
 super + shift + c
-	dmenuconfigs
+	$TERMINAL -e calcurse
 
 super + v
 	$TERMINAL -e pipe-viewer

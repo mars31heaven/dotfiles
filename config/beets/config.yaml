@@ -21,7 +21,7 @@ import:
     quiet: no
     singletons: no
     default_action: apply
-    languages: []
+    languages: [en]
     detail: no
     flat: no
     group_albums: no

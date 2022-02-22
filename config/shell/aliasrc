@@ -15,6 +15,7 @@ alias \
 	rm="rm -Iv" \
 	cp="cp -iv" \
 	mv="mv -iv" \
+	mkdir="mkdir -pv" \
 	vidir="vidir -v"
 
 
@@ -48,6 +49,8 @@ alias \
 	gcl="git clone" \
 	gdi="git diff" \
 	gad="git add" \
+	glo="git log" \
+	gre="git restore" \
 	gcm="git commit -m" \
 	gca="git commit -a" \
 	t="tmux" \
@@ -59,7 +62,18 @@ alias \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
 	hstr="hh" \
-	qbt="qbittorrent-nox --daemon"
+	qbt="qbittorrent-nox --daemon" \
+	m="mpc" \
+	ma="mpc add" \
+	mc="mpc clear" \
+	mp="mpc playlist" \
+	mu="mpc up" \
+	mt="mpc toggle" \
+	b="beet" \
+	bi="beet import" \
+	br="beet remove" \
+	be="beet edit" \
+	ytdl="yt-dlp"
 
 # External storage
 alias \
@@ -83,7 +97,7 @@ alias \
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	mpd="mpd && mpdscribble --conf ~/.config/mpd/mpdscribble.conf" \
+	mpd="mpd && mpdscribble --conf ~/.config/mpd/mpdscribble.conf && mpc up" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \

@@ -17,7 +17,8 @@ config.bind(",M", "hint links spawn ts st -e mpv --no-video {hint-url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
 config.bind(",Gd", "hint --rapid links download")
-config.bind(",eu", "edit-url")
+config.bind("eu", "edit-url")
+config.bind(",cl", "close")
 
 ## Aliases for commands. The keys of the given dictionary are the
 ## aliases, while the values are the commands they map to.
@@ -36,7 +37,7 @@ config.bind(",eu", "edit-url")
 ## session which was last loaded. This behavior can be customized via the
 ## `session.default_name` setting.
 ## Type: Bool
-# c.auto_save.session = False
+c.auto_save.session = True
 
 ## Backend to use to display websites. qutebrowser supports two different
 ## web rendering engines / backends, QtWebEngine and QtWebKit (not
@@ -1554,7 +1555,7 @@ c.url.start_pages = ['~/.config/qutebrowser/startpage/index.html']
 
 ## Default zoom level.
 ## Type: Perc
-# c.zoom.default = '100%'
+c.zoom.default = '100%'
 
 ## Available zoom levels.
 ## Type: List of Perc

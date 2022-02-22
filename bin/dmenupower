@@ -12,7 +12,7 @@ choice=$(printf '%s\n' "$options" | dmenu)
 case $choice in
 
 	"display off")
-		xset dpms force off
+		xset dpms force suspend
 		;;
 
 	logout)
