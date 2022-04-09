@@ -19,16 +19,10 @@ super + shift + F3
 super + F4
 	$TERMINAL -e pulsemixer
 
-super + F5
-	$TERMINAL -e ncmpcpp
-
-super + F6
-	virt-manager
-
-super + F11
+super + F12
 	pkill -USR1 mpv
 
-super + shift + F11
+super + shift + F12
 	pkill -USR1 mpd
 
 super + minus
@@ -46,9 +40,6 @@ super + w
 	$BROWSER
 
 super + shift + w
-	$TERMINAL -e w3m -B
-
-super + ctrl + w
 	dmenuwireless
 
 super + e
@@ -94,7 +85,7 @@ super + shift + v
 	ytfzf -D
 
 super + n
-	$TERMINAL $EDITOR -c VimwikiIndex
+	$TERMINAL -e ncmpcpp
 
 super + shift + n
 	$TERMINAL -e newsboat

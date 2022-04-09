@@ -24,6 +24,7 @@ export MBSYNCRC="${XDG_CONFIG_HOME:-$HOME/.config}/mbsync/mbsyncrc"
 export _JAVA_OPTIONS="-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME:-$HOME/.config}"/java"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
 export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
+export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
 export QT_QPA_PLATFORMTHEME="gtk3"	# Have Qt use GTK theme
 export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads
 export _JAVA_AWT_WM_NONREPARENTING=1	# Fix for Java applications in dwm

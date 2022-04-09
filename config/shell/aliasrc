@@ -10,13 +10,14 @@ done; unset command
 # against overwriting.
 alias \
 	ls="ls --color=auto --group-directories-first" \
-	grep="grep --color=auto" \
+	grep="grep -i --color=auto" \
 	diff="diff --color=auto" \
 	rm="rm -Iv" \
 	cp="cp -iv" \
 	mv="mv -iv" \
-	mkdir="mkdir -pv" \
-	vidir="vidir -v"
+	vidir="vidir -v" \
+	mkdir="mkdir -p" \
+	trans="trans --show-original no"
 
 
 # XBPS Package Manager (Void Linux specific)
@@ -40,10 +41,13 @@ alias wvoid="w3m /usr/share/doc/void/html/print.html"
 # Other abbreviations
 alias \
 	v="$EDITOR" \
+	vi="$EDITOR" \
 	l="ls" \
 	ll="ls -A" \
 	lll=" ls -lAcht" \
 	lr="ls -R" \
+	lh="ls -lAcht | head -n 20" \
+	lhr="ls -lArcht | head -n 20" \
 	g="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -63,7 +67,7 @@ alias \
 	pps="pipe-viewer -S" \
 	hstr="hh" \
 	qbt="qbittorrent-nox --daemon" \
-	m="mpc" \
+	mm="mpc" \
 	ma="mpc add" \
 	mc="mpc clear" \
 	mp="mpc playlist" \
@@ -73,7 +77,9 @@ alias \
 	bi="beet import" \
 	br="beet remove" \
 	be="beet edit" \
-	ytdl="yt-dlp"
+	ytdl="yt-dlp" \
+	iv="nsxiv -a" \
+	yt="ytfzf"
 
 # External storage
 alias \

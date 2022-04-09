@@ -71,6 +71,10 @@ smdir() {
 
 bindkey -s '^w' 'smdir\n'
 
+#Bindings for different ncurses programs
+bindkey -s '^n' 'ncmpcpp\n'
+bindkey -s '^p' 'pulsemixer\n'
+
 # Play a random internet radio station
 radio() {
 	pkill -f "mpv --no-terminal http*"; cat ~/.local/share/internet_radio | shuf | sed -n 1p | xargs bgmus

@@ -159,12 +159,18 @@
 #
 def_key "k"
   scroll_up
+
+def_key "up"
+  scroll_up
 #
 #def_key "shift-up"
 #  select_item
 #  scroll_up
 #
 def_key "j"
+  scroll_down
+
+def_key "down"
   scroll_down
 #
 #def_key "shift-down"
@@ -236,6 +242,9 @@ def_key "."
 #
 def_key "l"
   next_column
+
+def_key "right"
+  next_column
 #
 #def_key "right"
 #  slave_screen
@@ -247,6 +256,9 @@ def_key "+"
   volume_up
 #
 def_key "h"
+  previous_column
+
+def_key "left"
   previous_column
 #
 #def_key "left"
@@ -414,10 +426,10 @@ def_key "U"
 #def_key "?"
 #  find_item_backward
 #
-#def_key "."
+#def_key "n"
 #  next_found_item
 #
-#def_key ","
+#def_key "N"
 #  previous_found_item
 #
 #def_key "w"
@@ -486,10 +498,10 @@ def_key "L"
 #def_key "m"
 #  move_selected_items_up
 #
-#def_key "n"
+#def_key "."
 #  move_sort_order_down
 #
-#def_key "n"
+#def_key ","
 #  move_selected_items_down
 #
 #def_key "M"

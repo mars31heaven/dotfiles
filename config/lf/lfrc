@@ -83,6 +83,7 @@ cmd extract ${{
 	      	*.tar.xz) tar -xvf "$f" ;;
 	      	*.tar.bz2) tar -xjvf "$f" ;;
 	      	*.tar) tar -xvf "$f" ;;
+		*.tgz) tar zxvf "$f" ;;
 	      	*.rar) unrar x "$f" ;;
 	      	*) echo "Unsupported format" ;;
 	esac

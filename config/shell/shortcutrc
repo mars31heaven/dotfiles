@@ -5,7 +5,7 @@ alias \
 	h="cd ~ && ls -A" \
 	d="cd ~/docs && ls" \
 	D="cd ~/dl && ls" \
-	mm="cd ~/music && ls" \
+	m="cd ~/music && ls" \
 	p="cd ~/pics && ls" \
 	vv="cd ~/vids && ls" \
 	m3="cd /media/m3 && ls" \

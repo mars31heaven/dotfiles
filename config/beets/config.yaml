@@ -10,8 +10,8 @@ import:
     reflink: no
     delete: no
     resume: ask
-    incremental: no
-    incremental_skip_later: no
+    incremental: yes
+    incremental_skip_later: yes
     from_scratch: no
     quiet_fallback: skip
     none_rec_action: ask
@@ -66,7 +66,8 @@ overwrite_null:
 plugins: [edit,
   ftintitle,
   acousticbrainz,
-  the]
+  the,
+  fetchart]
 pluginpath: []
 threaded: yes
 timeout: 5.0
@@ -80,6 +81,10 @@ va_name: Various Artists
 
 ftintitle:
     drop: yes
+
+fetchart:
+    cautious: true
+    cover_names: cover front folder
 
 ui:
     terminal_width: 80
