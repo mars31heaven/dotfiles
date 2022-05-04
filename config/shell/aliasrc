@@ -13,12 +13,11 @@ alias \
 	grep="grep -i --color=auto" \
 	diff="diff --color=auto" \
 	rm="rm -Iv" \
-	cp="cp -iv" \
+	cp="cp -riv" \
 	mv="mv -iv" \
 	vidir="vidir -v" \
 	mkdir="mkdir -p" \
-	trans="trans --show-original no"
-
+	rsync="rsync -rP"
 
 # XBPS Package Manager (Void Linux specific)
 # abbreviations
@@ -79,12 +78,13 @@ alias \
 	be="beet edit" \
 	ytdl="yt-dlp" \
 	iv="nsxiv -a" \
+	ivu="nsxiv-url" \
 	yt="ytfzf"
 
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3" \
-	sdm="pmount -e /dev/mmcblk1p* sd" \
+	sdm="pmount -e /dev/mmcblk1* sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd" \
 	mtpm="simple-mtpfs --device 1 /media/android" \

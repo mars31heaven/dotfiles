@@ -426,11 +426,11 @@ def_key "U"
 #def_key "?"
 #  find_item_backward
 #
-#def_key "n"
-#  next_found_item
+def_key "n"
+  next_found_item
 #
-#def_key "N"
-#  previous_found_item
+def_key "N"
+  previous_found_item
 #
 #def_key "w"
 #  toggle_find_mode

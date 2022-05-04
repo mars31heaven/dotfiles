@@ -104,7 +104,7 @@ c.changelog_after_upgrade = 'patch'
 
 ## Height (in pixels or as percentage of the window) of the completion.
 ## Type: PercOrInt
-# c.completion.height = '50%'
+c.completion.height = '50%'
 
 ## Minimum amount of characters needed to update completions.
 ## Type: Int
