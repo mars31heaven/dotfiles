@@ -1,6 +1,5 @@
 #!/bin/sh
 
-numlockx
 remaps &
 xbacklight -set 10%
 unclutter -noevents -root &

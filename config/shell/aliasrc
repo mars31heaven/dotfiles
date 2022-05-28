@@ -16,8 +16,7 @@ alias \
 	cp="cp -riv" \
 	mv="mv -iv" \
 	vidir="vidir -v" \
-	mkdir="mkdir -p" \
-	rsync="rsync -rP"
+	mkdir="mkdir -p"
 
 # XBPS Package Manager (Void Linux specific)
 # abbreviations
@@ -79,7 +78,8 @@ alias \
 	ytdl="yt-dlp" \
 	iv="nsxiv -a" \
 	ivu="nsxiv-url" \
-	yt="ytfzf"
+	yt="ytfzf" \
+	ncdu="ncdu --color off"
 
 # External storage
 alias \

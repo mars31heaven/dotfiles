@@ -11,5 +11,5 @@
 
 (function () {
 	'use strict';
-	top.location.hostname = "bibliogram.art";
+	top.location.hostname = "bibliogram.pussthecat.org";
 })();

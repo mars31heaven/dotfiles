@@ -19,6 +19,9 @@ super + shift + F3
 super + F4
 	$TERMINAL -e pulsemixer
 
+super + F5
+	virt-manager
+
 super + F12
 	pkill -USR1 mpv
 
