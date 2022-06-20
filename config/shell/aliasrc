@@ -44,8 +44,8 @@ alias \
 	ll="ls -A" \
 	lll=" ls -lAcht" \
 	lr="ls -R" \
-	lh="ls -lAcht | head -n 20" \
-	lhr="ls -lArcht | head -n 20" \
+	lh="ls -lAcht | head -n 30" \
+	lhr="ls -lArcht | head -n 30" \
 	g="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -84,7 +84,7 @@ alias \
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3" \
-	sdm="pmount -e /dev/mmcblk1* sd" \
+	sdm="pmount -e /dev/mmcblk* sd" \
 	m3u="pumount /media/m3" \
 	sdu="pumount /media/sd" \
 	mtpm="simple-mtpfs --device 1 /media/android" \
@@ -109,4 +109,5 @@ alias \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi" \
-	sca="scrcpy"
+	sca="scrcpy" \
+	spt="spotify-tui"

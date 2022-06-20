@@ -60,6 +60,9 @@ super + shift + p
 super + shift + a
 	$TERMINAL -e abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
 
+super + shift + s
+	$TERMINAL -e spotify-tui
+
 super + d
 	$TERMINAL -e $EDITOR -c VimwikiDiaryIndex
 
