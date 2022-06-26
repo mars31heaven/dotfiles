@@ -5,11 +5,12 @@ xbacklight -set 10%
 unclutter -noevents -root &
 clipmenud &
 sxhkd &
-batsignal -c 10 -d 8 -f 100 -D "doas zzz" -e &
+batsignal -c 10 -d 8 -f 100 -D "systemctl suspend" -e &
 sbar &
 xrdb .config/x11/xresources
 xset s 480
 xsetroot -solid "#282828"
+dunst &
 brownout 600
 exec dwm
 

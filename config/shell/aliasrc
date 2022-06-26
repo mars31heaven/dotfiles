@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # doas not required for some system commands
-for command in mount umount zzz reboot poweroff shutdown sv vsv ; do
+for command in mount umount zzz reboot poweroff shutdown pacman; do
 	alias $command="doas $command"
 done; unset command
 
@@ -18,23 +18,13 @@ alias \
 	vidir="vidir -v" \
 	mkdir="mkdir -p"
 
-# XBPS Package Manager (Void Linux specific)
-# abbreviations
-alias  \
-	xis="doas xbps-install -S" \
-	xiu="doas xbps-install -Su" \
-	xrr="doas xbps-remove -R" \
-	xq="xbps-query -s" \
-	xqr="xbps-query -R" \
-	xqs="xbps-query -Rs" \
-	xql="xbps-query -l" \
-	xf="xbps-fetch"
+# pacman, yay
+alias \
+	p="doas pacman" \
+	y="yay"
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
-
-# Browse the offline Void Linux handbook with w3m
-alias wvoid="w3m /usr/share/doc/void/html/print.html"
 
 # Other abbreviations
 alias \
@@ -92,22 +82,20 @@ alias \
 
 # Managing wi-fi and bluetooth
 alias \
-	wup="doas ip link set dev wlp3s0 up && doas sv up iwd" \
-	wdown="doas sv down iwd && doas ip link set dev wlp3s0 down" \
 	wscan="iwctl station wlp3s0 scan" \
 	wgn="iwctl station wlp3s0 get-networks" \
-	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd" \
 	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E"
+	wup="doas ip link set dev wlan0 up && doas systemctl start iwd" \
+	wdown="doas systemctl stop iwd && doas ip link set dev wlan0 down" \
+	bup="doas systemctl start bluetooth && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
+	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas systemctl stop bluetooth" \
 
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	mpd="mpd && mpdscribble --conf ~/.config/mpd/mpdscribble.conf && mpc up" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi" \
-	sca="scrcpy" \
-	spt="spotify-tui"
+	sca="scrcpy"
