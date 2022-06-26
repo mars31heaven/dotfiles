@@ -69,7 +69,8 @@ alias \
 	iv="nsxiv -a" \
 	ivu="nsxiv-url" \
 	yt="ytfzf" \
-	ncdu="ncdu --color off"
+	ncdu="ncdu --color off" \
+	zzz="systemctl suspend"
 
 # External storage
 alias \
