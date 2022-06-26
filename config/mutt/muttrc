@@ -4,3 +4,6 @@ set query_command = "abook --datafile ~/.local/share/abook/addressbook --mutt-qu
 macro index,pager a "<enter-command>set my_pipe_decode=\$pipe_decode pipe_decode<return><pipe-message>abook --datafile ~/.local/share/abook/addressbook --add-email<return><enter-command>set pipe_decode=\$my_pipe_decode; unset my_pipe_decode<return>" "add the sender address to abook"
 macro index,pager \cb "<pipe-message> urlscan -d -r 'open {}'<Enter>" "call urlscan to extract URLs out of a message"
 macro attach,compose \cb "<pipe-entry> urlscan -d -r 'open {}'<Enter>" "call urlscan to extract URLs out of a message"
+source /usr/share/mutt-wizard/mutt-wizard.muttrc
+source /home/mrcl/.config/mutt/accounts/alvesmrcl@outlook.com.muttrc
+macro index,pager i1 '<sync-mailbox><enter-command>source /home/mrcl/.config/mutt/accounts/alvesmrcl@outlook.com.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to alvesmrcl@outlook.com"

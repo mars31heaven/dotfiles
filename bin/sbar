@@ -36,7 +36,7 @@ update_vol () {
 
 update_disk () {
 	free_space_root="$(df -h | awk '{ if ($6 == "/") print $4 }')"
-	free_space_home="$(df -h | awk '{ if ($6 == "/home") print $4 }')"
+#	free_space_home="$(df -h | awk '{ if ($6 == "/home") print $4 }')"
 }
 
 
@@ -60,8 +60,8 @@ update_vol
 #update_backlight
 
 display () {
-	#printf "%s\n" " $event [$weather] [$memory $cpu] [$bat] [$backlight] [$vol] $time "
-	xsetroot -name " / $free_space_root ~ $free_space_home V $vol R $memory CPU $cpu B $bat $time "
+	#printf "%s\n" " / $free_space_root ~ $free_space_home $event [$weather] [$memory $cpu] [$bat] [$backlight] [$vol] $time "
+	xsetroot -name " / $free_space_root V $vol R $memory CPU $cpu B $bat $time "
 }
 
 # SIGNALLING

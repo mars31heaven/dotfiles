@@ -9,17 +9,11 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/nerdtree'
 Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-" General theme
 colorscheme gruvbox
-
-" vim-airline theme
-let g:airline_theme='base16_gruvbox_dark_hard'
 
 " Leader key
 let mapleader =","
@@ -142,7 +136,7 @@ nnoremap <silent> <C-+> <C-w>+
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/docs/sync/markor', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '~/docs/docs_android_sync/markor', 'syntax': 'markdown', 'ext': '.md'}]
 autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 
 " Disables automatic commenting on newline:
