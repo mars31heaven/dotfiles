@@ -193,7 +193,7 @@ c.content.autoplay = False
 ## extracting it from the `location` parameter of the subscribe URL and
 ## URL-decoding it).
 ## Type: List of Url
-c.content.blocking.adblock.lists = ['https://easylist.to/easylist/easylist.txt', 'https://easylist.to/easylist/easyprivacy.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt' ]
+c.content.blocking.adblock.lists = ['https://easylist.to/easylist/easylist.txt', 'https://easylist.to/easylist/easyprivacy.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt' ]
 
 ## Enable the ad/host blocker
 ## Type: Bool
@@ -1618,7 +1618,7 @@ config.bind(',F', 'hint --rapid links tab-bg')
 # config.bind('<Ctrl-T>', 'open -t')
 # config.bind('<Ctrl-Tab>', 'tab-focus last')
 # config.bind('<Ctrl-U>', 'scroll-page 0 -0.5')
-config.bind(',pa', 'mode-enter passthrough')
+config.unbind('<Ctrl-V>')
 # config.bind('<Ctrl-W>', 'tab-close')
 # config.bind('<Ctrl-X>', 'navigate decrement')
 # config.bind('<Ctrl-^>', 'tab-focus last')
@@ -1664,7 +1664,8 @@ config.bind('gT', 'tab-prev')
 # config.bind('b', 'set-cmd-text -s :quickmark-load')
 # config.bind('cd', 'download-clear')
 # config.bind('co', 'tab-only')
-config.bind('D', 'tab-close')
+config.unbind('d')
+config.bind('dd', 'tab-close')
 # config.bind('f', 'hint')
 # config.bind('g$', 'tab-focus -1')
 # config.bind('g0', 'tab-focus 1')
