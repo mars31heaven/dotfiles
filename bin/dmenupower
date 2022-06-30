@@ -24,7 +24,7 @@ case $choice in
 		[ -d /media/m3 ] && pumount /media/m3
 		[ -d /media/mmcblk* ] && pumount /media/mmcblk*
 		[ -d /media/sd* ] && pumount /media/sd*
-		doas systemctl poweroff
+		doas loginctl poweroff
 		;;
 
 	reboot)
@@ -32,11 +32,11 @@ case $choice in
 		[ -d /media/m3 ] && pumount /media/m3
 		[ -d /media/mmcblk* ] && pumount /media/mmcblk*
 		[ -d /media/sd* ] && pumount /media/sd*
-		doas systemctl reboot
+		doas loginctl reboot
 		;;
 
 	suspend)
-		doas systemctl suspend
+		doas loginctl suspend
 		;;
 
 esac
