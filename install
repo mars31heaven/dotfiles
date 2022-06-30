@@ -8,7 +8,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/beets \
 	$HOME/.config/dunst \
 	$HOME/.config/fontconfig \
-	$HOME/.config/git
+	$HOME/.config/git \
 	$HOME/.config/gtk-2.0 \
 	$HOME/.config/gtk-3.0 \
 	$HOME/.config/htop \
@@ -19,6 +19,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/ncmpcpp \
 	$HOME/.config/newsboat \
 	$HOME/.config/nsxiv/exec \
+	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
 	$HOME/.config/qutebrowser/greasemonkey \
 	$HOME/.config/shell \
@@ -88,4 +89,4 @@ mkdir -p $HOME/.cache/zsh
 
 touch $HOME/.cache/zsh/history
 
-vim +PlugInstall +qall
+nvim +PlugInstall +qall
