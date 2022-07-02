@@ -54,7 +54,6 @@ ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
 ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
-ln -s $HOME/.dotfiles/config/mutt/muttrc $HOME/.config/mutt/muttrc
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
 ln -s $HOME/.dotfiles/config/newsboat/config $HOME/.config/newsboat/config
