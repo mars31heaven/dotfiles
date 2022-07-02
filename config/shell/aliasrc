@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # doas not required for some system commands
-for command in mount umount loginctl reboot poweroff shutdown pacman rsm; do
+for command in mount umount loginctl reboot poweroff shutdown pacman; do
 	alias $command="doas $command"
 done; unset command
 
@@ -85,18 +85,20 @@ alias \
 alias \
 	wscan="iwctl station wlan0 scan" \
 	wgn="iwctl station wlan0 get-networks" \
-	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E"
-	wup="doas ip link set dev wlan0 up && doas sv up iwd" \
-	wdown="doas sv down iwd && doas ip link set dev wlan0 down" \
-	bup="doas sv up bluetooth && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetooth" \
+	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E" \
+	wup="doas sv up iwd && doas ip link set dev wlan0 up" \
+	wdown="doas ip link set dev wlan0 down && doas sv down iwd" \
+	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
+	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd"
 
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	mpd="mpd && mpc up && mpdscribble --conf ~/.config/mpd/mpdscribble.conf" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi" \
-	sca="scrcpy"
+	sca="scrcpy" \
+	vsv="doas rsm"

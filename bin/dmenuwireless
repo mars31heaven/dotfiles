@@ -13,14 +13,14 @@ choice=$(printf '%s\n' "$options" | dmenu)
 case $choice in
 
 	"bluetooth on")
-		doas sv up bluetooth
+		doas sv up bluetoothd
 		bluetoothctl power on
 		bluetoothctl connect 4C:65:A8:97:2F:9E
 		;;
 
 	"bluetooth off")
 		bluetoothctl power off
-		doas sv down bluetooth
+		doas sv down bluetoothd
 		;;
 
 	"bluetooth headphones connect")
@@ -32,13 +32,13 @@ case $choice in
 		;;
 
 	"wifi on")
-		doas ip link set dev wlan0 up
 		doas sv up iwd
+		doas ip link set dev wlan0 up
 	        ;;
 
 	"wifi off")
-		doas sv down iwd
 		doas ip link set dev wlan0 down
+		doas sv down iwd
 		;;
 
 esac
