@@ -5,7 +5,7 @@ xbacklight -set 10%
 unclutter -noevents -root &
 clipmenud &
 sxhkd &
-batsignal -c 10 -d 8 -f 100 -D "systemctl suspend" -e &
+batsignal -c 10 -d 8 -f 100 -D "doas loginctl suspend" -e &
 sbar &
 xrdb .config/x11/xresources
 xset s 480
