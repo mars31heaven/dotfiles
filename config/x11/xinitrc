@@ -2,7 +2,7 @@
 
 remaps &
 xbacklight -set 10%
-unclutter -noevents -root &
+unclutter &
 clipmenud &
 sxhkd &
 batsignal -c 10 -d 8 -f 100 -D "doas loginctl suspend" -e &
