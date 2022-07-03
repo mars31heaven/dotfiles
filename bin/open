@@ -30,6 +30,10 @@ case "$1" in
 		setsid -f "$BROWSER" "$1" >/dev/null 2>&1
 		;;
 
+	*.torrent)
+		setsid -f qbittorrent "$1" >/dev/null 2>&1
+		;;
+
 	*)
 		"$EDITOR" "$1"
 		;;
