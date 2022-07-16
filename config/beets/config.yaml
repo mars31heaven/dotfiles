@@ -65,7 +65,6 @@ overwrite_null:
 
 plugins: [edit,
   ftintitle,
-  acousticbrainz,
   the,
   fetchart]
 pluginpath: []

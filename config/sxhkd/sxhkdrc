@@ -7,11 +7,8 @@ super + shift + F1
 super + F2
 	extmononly
 
-super + shift + F2
-	displayselect
-
 super + F3
-	brownout 400
+	brownout 600
 
 super + shift + F3
 	brownout 0
@@ -21,12 +18,6 @@ super + F4
 
 super + F5
 	virt-manager
-
-super + F12
-	pkill -USR1 mpv
-
-super + shift + F12
-	pkill -USR1 mpd
 
 super + minus
 	pamixer --decrease 5 ; \
@@ -66,13 +57,7 @@ super + shift + s
 super + d
 	$TERMINAL -e $EDITOR -c VimwikiDiaryIndex
 
-super + shift + d
-	dmenutodo
-
-super + shift + f
-	$TERMINAL -e lf
-
-super + ctrl + k
+super + shift + k
 	dmenukill
 
 super + shift + x
@@ -81,14 +66,14 @@ super + shift + x
 super + c
 	dmenucalc
 
-super + shift + c
-	$TERMINAL -e calcurse
-
 super + v
 	$TERMINAL -e pipe-viewer
 
-super + shift + v
-	ytfzf -D
+super + b
+	thunderbird
+
+super + shift + b
+	brave
 
 super + n
 	$TERMINAL -e ncmpcpp
@@ -120,6 +105,9 @@ Print
 
 shift + Print
 	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
+
+shift + ctrl + Print
+	scrdis
 
 super + Insert
 	clipmenu -l 20
