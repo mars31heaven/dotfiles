@@ -31,7 +31,7 @@ super + shift + BackSpace
 	dmenupower
 
 super + w
-	$BROWSER
+	qtb
 
 super + shift + w
 	dmenuwireless
@@ -69,9 +69,6 @@ super + c
 super + v
 	$TERMINAL -e pipe-viewer
 
-super + b
-	thunderbird
-
 super + shift + b
 	brave
 
@@ -79,7 +76,7 @@ super + n
 	$TERMINAL -e ncmpcpp
 
 super + shift + n
-	$TERMINAL -e newsboat
+	nicotine
 
 super + m
 	mpdmenu

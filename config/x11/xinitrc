@@ -8,7 +8,7 @@ sxhkd &
 batsignal -c 10 -d 8 -f 100 -D "doas loginctl suspend" -e &
 sbar &
 xrdb .config/x11/xresources
-xset s 480
+xset s 120
 xsetroot -solid "#282828"
 dunst &
 brownout 600

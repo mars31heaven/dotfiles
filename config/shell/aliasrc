@@ -21,7 +21,8 @@ alias \
 # pacman, yay
 alias \
 	p="doas pacman" \
-	y="yay"
+	y="yay" \
+	pyu="doas pacman -Syu"
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
@@ -36,7 +37,9 @@ alias \
 	lr="ls -R" \
 	lh="ls -lAcht | head -n 30" \
 	lhr="ls -lArcht | head -n 30" \
-	g="git" \
+	g="grep" \
+	lg="l | g" \
+	gi="git" \
 	gst="git status" \
 	gcl="git clone" \
 	gdi="git diff" \
@@ -48,7 +51,7 @@ alias \
 	t="tmux" \
 	ta="tmux attach-session" \
 	tl="tmux ls" \
-	qtb="qutebrowser" \
+	qtb="~/.local/bin/qutebrowser" \
 	z="zathura" \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
@@ -70,14 +73,13 @@ alias \
 	ivu="nsxiv-url" \
 	yt="ytfzf" \
 	ncdu="ncdu --color off" \
-	zzz="loginctl suspend"
+	zzz="loginctl suspend" \
+	rs="rsync -rvP"
 
 # External storage
 alias \
 	m3m="pmount -e /dev/sdb1 m3" \
-	sdm="pmount -e /dev/mmcblk* sd" \
 	m3u="pumount /media/m3" \
-	sdu="pumount /media/sd" \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
 
@@ -94,7 +96,6 @@ alias \
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	mpd="mpd && mpc up && mpdscribble --conf ~/.config/mpd/mpdscribble.conf" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
