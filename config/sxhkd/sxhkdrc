@@ -13,12 +13,6 @@ super + F3
 super + shift + F3
 	brownout 0
 
-super + F4
-	$TERMINAL -e pulsemixer
-
-super + F5
-	virt-manager
-
 super + minus
 	pamixer --decrease 5 ; \
 	kill -34 "$(cat ~/.cache/pidofbar)"
@@ -51,8 +45,11 @@ super + shift + p
 super + shift + a
 	$TERMINAL -e abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
 
+super + s
+	$TERMINAL -e syncthing --no-browser
+
 super + shift + s
-	$TERMINAL -e spotify-tui
+	pkill syncthing
 
 super + d
 	$TERMINAL -e $EDITOR -c VimwikiDiaryIndex
@@ -60,13 +57,19 @@ super + d
 super + shift + k
 	dmenukill
 
+super + x
+	dim
+
 super + shift + x
-	slock
+	xset s 999
 
 super + c
 	dmenucalc
 
 super + v
+	$TERMINAL -e pulsemixer
+
+super + shift + v
 	$TERMINAL -e pipe-viewer
 
 super + shift + b

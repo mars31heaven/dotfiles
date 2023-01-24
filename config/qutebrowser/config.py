@@ -9,9 +9,9 @@ config.load_autoconfig()
 # Custom bindings
 config.bind(",ce", "config-edit")
 config.bind(",cs", "config-source")
-config.bind(",v", "spawn setsid -f umpv {url}")
-config.bind(",V", "hint links spawn setsid -f umpv {hint-url}")
-config.bind(";V", "hint --rapid links spawn setsid -f umpv {hint-url}")
+config.bind(",v", "spawn mpv {url}")
+config.bind(",V", "hint links spawn mpv {hint-url}")
+config.bind(";V", "hint --rapid links spawn setsid -f mpv {hint-url}")
 config.bind(",m", "spawn tsp st -e mpv --no-video {url}")
 config.bind(",M", "hint links spawn tsp st -e mpv --no-video {hint-url}")
 config.bind(",W", "hint links spawn st -e w3m {url}")
@@ -193,7 +193,7 @@ c.content.autoplay = False
 ## extracting it from the `location` parameter of the subscribe URL and
 ## URL-decoding it).
 ## Type: List of Url
-c.content.blocking.adblock.lists = ['https://easylist.to/easylist/easylist.txt', 'https://easylist.to/easylist/easyprivacy.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2020.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2021.txt', 'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt' ]
+c.content.blocking.adblock.lists = ['https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt']
 
 ## Enable the ad/host blocker
 ## Type: Bool

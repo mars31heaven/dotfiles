@@ -51,7 +51,7 @@ alias \
 	t="tmux" \
 	ta="tmux attach-session" \
 	tl="tmux ls" \
-	qtb="~/.local/bin/qutebrowser" \
+	qtb="~/.local/bin/qtb" \
 	z="zathura" \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
@@ -74,7 +74,12 @@ alias \
 	yt="ytfzf" \
 	ncdu="ncdu --color off" \
 	zzz="loginctl suspend" \
-	rs="rsync -rvP"
+	rs="rsync -rvP" \
+	c="calcurse" \
+	t="toot" \
+	tt="toot tui" \
+	tp="toot post" \
+	tn="toot notifications"
 
 # External storage
 alias \
@@ -101,5 +106,8 @@ alias \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi" \
+	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
-	vsv="doas rsm"
+	vsv="doas rsm" \
+	ph="cat /var/log/pacman.log" \
+	mpd="mpd && mpc up"

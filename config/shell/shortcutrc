@@ -17,7 +17,8 @@ alias \
 	shr="cd ~/.local/share && ls" \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
-	ca="cd ~/.cache && ls"
+	ca="cd ~/.cache && ls" \
+	T="cd /tmp"
 
 # Files shortcuts
 alias \

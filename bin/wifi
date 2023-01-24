@@ -80,12 +80,12 @@ then
 fi
 
 # Select wifi interface device
-if ip link | egrep -q '^[0-9]+: w.* state UP '
+if ip link | grep -E -q '^[0-9]+: w.* state UP '
 then
 	# Priortize devices that are up already
 	WIFI_DEVICE_LIST=$(
 		ip link |
-		egrep -i '^[0-9]+: w.* state UP ' |
+		grep -E -i '^[0-9]+: w.* state UP ' |
 		sed 's/^[0-9]\+: //g' |
 		sed 's/:.*//g'
 	)
@@ -93,7 +93,7 @@ else
 	WIFI_DEVICE_DOWN=1
 	WIFI_DEVICE_LIST=$(
 		ip link |
-		egrep -i '^[0-9]+: w' |
+		grep -E -i '^[0-9]+: w' |
 		sed 's/^[0-9]\+: //g' |
 		sed 's/:.*//g'
 	)

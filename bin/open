@@ -11,7 +11,7 @@ case "$1" in
 		;;
 
 	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
-		setsid -f umpv "$1"
+		setsid -f mpv "$1"
 		;;
 
 	http*.png|http*.gif|http*.jpg|http*.jpe|http*.jpeg|http*.jpg*)

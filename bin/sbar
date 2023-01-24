@@ -16,7 +16,7 @@ update_memory () {
 }
 
 update_time () {
-	time="$(date "+%b %d (%a) %R")"
+	time="$(date "+%a %b %d %R")"
 }
 
 #update_weather () {

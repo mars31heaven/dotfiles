@@ -14,7 +14,7 @@ case $choice in
 
 	"bluetooth on")
 		doas sv up bluetoothd
-		bluetoothctl power on
+		bluetoothctl power on &&
 		bluetoothctl connect 4C:65:A8:97:2F:9E
 		;;
 

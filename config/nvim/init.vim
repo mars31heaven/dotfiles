@@ -16,7 +16,7 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " General theme
-colorscheme gruvbox
+colorscheme default
 
 " vim-airline theme
 let g:airline_theme='base16_gruvbox_dark_hard'
@@ -70,6 +70,9 @@ set wildmode=longest,list,full
 set wildmenu
 " Don't show the current mode
 set noshowmode
+
+" Soft warp
+set wrap linebreak nolist
 
 " Ask for confirmation when handling unsaved or
 " read-only files
@@ -175,28 +178,6 @@ nnoremap <leader>l :Limelight!!<CR>
 " Toggle Goyo plugin
 nnoremap <leader>g :Goyo<CR>
 
-" statusline settings
-let g:currentmode={
-       \ 'n'  : 'NORMAL ',
-       \ 'v'  : 'VISUAL ',
-       \ 'V'  : 'V·Line ',
-       \ "\<C-V>" : 'V·Block ',
-       \ 'i'  : 'INSERT ',
-       \ 'R'  : 'R ',
-       \ 'Rv' : 'V·Replace ',
-       \ 'c'  : 'Command ',
-       \}
-
-set statusline=
-set statusline+=%1*
-set statusline+=\ %{toupper(g:currentmode[mode()])}
-set statusline+=%{&spell?'[SPELL]':''}
-set statusline+=\ %F
-set statusline+=%{&modified?'\ [+]':''}
-set statusline+=%{&readonly?'\ [RO]':''}
-set statusline+=%<
-set statusline+=%=
-set statusline+=%{&filetype!=#''?&filetype.'\ ':'none\ '}
-set statusline+=%2*
-set statusline+=%-7([%{&fileformat}]%)
-set statusline+=[%l/%L]
+" F5 to insert current date and time
+:nnoremap <F5> "=strftime("%c")<CR>P
+:inoremap <F5> <C-R>=strftime("%c")<CR>
