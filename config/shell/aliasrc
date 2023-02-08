@@ -78,7 +78,7 @@ alias \
 	c="calcurse" \
 	t="toot" \
 	tt="toot tui" \
-	tp="toot post" \
+	tp="toot post -v unlisted -e" \
 	tn="toot notifications"
 
 # External storage
@@ -110,4 +110,4 @@ alias \
 	sca="scrcpy" \
 	vsv="doas rsm" \
 	ph="cat /var/log/pacman.log" \
-	mpd="mpd && mpc up"
+	mpd="mpd && mpc up && mpdscribble --conf ~/.config/mpd/mpdscribble.conf"
