@@ -366,8 +366,8 @@ def_key "-"
 #def_key "y"
 #  start_searching
 #
-def_key "S"
-  toggle_single
+#def_key "S"
+#  toggle_single
 #
 #def_key "R"
 #  toggle_consume

@@ -36,6 +36,9 @@ super + e
 super + shift + e
 	$TERMINAL -e neomutt
 
+super + shift + u
+	dmenuumount
+
 super + p
 	dmenu_run_i
 
@@ -111,6 +114,9 @@ shift + ctrl + Print
 
 super + Insert
 	clipmenu -l 20
+
+super + Home
+	dmenufavorites
 
 super + shift + Home
 	$TERMINAL -e htop

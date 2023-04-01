@@ -78,7 +78,7 @@ alias \
 	c="calcurse" \
 	t="toot" \
 	tt="toot tui" \
-	tp="toot post -v unlisted -e" \
+	tp="toot post -e" \
 	tn="toot notifications"
 
 # External storage
@@ -103,6 +103,7 @@ alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
+	ww="curl https://wttr.in/" \
 	www="w3m -B" \
 	mdcat="mdcat -p" \
 	ccat="highlight -O ansi" \
