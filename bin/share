@@ -1,0 +1,4 @@
+#!/bin/bash
+
+file=$(ls | fzf)
+curl -F "file=@$file" 0x0.st | xclip -selection c

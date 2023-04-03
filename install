@@ -87,7 +87,7 @@ ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
 mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
 
-mkdir -p $HOME/share/applications
-ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/share/applications/st.desktop
+mkdir -p $HOME/.local/share/applications
+ln -s $HOME/.dotfiles/.local/share/applications/st.desktop $HOME/share/applications/st.desktop
 
 nvim +PlugInstall +qall
