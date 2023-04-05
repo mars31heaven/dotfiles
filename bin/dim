@@ -1,4 +1,3 @@
 #!/bin/sh
 
-xbacklight -set 1% && brownout 600 >/dev/null 2>&1
-xset s 120
+brownout 600 >/dev/null 2>&1

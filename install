@@ -29,7 +29,6 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/urlscan \
 	$HOME/.config/x11 \
 	$HOME/.config/yt-dlp \
-	$HOME/.config/ytfzf \
 	$HOME/.config/zathura \
 	$HOME/.config/zsh
 
@@ -79,7 +78,6 @@ ln -s $HOME/.dotfiles/config/urlscan/config.json $HOME/.config/urlscan/config.js
 ln -s $HOME/.dotfiles/config/x11/xinitrc $HOME/.config/x11/xinitrc
 ln -s $HOME/.dotfiles/config/x11/xresources $HOME/.config/x11/xresources
 ln -s $HOME/.dotfiles/config/yt-dlp/config $HOME/.config/yt-dlp/config
-ln -s $HOME/.dotfiles/config/ytfzf/conf.sh $HOME/.config/ytfzf/conf.sh
 ln -s $HOME/.dotfiles/config/zathura/zathurarc $HOME/.config/zathura/zathurarc
 ln -s $HOME/.dotfiles/config/zsh/zprofile $HOME/.config/zsh/.zprofile
 ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
@@ -87,7 +85,14 @@ ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
 mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
 
-mkdir -p $HOME/share/applications
+mkdir -p $HOME/.local/share/applications
 ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/share/applications/st.desktop
+mkdir -p $HOME/.local/share/mpdscribble
+touch /home/mrcl/.local/share/mpdscribble/log
+
+mkdir -p $HOME/.cache/mpdscribble
+touch $HOME/.cache/mpdscribble/lastfm.journal
+touch $HOME/.cache/mpdscribble/librefm.journal
+touch $HOME/.cache/mpdscribble/listenbrainz.journal
 
 nvim +PlugInstall +qall

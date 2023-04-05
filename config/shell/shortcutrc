@@ -8,7 +8,7 @@ alias \
 	m="cd ~/music && ls" \
 	P="cd ~/pics && ls" \
 	vv="cd ~/vids && ls" \
-	m3="cd /media/m3 && ls" \
+	m3="cd /media/sdc1 && ls" \
 	sd="cd /media/sd && ls" \
 	M="cd /mnt && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
@@ -18,7 +18,9 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
-	T="cd /tmp"
+	T="cd /tmp" \
+	ww="cd /media/windows/Users/Marcelo && ls" \
+	hd="cd /media/hdd && ls"
 
 # Files shortcuts
 alias \

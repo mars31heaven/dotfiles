@@ -27,9 +27,6 @@ super + shift + BackSpace
 super + w
 	qtb
 
-super + shift + w
-	dmenuwireless
-
 super + e
 	$TERMINAL -e $EDITOR
 

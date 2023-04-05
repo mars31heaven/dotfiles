@@ -1,14 +1,12 @@
 #!/bin/sh
 
 remaps &
-xbacklight -set 10%
 unclutter &
 clipmenud &
 sxhkd &
-batsignal -c 10 -d 8 -f 98 -D "doas loginctl suspend" -e &
 sbar &
 xrdb .config/x11/xresources
-xset s 120
+xset s 480
 xsetroot -solid "#282828"
 dunst &
 brownout 600

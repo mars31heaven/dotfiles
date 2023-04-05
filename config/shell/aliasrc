@@ -21,8 +21,8 @@ alias \
 # pacman, yay
 alias \
 	p="doas pacman" \
-	y="yay" \
-	pyu="doas pacman -Syu"
+	pyu="doas pacman -Syu" \
+	y="yay"
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
@@ -38,7 +38,9 @@ alias \
 	lh="ls -lAcht | head -n 30" \
 	lhr="ls -lArcht | head -n 30" \
 	g="grep" \
-	lg="l | g" \
+	lg="ls | grep" \
+	c="bat --theme gruvbox-dark" \
+	cat="bat --theme gruvbox-dark" \
 	gi="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -48,9 +50,6 @@ alias \
 	gre="git restore" \
 	gcm="git commit -m" \
 	gca="git commit -a" \
-	t="tmux" \
-	ta="tmux attach-session" \
-	tl="tmux ls" \
 	qtb="~/.local/bin/qtb" \
 	z="zathura" \
 	ppv="pipe-viewer" \
@@ -75,7 +74,6 @@ alias \
 	ncdu="ncdu --color off" \
 	zzz="loginctl suspend" \
 	rs="rsync -rvP" \
-	c="calcurse" \
 	t="toot" \
 	tt="toot tui" \
 	tp="toot post -e" \
@@ -83,32 +81,20 @@ alias \
 
 # External storage
 alias \
-	m3m="pmount -e /dev/sdb1 m3" \
+	m3m="pmount -e /dev/sdc1" \
 	m3u="pumount /media/m3" \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
-
-# Managing wi-fi and bluetooth
-alias \
-	wscan="iwctl station wlan0 scan" \
-	wgn="iwctl station wlan0 get-networks" \
-	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	wup="doas sv up iwd && doas ip link set dev wlan0 up" \
-	wdown="doas ip link set dev wlan0 down && doas sv down iwd" \
-	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd"
 
 # Other aliases
 alias \
 	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
 	wi="vim -c VimwikiIndex" \
 	di="vim -c VimwikiDiaryIndex" \
-	ww="curl https://wttr.in/" \
+	wt="curl https://wttr.in/" \
 	www="w3m -B" \
-	mdcat="mdcat -p" \
-	ccat="highlight -O ansi" \
 	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
 	vsv="doas rsm" \
 	ph="cat /var/log/pacman.log" \
-	mpd="mpd && mpc up && mpdscribble --conf ~/.config/mpd/mpdscribble.conf"
+	mpd="mpd && mpc up && mpdscribble"
