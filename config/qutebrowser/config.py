@@ -193,7 +193,7 @@ c.content.autoplay = False
 ## extracting it from the `location` parameter of the subscribe URL and
 ## URL-decoding it).
 ## Type: List of Url
-c.content.blocking.adblock.lists = ['https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt']
+c.content.blocking.adblock.lists = ['https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2023.txt']
 
 ## Enable the ad/host blocker
 ## Type: Bool
@@ -646,7 +646,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '~/dl'
+c.downloads.location.directory = '/media/hdd/dl'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.

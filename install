@@ -14,7 +14,8 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
-	$HOME/.config/mpv \
+	$HOME/.config/mpv/scripts \
+	$HOME/.config/mpv/scripts-opts \
 	$HOME/.config/mutt \
 	$HOME/.config/ncmpcpp \
 	$HOME/.config/newsboat \
@@ -52,6 +53,8 @@ ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
 ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
+ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
+ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
 ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config

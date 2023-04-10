@@ -3,13 +3,8 @@
 # Directories shortcuts
 alias \
 	h="cd ~ && ls -A" \
-	d="cd ~/docs && ls" \
 	D="cd ~/dl && ls" \
-	m="cd ~/music && ls" \
-	P="cd ~/pics && ls" \
-	vv="cd ~/vids && ls" \
 	m3="cd /media/sdc1 && ls" \
-	sd="cd /media/sd && ls" \
 	M="cd /mnt && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
@@ -21,9 +16,3 @@ alias \
 	T="cd /tmp" \
 	ww="cd /media/windows/Users/Marcelo && ls" \
 	hd="cd /media/hdd && ls"
-
-# Files shortcuts
-alias \
-	n="$EDITOR ~/docs/notes" \
-	eq="$EDITOR ~/.config/qutebrowser/config.py" \
-	enu="$EDITOR ~/.config/newsboat/urls"

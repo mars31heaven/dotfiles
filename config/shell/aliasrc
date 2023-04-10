@@ -1,9 +1,12 @@
 #!/bin/sh
 
 # doas not required for some system commands
-for command in mount umount loginctl reboot poweroff shutdown pacman sv; do
+for command in mount umount loginctl reboot poweroff shutdown pacman sv rsm; do
 	alias $command="doas $command"
 done; unset command
+
+alias \
+	dv="doas nvim"
 
 # Utilities configuration
 # Colored output, verbosity and protection
@@ -95,6 +98,5 @@ alias \
 	www="w3m -B" \
 	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
-	vsv="doas rsm" \
 	ph="cat /var/log/pacman.log" \
 	mpd="mpd && mpc up && mpdscribble"
