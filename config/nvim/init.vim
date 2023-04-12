@@ -145,7 +145,7 @@ nnoremap <silent> <C-+> <C-w>+
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/docs/docs_android_sync/markor', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '~/home/mrcl/docs_awl_sync/markor', 'syntax': 'markdown', 'ext': '.md'}]
 autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 
 " Disables automatic commenting on newline:
