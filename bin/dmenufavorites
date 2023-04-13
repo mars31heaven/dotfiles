@@ -3,10 +3,10 @@
 favorites="\
 anydesk:/usr/bin/anydesk
 discord:/usr/bin/discord
-firefox:/usr/bin/firefox
 gaupol:/usr/bin/gaupol
 gmusicbrowser:/usr/bin/gmusicbrowser
 keepassxc:/usr/bin/keepassxc
+librewolf:/usr/bin/librewolf
 mpd:/home/mrcl/.local/bin/mpd
 pcmanfm:/home/mrcl/.local/bin/pcmanfm
 qbittorrent:/usr/bin/qbittorrent

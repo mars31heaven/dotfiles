@@ -109,7 +109,7 @@ Print
 shift + Print
 	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
-shift + ctrl + Print
+super + Print
 	scrdis
 
 super + Insert
