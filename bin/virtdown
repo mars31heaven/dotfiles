@@ -1,0 +1,4 @@
+#!/bin/sh
+
+doas sv down libvirtd && doas sv down virtlockd && doas sv down virtlogd && doas pkill polkitd
+unclutter &

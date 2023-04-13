@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pkill unclutter && doas sv up libvirtd && doas sv up virtlockd && doas sv up virtlogd
