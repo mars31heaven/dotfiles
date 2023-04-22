@@ -6,8 +6,8 @@
 if [ "$1" = "" ]; then exit; fi
 
 case "$1" in
-	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.m3u|*.pls)
-		tsp "$TERMINAL" -e mpv --no-video "$1" >/dev/null 2>&1
+	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
+		tsp "$TERMINAL" -e mpv --no-video --no-save-position-on-quit --no-resume-playback "$1" >/dev/null 2>&1
 		;;
 
 	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
