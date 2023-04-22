@@ -25,12 +25,11 @@ alias \
 alias \
 	p="doas pacman" \
 	pyu="doas pacman -Syu" \
-	y="yay"
+	y="yay --removemake"
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
-# Other abbreviations
 alias \
 	v="$EDITOR" \
 	vi="$EDITOR" \
@@ -75,12 +74,21 @@ alias \
 	ivu="nsxiv-url" \
 	yt="ytfzf" \
 	ncdu="ncdu --color off" \
-	zzz="loginctl suspend" \
 	rs="rsync -rvP" \
 	t="toot" \
 	tt="toot tui" \
 	tp="toot post -e" \
-	tn="toot notifications"
+	tn="toot notifications" \
+	fd="fd --unrestricted" \
+	mpm="mpv --no-save-position-on-quit --no-resume-playback" \
+	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	wi="vim -c VimwikiIndex" \
+	di="vim -c VimwikiDiaryIndex" \
+	www="w3m -B" \
+	bat="bat --theme gruvbox-dark" \
+	sca="scrcpy" \
+	ph="cat /var/log/pacman.log" \
+	mpd="mpd && mpc up && mpdscribble"
 
 # External storage
 alias \
@@ -88,15 +96,3 @@ alias \
 	m3u="pumount /media/m3" \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
-
-# Other aliases
-alias \
-	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	wi="vim -c VimwikiIndex" \
-	di="vim -c VimwikiDiaryIndex" \
-	wt="curl https://wttr.in/" \
-	www="w3m -B" \
-	bat="bat --theme gruvbox-dark" \
-	sca="scrcpy" \
-	ph="cat /var/log/pacman.log" \
-	mpd="mpd && mpc up && mpdscribble"
