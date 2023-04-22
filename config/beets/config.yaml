@@ -1,5 +1,5 @@
 library: library.db
-directory: ~/music
+directory: /media/hdd/music/
 
 import:
     write: yes

@@ -3,7 +3,7 @@
 # Directories shortcuts
 alias \
 	h="cd ~ && ls -A" \
-	D="cd ~/dl && ls" \
+	D="cd /media/hdd/dl && ls" \
 	m3="cd /media/sdc1 && ls" \
 	M="cd /mnt && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
@@ -15,4 +15,6 @@ alias \
 	ca="cd ~/.cache && ls" \
 	T="cd /tmp" \
 	ww="cd /media/windows/Users/Marcelo && ls" \
-	hd="cd /media/hdd && ls"
+	hd="cd /media/hdd && ls" \
+	lp="cd /media/laptop && ls" \
+	ad="cd /media/android && ls"

@@ -1,5 +1,5 @@
 map gh cd "~"
-map gD cd "~/dl"
+map gD cd "/media/hdd/dl"
 map gN cd "~/dl/nicotine"
 map gdd cd "~/docs"
 map gsy cd "~/docs/docs_android_sync"
