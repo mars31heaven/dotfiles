@@ -6,15 +6,15 @@
 dwm.normbgcolor: #282828
 dwm.normbordercolor: #444444
 dwm.normfgcolor: #ebdbb2
-dwm.selbgcolor: #fabd2f
-dwm.selbordercolor: #fabd2f
+dwm.selbgcolor: #83a598
+dwm.selbordercolor: #83a598
 dwm.selfgcolor: #101112
 
 !! dmenu
 !dmenu.font: font or font set
 dmenu.background: #282828
 dmenu.foreground: #ebdbb2
-dmenu.selbackground: #fabd2f
+dmenu.selbackground: #83a598
 dmenu.selforeground: #101112
 
 !! nsxiv

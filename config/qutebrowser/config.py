@@ -646,7 +646,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '/media/hdd/dl'
+c.downloads.location.directory = '/media/hdd/03_downloads'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.

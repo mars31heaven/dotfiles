@@ -6,7 +6,8 @@ for command in mount umount loginctl reboot poweroff shutdown pacman sv rsm; do
 done; unset command
 
 alias \
-	dv="doas nvim"
+	dv="doas nvim" \
+	doas vim="doas nvim"
 
 # Utilities configuration
 # Colored output, verbosity and protection
@@ -25,7 +26,7 @@ alias \
 alias \
 	p="doas pacman" \
 	pyu="doas pacman -Syu" \
-	y="yay --removemake"
+	y="yay --removemake --noprovides --answerdiff None --answerclean None --mflags "--noconfirm""
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
@@ -52,6 +53,7 @@ alias \
 	gre="git restore" \
 	gcm="git commit -m" \
 	gca="git commit -a" \
+	gpu="git push" \
 	qtb="~/.local/bin/qtb" \
 	z="zathura" \
 	ppv="pipe-viewer" \
@@ -88,11 +90,10 @@ alias \
 	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
 	ph="cat /var/log/pacman.log" \
+	jkt="/usr/lib/jackett/jackett_launcher.sh" \
 	mpd="mpd && mpc up && mpdscribble"
 
 # External storage
 alias \
 	m3m="pmount -e /dev/sdc1" \
-	m3u="pumount /media/m3" \
-	mtpm="simple-mtpfs --device 1 /media/android" \
-	mtpu="fusermount -u /media/android"
+	m3u="pumount /media/sdc1"

@@ -61,7 +61,7 @@ super + x
 	dim
 
 super + shift + x
-	xset s 999
+	xset s 99999
 
 super + c
 	dmenucalc
@@ -113,7 +113,10 @@ super + Insert
 	clipmenu -l 20
 
 super + Home
-	dmenufavorites
+	rofi -show drun
+
+super + Prior
+	dmenugames
 
 super + shift + Home
 	$TERMINAL -e htop

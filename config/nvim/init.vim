@@ -16,7 +16,7 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " General theme
-colorscheme default
+colorscheme gruvbox
 
 " vim-airline theme
 let g:airline_theme='base16_gruvbox_dark_hard'
@@ -145,7 +145,7 @@ nnoremap <silent> <C-+> <C-w>+
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '/media/windows/Users/Marcelo/docs_awl_sync/markor/', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '/media/windows/Users/Marcelo/01_documents_sync/markor', 'syntax': 'markdown', 'ext': '.md'}]
 autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 
 " Disables automatic commenting on newline:
