@@ -53,8 +53,8 @@ ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
 ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
-ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
-ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
+ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/
+ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/
 ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
@@ -66,11 +66,7 @@ ln -s $HOME/.dotfiles/config/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s $HOME/.dotfiles/config/pipe-viewer/pipe-viewer.conf $HOME/.config/pipe-viewer/pipe-viewer.conf
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
 ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.instagram.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.instagram.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.reddit.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.reddit.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.twitter.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.twitter.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.wikipedia.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.wikipedia.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.youtube.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.youtube.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
 ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc
 ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
