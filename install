@@ -23,6 +23,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
 	$HOME/.config/qutebrowser/greasemonkey \
+	$HOME/.config/rofi \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
 	$HOME/.config/sxhkd \
@@ -67,6 +68,7 @@ ln -s $HOME/.dotfiles/config/pipe-viewer/pipe-viewer.conf $HOME/.config/pipe-vie
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
 ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
 ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
+ln -s $HOME/.dotfiles/config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
 ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc
 ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
@@ -88,6 +90,9 @@ mkdir -p $HOME/.local/share/applications
 ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/share/applications/st.desktop
 mkdir -p $HOME/.local/share/mpdscribble
 touch /home/mrcl/.local/share/mpdscribble/log
+
+mkdir -p $HOME/.cache/mpd
+touch $HOME/mrcl/.cache/mpd/db
 
 mkdir -p $HOME/.cache/mpdscribble
 touch $HOME/.cache/mpdscribble/lastfm.journal
