@@ -1,12 +1,3 @@
-super + F1
-	laptopmononly
-
-super + shift + F1
-	bothmons
-
-super + F2
-	extmononly
-
 super + F3
 	brownout 600
 
@@ -30,12 +21,6 @@ super + w
 super + e
 	$TERMINAL -e $EDITOR
 
-super + shift + e
-	$TERMINAL -e neomutt
-
-super + shift + u
-	dmenuumount
-
 super + p
 	dmenu_run_i
 
@@ -50,9 +35,6 @@ super + s
 
 super + shift + s
 	pkill syncthing
-
-super + d
-	$TERMINAL -e $EDITOR -c VimwikiDiaryIndex
 
 super + shift + k
 	dmenukill
@@ -71,9 +53,6 @@ super + v
 
 super + shift + v
 	$TERMINAL -e pipe-viewer
-
-super + shift + b
-	brave
 
 super + n
 	$TERMINAL -e ncmpcpp
@@ -94,17 +73,14 @@ super + shift + less
 super + shift + greater
 	mpc next
 
-super + slash
-  	dunstify -h string:x-canonical-private-synchronous:mpd-audio "MPD Notification" "`mpc --format '<b>%title%</b>\nby <i>%artist%</i>\nfrom <i>%album%</i>' current`"
-
 ctrl + space
 	dunstctl close-all
 
 Print
-	maim -u ~/pics/screenshots/full_$(date "+%Y_%m_%d_%s").png
+	maim -u ~/06_imagens/01_capturas/full_$(date "+%Y_%m_%d_%s").png
 
 shift + Print
-	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
+	maim -uso ~/06_imagens/01_capturas/full_$(date "+%Y_%m_%d_%s").png
 
 shift + ctrl + Print
 	scrdis
@@ -114,9 +90,6 @@ super + Insert
 
 super + Home
 	rofi -show drun
-
-super + Prior
-	dmenugames
 
 super + shift + Home
 	$TERMINAL -e htop
