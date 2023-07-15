@@ -378,7 +378,6 @@ c.content.fullscreen.window = False
 ## JavaScript requires a restart.
 ## Type: FormatString
 # c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
-c.content.headers.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0'
 
 ## Enable hyperlink auditing (`<a ping>`).
 ## Type: Bool
@@ -646,7 +645,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '/media/hdd/03_downloads'
+c.downloads.location.directory = '/home/mrcl/03_downloads/'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.
