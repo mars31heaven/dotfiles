@@ -7,7 +7,7 @@ if [ "$1" = "" ]; then exit; fi
 
 case "$1" in
 	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
-		setsid -f mpv --no-save-position-on-quit --no-resume-playback --stop-screensaver=no "$1"
+		tsp "$TERMINAL" -e mpv --no-video --no-save-position-on-quit --no-resume-playback "$1" >/dev/null 2>&1
 		;;
 
 	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
