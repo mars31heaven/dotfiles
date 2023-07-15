@@ -90,10 +90,9 @@ alias \
 	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
 	ph="cat /var/log/pacman.log" \
-	jkt="/usr/lib/jackett/jackett_launcher.sh" \
-	mpd="mpd && mpc up && mpdscribble"
+	jkt="~/.local/share/Jackett/jackett"
 
 # External storage
 alias \
-	m3m="pmount -e /dev/sdc1" \
-	m3u="pumount /media/sdc1"
+	m3m="pmount -e /dev/sdd1" \
+	m3u="pumount /media/sdd1"

@@ -3,10 +3,9 @@
 # Directories shortcuts
 alias \
 	h="cd ~ && ls -A" \
-	m="cd /media/hdd/01_musica && ls" \
-	D="cd /media/hdd/03_downloads && ls" \
-	m3="cd /media/sdc1 && ls" \
-	M="cd /mnt && ls" \
+	d="cd ~/01_documents && ls" \
+	sy="cd ~/02_documents_android_sync && ls" \
+	D="cd ~/03_downloads && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -14,7 +13,13 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
+	m="cd ~/05_musica && ls" \
+	P="cd ~/06_imagens && ls" \
+	sc="cd ~/06_imagens/01_capturas && ls" \
+	M="cd /mnt && ls" \
+	m3="cd /media/sdd1 && ls" \
+	hd1="cd /media/hdd1 && ls" \
+	hd2="cd /media/hdd2 && ls" \
+	sd1="cd /media/ssd1 && ls" \
 	T="cd /tmp" \
-	ww="cd /media/windows/Users/Marcelo && ls" \
-	hd="cd /media/hdd && ls" \
-	lp="cd /media/laptop && ls"
+	N="cd /media/ssd1/01_musica/00_soulseek && ls"
