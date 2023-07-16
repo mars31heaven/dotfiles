@@ -22,6 +22,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/nsxiv/exec \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
+	$HOME/.config/qBittorrent \
 	$HOME/.config/qutebrowser/greasemonkey \
 	$HOME/.config/rofi \
 	$HOME/.config/shell \
@@ -65,6 +66,9 @@ ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key
 ln -s $HOME/.dotfiles/config/nvim/autoload/plug.vim $HOME/.config/nvim/autoload/plug.vim
 ln -s $HOME/.dotfiles/config/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s $HOME/.dotfiles/config/pipe-viewer/pipe-viewer.conf $HOME/.config/pipe-viewer/pipe-viewer.conf
+ln -s $HOME/.dotfiles/config/qBittorrent/search_plugins $HOME/.config/qBittorrent/search_plugins
+ln -s $HOME/.dotfiles/config/qBittorrent/qBittorrent.conf $HOME/.config/qBittorrent/qBittorrent.conf
+ln -s $HOME/.dotfiles/config/qBittorrent/mumble-dark.qbtheme $HOME/.config/qBittorrent/mumble-dark.qbtheme
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
 ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
 ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
