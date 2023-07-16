@@ -14,8 +14,8 @@ alias \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
 	m="cd ~/05_musica && ls" \
-	P="cd ~/06_imagens && ls" \
-	sc="cd ~/06_imagens/01_capturas && ls" \
+	im="cd ~/06_imagens && ls" \
+	sc="cd ~/06_imagens/04_capturas && ls" \
 	M="cd /mnt && ls" \
 	m3="cd /media/sdd1 && ls" \
 	hd1="cd /media/hdd1 && ls" \

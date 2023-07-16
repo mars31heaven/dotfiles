@@ -77,10 +77,10 @@ ctrl + space
 	dunstctl close-all
 
 Print
-	maim -u ~/06_imagens/01_capturas/full_$(date "+%Y_%m_%d_%s").png
+	maim -u ~/06_imagens/04_capturas/cheia_$(date "+%Y_%m_%d_%s").png
 
 shift + Print
-	maim -uso ~/06_imagens/01_capturas/full_$(date "+%Y_%m_%d_%s").png
+	maim -uso ~/06_imagens/04_capturas/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + ctrl + Print
 	scrdis
