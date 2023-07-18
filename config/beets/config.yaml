@@ -65,8 +65,7 @@ overwrite_null:
 
 plugins: [edit,
   ftintitle,
-  the,
-  fetchart]
+  the]
 pluginpath: []
 threaded: yes
 timeout: 5.0

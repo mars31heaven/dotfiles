@@ -7,7 +7,7 @@
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-PS1="%~%  > "
+PS1='[%n@%m %F{white}%~%f] > '
 
 HISTFILE=$HISTFILE
 HISTSIZE=1000000

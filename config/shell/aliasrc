@@ -78,7 +78,20 @@ alias \
 	t="toot" \
 	tt="toot tui" \
 	tp="toot post -e" \
-	tn="toot notifications"
+	tn="toot notifications" \
+	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	wi="vim -c VimwikiIndex" \
+	di="vim -c VimwikiDiaryIndex" \
+	www="w3m -B" \
+	mdcat="mdcat -p" \
+	ccat="highlight -O ansi" \
+	bat="bat --theme gruvbox-dark" \
+	sca="scrcpy" \
+	vsv="doas rsm" \
+	ph="cat /var/log/pacman.log" \
+	ncdu="ncdu --color dark" \
+	jkt="/usr/lib/jackett/jackett_launcher.sh" \
+	mpd="mpd && mpc up && mpdscribble"
 
 # External storage
 alias \
@@ -87,7 +100,7 @@ alias \
 	mtpm="simple-mtpfs --device 1 /media/android" \
 	mtpu="fusermount -u /media/android"
 
-# Managing wi-fi and bluetooth
+# Managing wi-fi, bluetooth and backlight
 alias \
 	wscan="iwctl station wlan0 scan" \
 	wgn="iwctl station wlan0 get-networks" \
@@ -95,19 +108,6 @@ alias \
 	wup="doas sv up iwd && doas ip link set dev wlan0 up" \
 	wdown="doas ip link set dev wlan0 down && doas sv down iwd" \
 	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd"
-
-# Other aliases
-alias \
-	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
-	wi="vim -c VimwikiIndex" \
-	di="vim -c VimwikiDiaryIndex" \
-	we="curl https://wttr.in/" \
-	www="w3m -B" \
-	mdcat="mdcat -p" \
-	ccat="highlight -O ansi" \
-	bat="bat --theme gruvbox-dark" \
-	sca="scrcpy" \
-	vsv="doas rsm" \
-	ph="cat /var/log/pacman.log" \
-	mpd="mpd && mpc up && mpdscribble --conf ~/.config/mpd/mpdscribble.conf"
+	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd" \
+	xb="xbacklight" \
+	xbs="xbacklight set"

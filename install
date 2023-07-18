@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 mv $HOME/dotfiles $HOME/.dotfiles
@@ -14,14 +15,15 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
-	$HOME/.config/mpv \
 	$HOME/.config/mutt \
 	$HOME/.config/ncmpcpp \
 	$HOME/.config/newsboat \
 	$HOME/.config/nsxiv/exec \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
+	$HOME/.config/qBittorrent \
 	$HOME/.config/qutebrowser/greasemonkey \
+	$HOME/.config/rofi \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
 	$HOME/.config/sxhkd \
@@ -29,7 +31,6 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/urlscan \
 	$HOME/.config/x11 \
 	$HOME/.config/yt-dlp \
-	$HOME/.config/ytfzf \
 	$HOME/.config/zathura \
 	$HOME/.config/zsh
 
@@ -53,6 +54,8 @@ ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
 ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
+ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
+ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
 ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
@@ -62,13 +65,13 @@ ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key
 ln -s $HOME/.dotfiles/config/nvim/autoload/plug.vim $HOME/.config/nvim/autoload/plug.vim
 ln -s $HOME/.dotfiles/config/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s $HOME/.dotfiles/config/pipe-viewer/pipe-viewer.conf $HOME/.config/pipe-viewer/pipe-viewer.conf
+ln -s $HOME/.dotfiles/config/qBittorrent/search_plugins $HOME/.config/qBittorrent/search_plugins
+ln -s $HOME/.dotfiles/config/qBittorrent/qBittorrent.conf $HOME/.config/qBittorrent/qBittorrent.conf
+ln -s $HOME/.dotfiles/config/qBittorrent/mumble-dark.qbtheme $HOME/.config/qBittorrent/mumble-dark.qbtheme
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
 ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.instagram.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.instagram.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.reddit.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.reddit.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.twitter.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.twitter.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.wikipedia.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.wikipedia.user.js
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey/redirector.youtube.user.js $HOME/.config/qutebrowser/greasemonkey/redirector.youtube.user.js
+ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
+ln -s $HOME/.dotfiles/config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
 ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc
 ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
@@ -79,7 +82,6 @@ ln -s $HOME/.dotfiles/config/urlscan/config.json $HOME/.config/urlscan/config.js
 ln -s $HOME/.dotfiles/config/x11/xinitrc $HOME/.config/x11/xinitrc
 ln -s $HOME/.dotfiles/config/x11/xresources $HOME/.config/x11/xresources
 ln -s $HOME/.dotfiles/config/yt-dlp/config $HOME/.config/yt-dlp/config
-ln -s $HOME/.dotfiles/config/ytfzf/conf.sh $HOME/.config/ytfzf/conf.sh
 ln -s $HOME/.dotfiles/config/zathura/zathurarc $HOME/.config/zathura/zathurarc
 ln -s $HOME/.dotfiles/config/zsh/zprofile $HOME/.config/zsh/.zprofile
 ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
@@ -88,6 +90,17 @@ mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
 
 mkdir -p $HOME/.local/share/applications
-ln -s $HOME/.dotfiles/.local/share/applications/st.desktop $HOME/share/applications/st.desktop
+ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/.local/share/applications/st.desktop
+
+mkdir -p $HOME/.local/share/mpdscribble
+touch /home/mrcl/.local/share/mpdscribble/log
+
+mkdir -p $HOME/.cache/mpd
+touch $HOME/.cache/mpd/db
+
+mkdir -p $HOME/.cache/mpdscribble
+touch $HOME/.cache/mpdscribble/lastfm.journal
+touch $HOME/.cache/mpdscribble/librefm.journal
+touch $HOME/.cache/mpdscribble/listenbrainz.journal
 
 nvim +PlugInstall +qall

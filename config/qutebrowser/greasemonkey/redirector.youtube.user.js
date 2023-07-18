@@ -11,5 +11,5 @@
 
 (function () {
 	'use strict';
-	top.location.hostname = "yewtu.be";
+	top.location.hostname = "vid.puffyan.us";
 })();

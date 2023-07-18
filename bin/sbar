@@ -19,10 +19,6 @@ update_time () {
 	time="$(date "+%a %b %d %R")"
 }
 
-#update_weather () {
-#	weather="$(curl -s "wttr.in?format=1"| sed -E "s/^(.).*\+/\1/")"
-#}
-
 update_bat () {
 	# you might need to change the path depending on your device
 	read -r bat_status </sys/class/power_supply/BAT0/status
@@ -39,35 +35,17 @@ update_disk () {
 #	free_space_home="$(df -h | awk '{ if ($6 == "/home") print $4 }')"
 }
 
-
-#update_backlight () {
-	# you might need to change the path depending on your device
-#	read -r actual_brightness </sys/class/backlight/intel_backlight/actual_brightness
-#	read -r max_brightness </sys/class/backlight/intel_backlight/max_brightness
-#	backlight="☀$((actual_brightness*100/max_brightness))%"
-#}
-
-# For calcurse users, refer https://github.com/pystardust/automeet
-#update_event () {
-#	event="$(calcurse -n | sed 1d | \
-#		sed -E "s_^ *\[(.*):(.*)\] ([^\t]*)\t?.*_[\1h \2m->\3]_")"
-#	[ "[]" = "$event" ] && event=""
-#}
-
-
 # modules that don't update on their own need to be run at the start for getting their initial value
 update_vol
-#update_backlight
 
 display () {
-	#printf "%s\n" " / $free_space_root ~ $free_space_home $event [$weather] [$memory $cpu] [$bat] [$backlight] [$vol] $time "
+	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $memory $cpu $bat $vol $time "
 	xsetroot -name " / $free_space_root V $vol R $memory CPU $cpu B $bat $time "
 }
 
 # SIGNALLING
 # trap	"<function>;display"		"RTMIN+n"
 trap	"update_vol;display"		"RTMIN"
-#trap	"update_backlight;display" 	"RTMIN+1"
 trap	"update_bat;display" 		"RTMIN+2"
 # to update it from external commands
 ## kill -m "$(cat ~/.cache/pidofbar)"
@@ -82,9 +60,7 @@ do
 		[ $((sec % 15)) -eq 0 ] && update_cpu 	# update cpu every 15 seconds
 		[ $((sec % 15)) -eq 0 ] && update_memory
 		[ $((sec % 60)) -eq 0 ] && update_bat
-		#[ $((sec % 3600)) -eq 2 ] && update_weather
 		[ $((sec % 3600)) -eq 2 ] && update_disk
-		#[ $((sec % 300)) -eq 1 ] && update_event
 
 		# how often the display updates ( 5 seconds )
 		[ $((sec % 5 )) -eq 0 ] && display

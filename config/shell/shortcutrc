@@ -18,10 +18,5 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
+	pc="cd /media/pc/media && ls" \
 	T="cd /tmp"
-
-# Files shortcuts
-alias \
-	n="$EDITOR ~/docs/notes" \
-	eq="$EDITOR ~/.config/qutebrowser/config.py" \
-	enu="$EDITOR ~/.config/newsboat/urls"

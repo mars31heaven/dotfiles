@@ -109,14 +109,14 @@ Print
 shift + Print
 	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
-super + Print
+shift + ctrl + Print
 	scrdis
 
 super + Insert
 	clipmenu -l 20
 
 super + Home
-	dmenufavorites
+	rofi -show drun
 
 super + shift + Home
 	$TERMINAL -e htop
