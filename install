@@ -16,6 +16,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
 	$HOME/.config/mutt \
+	$HOME/.config/mpv \
 	$HOME/.config/ncmpcpp \
 	$HOME/.config/newsboat \
 	$HOME/.config/nsxiv/exec \

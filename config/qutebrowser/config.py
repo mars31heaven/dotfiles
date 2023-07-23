@@ -647,7 +647,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '~/dl'
+c.downloads.location.directory = '~/03_downloads'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.
@@ -1530,7 +1530,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = ['~/.config/qutebrowser/startpage/index.html']
+c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String
