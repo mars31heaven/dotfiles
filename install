@@ -14,9 +14,8 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
-	$HOME/.config/mpv/scripts \
-	$HOME/.config/mpv/scripts-opts \
 	$HOME/.config/mutt \
+	$HOME/.config/mpv \
 	$HOME/.config/ncmpcpp \
 	$HOME/.config/newsboat \
 	$HOME/.config/nsxiv/exec \
@@ -55,8 +54,8 @@ ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
 ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
-ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/
-ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/
+ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
+ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
 ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
@@ -91,12 +90,13 @@ mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
 
 mkdir -p $HOME/.local/share/applications
-ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/share/applications/st.desktop
+ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/.local/share/applications/st.desktop
+
 mkdir -p $HOME/.local/share/mpdscribble
 touch /home/mrcl/.local/share/mpdscribble/log
 
 mkdir -p $HOME/.cache/mpd
-touch $HOME/mrcl/.cache/mpd/db
+touch $HOME/.cache/mpd/db
 
 mkdir -p $HOME/.cache/mpdscribble
 touch $HOME/.cache/mpdscribble/lastfm.journal
