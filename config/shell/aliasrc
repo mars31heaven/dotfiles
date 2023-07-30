@@ -67,7 +67,7 @@ alias \
 	mp="mpc playlist" \
 	mu="mpc up" \
 	mt="mpc toggle" \
-	b="beet" \
+	bt="beet" \
 	bi="beet import" \
 	br="beet remove" \
 	be="beet edit" \
@@ -90,7 +90,13 @@ alias \
 	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
 	ph="cat /var/log/pacman.log" \
-	jkt="~/.local/share/Jackett/jackett"
+	jkt="~/.local/share/Jackett/jackett" \
+	mpd="mpd && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf" \
+	b="buku --suggest" \
+	bp="buku -p" \
+	bw="buku -w" \
+	msar="mpc search Artist" \
+	msal="mpc search Album"
 
 # External storage
 alias \
