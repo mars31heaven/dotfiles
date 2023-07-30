@@ -12,6 +12,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/gtk-2.0 \
 	$HOME/.config/gtk-3.0 \
 	$HOME/.config/htop \
+	$HOME/.config/hypr \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
 	$HOME/.config/mutt \
@@ -48,6 +49,7 @@ ln -s $HOME/.dotfiles/config/gtk-2.0/gtkfilechooser.ini $HOME/.config/gtk-2.0/gt
 ln -s $HOME/.dotfiles/config/gtk-2.0/gtkrc-2.0 $HOME/.config/gtk-2.0/gtkrc-2.0
 ln -s $HOME/.dotfiles/config/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
+ln -s $HOME/.dotfiles/config/hypr/hyprland.conf $HOME/.config/hypr/hyprland.conf
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
@@ -102,5 +104,8 @@ mkdir -p $HOME/.cache/mpdscribble
 touch $HOME/.cache/mpdscribble/lastfm.journal
 touch $HOME/.cache/mpdscribble/librefm.journal
 touch $HOME/.cache/mpdscribble/listenbrainz.journal
+
+mkdir -p $HOME/.local/share/nicotine/plugins
+ln -s $HOME/.dotfiles/share/nicotine/plugins/leechdetectorautoban $HOME/.local/share/nicotine/plugins
 
 nvim +PlugInstall +qall
