@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# Will stream audio on background
-# if given a file or URL
-exec setsid -f mpv --no-terminal \
-	"$@"
