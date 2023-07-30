@@ -1,7 +1,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export BROWSER="qutebrowser"
-export TERMINAL="st"
+export TERMINAL="kitty"
 export READER="zathura"
 export IMAGE="nsxiv"
 export VIDEO="mpv"
