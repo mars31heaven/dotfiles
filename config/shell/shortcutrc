@@ -5,7 +5,7 @@ alias \
 	h="cd ~ && ls -A" \
 	d="cd ~/01_documents && ls" \
 	sy="cd ~/02_documents_android_sync && ls" \
-	D="cd ~/03_downloads && ls" \
+	D="cd /media/ssd1/02_downloads && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -22,4 +22,4 @@ alias \
 	hd2="cd /media/hdd2 && ls" \
 	sd1="cd /media/ssd1 && ls" \
 	T="cd /tmp" \
-	N="cd /media/ssd1/01_musica/00_soulseek && ls"
+	S="cd /media/ssd1/01_musica/00_soulseek && ls"
