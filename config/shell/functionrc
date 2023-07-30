@@ -5,23 +5,13 @@ o() {
 	open "$(find -type f | fzf)"
 }
 
-# preview and open files with fzf
-O() {
-	fzf --preview="highlight -O ansi {}" --preview-window=right:70%:wrap --query="$given_file"
-
-}
-
-# cd with fzf and bind it to ctrl+f
+# cd with fzf
+# and bind it to ctrl+f
 fcd() {
 	cd "$(find -type d | fzf)"
 }
 
 bind '"\C-f":"fcd\n"'
-
-# Remove files with fzf
-R() {
-	rm -rvI "$(ls | fzf -m)"
-}
 
 # Autogenerate .m3u playlist files
 play() {
@@ -32,14 +22,6 @@ play() {
 mag2torrent() {
 	aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
 }
-
-# Open another terminal on the current working directory
-# and bind it to ctrl+w
-smdir() {
-	setsid -f "$TERMINAL"
-}
-
-bind '"\C-w":"smdir\n"'
 
 # Play a random internet radio station
 radio() {
