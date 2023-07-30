@@ -6,7 +6,7 @@ lyrics_directory = "~/.local/share/lyrics"
 ##### connection settings #####
 #mpd_host = localhost
 #mpd_port = 6600
-mpd_connection_timeout = "20"
+mpd_connection_timeout = "60"
 
 ## Needed for tag editor and file operations to work.
 mpd_music_dir = "~/music"
@@ -351,7 +351,7 @@ progressbar_look = "->-"
 #
 ## Available values: classic, alternative.
 ##
-user_interface = alternative
+user_interface = classic
 #
 #data_fetching_delay = yes
 #
