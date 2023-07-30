@@ -91,7 +91,7 @@ cmd extract ${{
 
 cmd path_yank ${{
 	for x in $fx; do
-		echo $x | xclip -r -sel c
+		echo $x | kitty +kitten clipboard
 	done
 }}
 
