@@ -9,7 +9,7 @@ xrdb .config/x11/xresources
 xset s 480
 xsetroot -solid "#282828"
 dunst &
-brownout 800
+brownout 500
 exec dwm
 
 # Ensure that xrdb has finished running before moving on to start the WM/DE.
