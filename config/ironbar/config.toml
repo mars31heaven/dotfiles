@@ -1,0 +1,30 @@
+position = "bottom"
+height = 32
+
+[[start]]
+type = "workspaces"
+all_monitors = false
+
+[[start]]
+type = "focused"
+show_icon = true
+show_title = true
+icon_size = 28
+
+[[end]]
+type = "music"
+player_type = "mpd"
+format = "{artist} - {title}"
+music_dir = "/home/mrcl/05_music"
+show_status_icon = true
+
+[[start.icons]]
+play = ""
+pause = ""
+
+[[end]]
+type = "clock"
+format = "%d/%m/%Y %H:%M"
+
+[[end]]
+type = "tray"

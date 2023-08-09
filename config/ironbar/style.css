@@ -1,0 +1,83 @@
+@define-color color_bg #282828;
+@define-color color_bg_dark #1c1c1c;
+@define-color color_border #424242;
+@define-color color_border_active #6699cc;
+@define-color color_text #ffffff;
+@define-color color_urgent #8f0a0a;
+
+/* -- base styles -- */
+
+* {
+    font-family: Hermit;
+    font-size: 14;
+    border: none;
+    border-radius: 0;
+}
+
+box, menubar, button {
+    background-color: @color_bg;
+    background-image: none;
+}
+
+button, label {
+    color: @color_text;
+}
+
+button:hover {
+    background-color: @color_bg_dark;
+}
+
+#bar {
+    border-top: 1px solid @color_border;
+}
+
+.popup {
+    border: 1px solid @color_border;
+    padding: 1em;
+}
+
+
+/* -- music -- */
+
+.music:hover * {
+    background-color: @color_bg_dark;
+}
+
+.popup-music .album-art {
+    margin-right: 1em;
+}
+
+.popup-music .icon-box {
+    margin-right: 0.4em;
+}
+
+.popup-music .title .icon, .popup-music .title .label {
+    font-size: 1.7em;
+}
+
+.popup-music .controls *:disabled {
+    color: @color_border;
+}
+
+.popup-music .volume .slider slider {
+    border-radius: 100%;
+}
+
+.popup-music .volume .icon {
+    margin-left: 4px;
+}
+
+.popup-music .progress .slider slider {
+    border-radius: 100%;
+}
+
+/* -- workspaces -- */
+
+.workspaces .item.focused {
+    box-shadow: inset 0 -3px;
+    background-color: @color_bg_dark;
+}
+
+.workspaces .item:hover {
+    box-shadow: inset 0 -3px;
+}
