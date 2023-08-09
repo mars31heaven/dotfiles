@@ -100,6 +100,16 @@ augroup END
 
 " New tab shortcut
 map <leader>t :tabnew<CR>
+" Move to next tab
+map <leader>J :tabNext<CR>
+" Move to the previous tab
+map <leader>K :tabprevious<CR>
+" Close current tab
+map <leader>d :tabclose<CR>
+
+" Exit vim
+map <leader>cl :exit<CR>
+
 " Replace all alias
 nnoremap <leader>S :%s//g<Left><Left>
 " Open files with fzf
