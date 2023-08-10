@@ -10,6 +10,7 @@ type = "focused"
 show_icon = true
 show_title = true
 icon_size = 28
+truncate = "end"
 
 [[end]]
 type = "music"
