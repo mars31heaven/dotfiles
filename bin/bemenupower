@@ -1,22 +1,17 @@
 #!/bin/sh
 
 options="\
-display off
-logout
-poweroff
-reboot
-suspend"
+	logout
+	poweroff
+	reboot
+	suspend"
 
 choice=$(printf '%s\n' "$options" | bemenu)
 
 case $choice in
 
-	"display off")
-		xset dpms force suspend
-		;;
-
 	logout)
-		pkill dwm || notify-send "dwm was not running"
+		pkill Hyprland || notify-send "Hyprland was not running"
 		;;
 
 	poweroff)
