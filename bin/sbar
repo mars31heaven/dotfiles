@@ -7,14 +7,6 @@ printf "$$" > ~/.cache/pidofbar
 sec=0
 
 # MODULES
-update_cpu () {
-	cpu="$(grep -o "^[^ ]*" /proc/loadavg )"
-}
-
-update_memory () {
-	memory="$(free -h | sed -n "2s/\([^ ]* *\)\{2\}\([^ ]*\).*/\2/p")"
-}
-
 update_time () {
 	time="$(date "+%a %B %d %R")"
 }
@@ -32,8 +24,8 @@ update_disk () {
 update_vol
 
 display () {
-	#printf "%s\n" " / $free_space_root ~ $free_space_home $memory $cpu $vol $time "
-	xsetroot -name " / $free_space_root V $vol R $memory CPU $cpu $time "
+	#printf "%s\n" " / $free_space_root ~ $free_space_home $vol $time "
+	xsetroot -name " / $free_space_root V $vol $time "
 }
 
 # SIGNALLING
