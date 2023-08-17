@@ -77,7 +77,7 @@ cmd copyto ${{
 
 cmd extract ${{
 	case "$f" in
-		*.zip) unzip "$f" ;;
+		*.zip) for f in *.zip; do unzip "$f" -d "${f%.zip}"; done ;;
 	      	*.7z) 7z x "$f" ;;
 	      	*.tar.gz) tar -xzvf "$f" ;;
 	      	*.tar.xz) tar -xvf "$f" ;;

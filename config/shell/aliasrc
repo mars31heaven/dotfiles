@@ -42,8 +42,7 @@ alias \
 	lhr="ls -lArcht | head -n 30" \
 	g="grep" \
 	lg="ls | grep" \
-	c="bat --theme gruvbox-dark" \
-	cat="bat --theme gruvbox-dark" \
+	cat="bat" \
 	gi="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -72,7 +71,7 @@ alias \
 	br="beet remove" \
 	be="beet edit" \
 	ytdl="yt-dlp" \
-	iv="nsxiv -a" \
+	iv="nsxiv-rifle" \
 	ivu="nsxiv-url" \
 	yt="ytfzf" \
 	ncdu="ncdu --color off" \
@@ -96,7 +95,9 @@ alias \
 	bp="buku -p" \
 	bw="buku -w" \
 	msar="mpc search Artist" \
-	msal="mpc search Album"
+	msal="mpc search Album" \
+	icat="kitty +kitten icat" \
+	c="calcurse"
 
 # External storage
 alias \

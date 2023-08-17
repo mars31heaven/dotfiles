@@ -22,9 +22,6 @@ super + e
 	$TERMINAL -e $EDITOR
 
 super + p
-	dmenu_run_i
-
-super + shift + p
 	passmenu
 
 super + shift + a
@@ -52,7 +49,7 @@ super + v
 	$TERMINAL -e pulsemixer
 
 super + shift + v
-	$TERMINAL -e pipe-viewer
+	$TERMINAL -e gtk-pipe-viewer
 
 super + n
 	$TERMINAL -e ncmpcpp
@@ -61,7 +58,7 @@ super + shift + n
 	nicotine
 
 super + m
-	mpdmenu
+	rofi-mpd -a
 
 super + shift + m
 	pamixer --toggle-mute ; \
@@ -88,10 +85,10 @@ shift + ctrl + Print
 super + Insert
 	clipmenu -l 20
 
-super + Home
+super + space
 	rofi -show drun
 
-super + shift + Home
+super + Home
 	$TERMINAL -e htop
 
 XF86Tools

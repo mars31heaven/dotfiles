@@ -1,10 +1,10 @@
 #!/bin/sh
 
 options="\
-	logout
-	poweroff
-	reboot
-	suspend"
+logout
+poweroff
+reboot
+suspend"
 
 choice=$(printf '%s\n' "$options" | bemenu)
 

@@ -1,4 +1,4 @@
-@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
+//@theme "/usr/share/rofi/themes/Monokai.rasi"
 
 configuration {
 /*	modes: "window,drun,run,ssh";*/
@@ -152,3 +152,4 @@ configuration {
       sorting-method:    "name";
   }
 }
+@theme "/usr/share/rofi/themes/Monokai.rasi"
