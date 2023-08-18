@@ -6,6 +6,7 @@ mkdir -p $HOME/.w3m
 
 mkdir -p $HOME/.config/abook \
 	$HOME/.config/beets \
+	$HOME/.config/calcurse \
 	$HOME/.config/dunst \
 	$HOME/.config/fontconfig \
 	$HOME/.config/git \
@@ -42,6 +43,7 @@ ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
 ln -s $HOME/.dotfiles/config/abook/abookrc $HOME/.config/abook/abookrc
 ln -s $HOME/.dotfiles/config/beets/config.yaml $HOME/.config/beets/config.yaml
+ln -s $HOME/.dotfiles/config/calcurse $HOME/.config/calcurse
 ln -s $HOME/.dotfiles/config/dunst/dunstrc $HOME/.config/dunst/dunstrc
 ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
