@@ -10,7 +10,7 @@ case "$1" in
 		tsp "$TERMINAL" -e mpv --no-video "$1" >/dev/null 2>&1
 		;;
 
-	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
+	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*.rmvb|*youtu.be*|watch?*|*/playlist?*)
 		setsid -f mpv "$1"
 		;;
 
