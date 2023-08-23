@@ -8,18 +8,13 @@ Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/nerdtree'
-Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
 " General theme
 colorscheme default
-
-" vim-airline theme
-let g:airline_theme='base16_gruvbox_dark_hard'
 
 " Leader key
 let mapleader =","
