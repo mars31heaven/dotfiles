@@ -7,14 +7,6 @@ printf "$$" > ~/.cache/pidofbar
 sec=0
 
 # MODULES
-update_cpu () {
-	cpu="$(grep -o "^[^ ]*" /proc/loadavg )"
-}
-
-update_memory () {
-	memory="$(free -h | sed -n "2s/\([^ ]* *\)\{2\}\([^ ]*\).*/\2/p")"
-}
-
 update_time () {
 	time="$(date "+%a %b %d %R")"
 }
@@ -39,8 +31,8 @@ update_disk () {
 update_vol
 
 display () {
-	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $memory $cpu $bat $vol $time "
-	xsetroot -name " / $free_space_root V $vol R $memory CPU $cpu B $bat $time "
+	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $bat $vol $time "
+	xsetroot -name " / $free_space_root V $vol B $bat $time "
 }
 
 # SIGNALLING
@@ -57,8 +49,6 @@ do
 		# to update item ever n seconds with a offset of m
 		## [ $((sec % n)) -eq m ] && udpate_item
 		[ $((sec % 30 )) -eq 0 ] && update_time # update time every 30 seconds
-		[ $((sec % 15)) -eq 0 ] && update_cpu 	# update cpu every 15 seconds
-		[ $((sec % 15)) -eq 0 ] && update_memory
 		[ $((sec % 60)) -eq 0 ] && update_bat
 		[ $((sec % 3600)) -eq 2 ] && update_disk
 
