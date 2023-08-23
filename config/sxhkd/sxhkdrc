@@ -115,7 +115,7 @@ shift + ctrl + Print
 super + Insert
 	clipmenu -l 20
 
-super + Home
+super + space
 	rofi -show drun
 
 super + shift + Home

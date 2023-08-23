@@ -1,6 +1,5 @@
 # Source external configuration files
 config.source("search_engines.py")
-config.source("gruvbox.py")
 
 ## This is here so configs done via the GUI are still loaded.
 ## Remove it to not load settings done via the GUI.
@@ -14,7 +13,6 @@ config.bind(",V", "hint links spawn mpv {hint-url}")
 config.bind(";V", "hint --rapid links spawn setsid -f mpv {hint-url}")
 config.bind(",m", "spawn tsp st -e mpv --no-video {url}")
 config.bind(",M", "hint links spawn tsp st -e mpv --no-video {hint-url}")
-config.bind(",w", "spawn st -e w3m {url}")
 config.bind(",W", "hint links spawn st -e w3m {url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
@@ -109,7 +107,7 @@ c.completion.height = '50%'
 
 ## Minimum amount of characters needed to update completions.
 ## Type: Int
-# c.completion.min_chars = 1
+c.completion.min_chars = 2
 
 ## Which categories to show (in which order) in the :open completion.
 ## Type: FlagList
@@ -119,7 +117,7 @@ c.completion.height = '50%'
 ##   - bookmarks
 ##   - history
 ##   - filesystem
-# c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history', 'filesystem']
+c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history']
 
 ## Move on to the next part when there's only one possible completion
 ## left.
@@ -145,7 +143,7 @@ c.completion.height = '50%'
 ## Shrink the completion to be smaller than the configured size if there
 ## are no scrollbars.
 ## Type: Bool
-# c.completion.shrink = False
+c.completion.shrink = True
 
 ## Format of timestamps (e.g. for the history completion). See
 ## https://sqlite.org/lang_datefunc.html and
@@ -170,7 +168,7 @@ c.completion.height = '50%'
 ## Number of URLs to show in the web history. 0: no history / -1:
 ## unlimited
 ## Type: Int
-# c.completion.web_history.max_items = -1
+c.completion.web_history.max_items = -1
 
 ## Require a confirmation before quitting the application.
 ## Type: ConfirmQuit
@@ -194,7 +192,7 @@ c.content.autoplay = False
 ## extracting it from the `location` parameter of the subscribe URL and
 ## URL-decoding it).
 ## Type: List of Url
-c.content.blocking.adblock.lists = ['https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2022.txt']
+c.content.blocking.adblock.lists = ['https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2023.txt']
 
 ## Enable the ad/host blocker
 ## Type: Bool
@@ -378,8 +376,8 @@ c.content.fullscreen.window = False
 ## between 5.12 and 5.14 (inclusive), changing the value exposed to
 ## JavaScript requires a restart.
 ## Type: FormatString
-# c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
-c.content.headers.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0'
+c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+#c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
 
 ## Enable hyperlink auditing (`<a ping>`).
 ## Type: Bool
@@ -647,7 +645,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '~/03_downloads'
+c.downloads.location.directory = '/home/mrcl/03_downloads/'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.
@@ -698,7 +696,7 @@ c.downloads.open_dispatcher = 'qtbopen'
 ## `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 ## Same as `{column}`, but starting from index 0.
 ## Type: ShellCommand
-c.editor.command = ['st', '-e', 'nvim', '{file}']
+c.editor.command = ['kitty', 'nvim', '{file}']
 
 ## Encoding to use for the editor.
 ## Type: Encoding
@@ -710,7 +708,7 @@ c.editor.command = ['st', '-e', 'nvim', '{file}']
 ## Filename of the file to be written to. If not contained in any
 ## argument, the   standard output of the command is read instead.
 ## Type: ShellCommand
-c.fileselect.folder.command = ['st', '-e', 'lf', '--choosedir={}']
+c.fileselect.folder.command = ['pcmanfm', '--choosedir={}']
 
 ## Handler for selecting file(s) in forms. If `external`, then the
 ## commands specified by `fileselect.single_file.command` and
@@ -1349,7 +1347,7 @@ c.scrolling.bar = 'overlay'
 ##   - startpage: Load the start page.
 ##   - default-page: Load the default page.
 ##   - close: Close the window.
-c.tabs.last_close = 'startpage'
+c.tabs.last_close = 'close'
 
 ## Maximum width (in pixels) of tabs (-1 for no maximum). This setting
 ## only applies when tabs are horizontal. This setting does not apply to
@@ -1624,6 +1622,7 @@ config.unbind('<Ctrl-V>')
 # config.bind('<Ctrl-X>', 'navigate decrement')
 # config.bind('<Ctrl-^>', 'tab-focus last')
 # config.bind('<Ctrl-h>', 'home')
+config.bind('<Ctrl-Shift-h>', 'history')
 # config.bind('<Ctrl-p>', 'tab-pin')
 # config.bind('<Ctrl-s>', 'stop')
 # config.bind('<Escape>', 'clear-keychain ;; search ;; fullscreen --leave')
