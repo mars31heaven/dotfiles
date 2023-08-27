@@ -56,6 +56,7 @@ ln -s $HOME/.dotfiles/config/ironbar $HOME/.config/ironbar
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
+ln -s $HOME/.dotfiles/config/kitty $HOME/.config/kitty
 ln -s $HOME/.dotfiles/config/mpd/mpd.conf $HOME/.config/mpd/mpd.conf
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
