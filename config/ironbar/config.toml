@@ -1,15 +1,16 @@
-position = "bottom"
-height = 32
+position = "top"
+anchor_to_edges = true
+height = 28
 
 [[start]]
 type = "workspaces"
 all_monitors = false
 
-[[start]]
+[[center]]
 type = "focused"
 show_icon = true
 show_title = true
-icon_size = 28
+icon_size = 22
 truncate = "end"
 
 [[end]]
@@ -26,6 +27,3 @@ pause = ""
 [[end]]
 type = "clock"
 format = "%d/%m/%Y %H:%M"
-
-[[end]]
-type = "tray"
