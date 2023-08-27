@@ -2,7 +2,6 @@
 # functions exists and source them
 [ -f ~/.config/shell/aliasrc ] && source ~/.config/shell/aliasrc
 [ -f ~/.config/shell/shortcutrc ] && source ~/.config/shell/shortcutrc
-
 [ -f ~/.config/shell/private ] && source ~/.config/shell/private
 
 # Enable colors and change prompt:

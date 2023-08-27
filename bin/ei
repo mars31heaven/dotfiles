@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nvim /home/mrcl/.config/ironbar/config.toml

@@ -1,5 +1,5 @@
 # Source external configuration files
-config.source("search_engines.py")
+#config.source("search_engines.py")
 
 ## This is here so configs done via the GUI are still loaded.
 ## Remove it to not load settings done via the GUI.
@@ -1528,7 +1528,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
+#c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String
