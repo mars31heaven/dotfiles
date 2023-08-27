@@ -13,11 +13,30 @@ HISTFILE=$HISTFILE
 HISTSIZE=1000000
 SAVEHIST=1000000
 
-autoload -U compinit && compinit
+# Completion.
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+zstyle ':completion:*' rehash true                              # automatically find new executables in path
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle ':completion:*:descriptions' format '%U%F{cyan}%d%f%u'
+
+# Speed up completions
+zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.cache/zcache
+
+# automatically load bash completion functions
+autoload -U +X bashcompinit && bashcompinit
+
+#autoload -U compinit && compinit
 zmodload -i zsh/complist
 
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+#zstyle ':completion:*' menu select
+#zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 zle -N history-substring-search-up
 zle -N history-substring-search-down
