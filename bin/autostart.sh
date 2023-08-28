@@ -8,8 +8,6 @@ wl-paste -t text --watch clipman store --no-persist &
 
 swaybg --color '#1c1c1c' &
 
-ironbar &
-
 dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus &
 
 /usr/bin/pipewire &
