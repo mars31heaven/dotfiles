@@ -1,6 +1,6 @@
 position = "top"
 anchor_to_edges = true
-height = 28
+height = 18
 
 [[start]]
 type = "workspaces"
@@ -10,15 +10,8 @@ all_monitors = false
 type = "focused"
 show_icon = true
 show_title = true
-icon_size = 22
+icon_size = 18
 truncate = "end"
-
-[[end]]
-type = "music"
-player_type = "mpd"
-format = "{artist} - {title}"
-music_dir = "/home/mrcl/05_music"
-show_status_icon = true
 
 [[start.icons]]
 play = ""
