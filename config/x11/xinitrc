@@ -1,16 +1,7 @@
 #!/bin/sh
 
-remaps &
-unclutter &
-clipmenud &
-sxhkd &
-sbar &
-xrdb .config/x11/xresources
-xset s 480
-xsetroot -solid "#3a3a3a"
-dunst &
-brownout 600
-exec dwm
+/usr/bin/pipewire &
+/usr/bin/pipewire-pulse &
+/usr/bin/wireplumber &
 
-# Ensure that xrdb has finished running before moving on to start the WM/DE.
-[ -n "$xrdbpid" ] && wait "$xrdbpid"
+exec startplasma-x11
