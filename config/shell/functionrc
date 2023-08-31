@@ -13,21 +13,6 @@ fcd() {
 
 bind '"\C-f":"fcd\n"'
 
-# Autogenerate .m3u playlist files
-play() {
-	for f in *.mp3; do echo "$f" >> play.m3u; done
-}
-
-# Convert magnet links into .torrent files
-mag2torrent() {
-	aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
-}
-
-# Play a random internet radio station
-radio() {
-	pkill -f "mpv --no-terminal http*"; cat ~/.local/share/internet_radio | shuf | sed -n 1p | xargs bgmus
-}
-
 # Use lf to switch directories and bind it to ctrl+o
 lfcd() {
     tmp="$(mktemp)"
@@ -43,8 +28,3 @@ bind '"\C-o":"lfcd\n"'
 
 # Edit a command with vim when in insert mode and bind it to ctrl+e
 bind '"\C-e": "\e^v \n"'
-
-# Get the current ip address
-ipa() {
-	ip addr | grep 192 | awk '{print $2}' | sed 's\/24\\'
-}
