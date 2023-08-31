@@ -92,6 +92,7 @@ bindkey -s '^w' 'smdir\n'
 #Bindings for different ncurses programs
 bindkey -s '^n' 'ncmpcpp\n'
 bindkey -s '^p' 'pulsemixer\n'
+bindkey -s '^k' 'fzf-kill\n'
 
 # Play a random internet radio station
 radio() {
