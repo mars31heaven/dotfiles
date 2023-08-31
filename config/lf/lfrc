@@ -18,9 +18,7 @@ map o open
 map . set hidden!
 map u half-up
 map d half-down
-map D delete
 map p paste
-map x cut
 map X extract
 map y copy
 map Y copyto
