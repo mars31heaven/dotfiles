@@ -2,10 +2,12 @@
 
 # Directories shortcuts
 alias \
-	h="cd ~ && ls -A" \
-	d="cd ~/01_documents && ls" \
+	h="cd ~ && ls" \
+	d="cd ~/Documents && ls" \
+	D="cd ~/Downloads && ls" \
+	m="cd ~/Music && ls" \
+	im="cd ~/Pictures && ls" \
 	sy="cd ~/02_documents_android_sync && ls" \
-	D="cd /media/ssd1/02_downloads && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -13,8 +15,6 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
-	m="cd ~/05_musica && ls" \
-	im="cd ~/06_imagens && ls" \
 	sc="cd ~/06_imagens/04_capturas && ls" \
 	M="cd /mnt && ls" \
 	m3="cd /media/sdd1 && ls" \
