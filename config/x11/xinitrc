@@ -1,7 +1,5 @@
 #!/bin/sh
 
-/usr/bin/pipewire &
-/usr/bin/pipewire-pulse &
-/usr/bin/wireplumber &
+xrdb ~/.config/x11/xresources
 
 exec startplasma-x11
