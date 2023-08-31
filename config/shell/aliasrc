@@ -13,7 +13,6 @@ alias \
 # Colored output, verbosity and protection
 # against overwriting.
 alias \
-	ls="ls --color=auto --group-directories-first" \
 	grep="grep -i --color=auto" \
 	diff="diff --color=auto" \
 	rm="rm -Iv" \
@@ -32,14 +31,17 @@ alias \
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
 alias \
+	..="cd .." \
 	v="$EDITOR" \
 	vi="$EDITOR" \
-	l="ls" \
-	ll="ls -A" \
-	lll=" ls -lAcht" \
-	lr="ls -R" \
-	lh="ls -lAcht | head -n 30" \
-	lhr="ls -lArcht | head -n 30" \
+	ls="exa" \
+	l="exa" \
+	ll="exa -lht modified" \
+	lll="exa -alht modified" \
+	lr="exa -R" \
+	lh="exa -lhs modified | head -n 30" \
+	lhr="exa -lrhs modified | head -n 30" \
+	t="exa --tree" \
 	g="grep" \
 	lg="ls | grep" \
 	cat="bat" \
@@ -58,7 +60,6 @@ alias \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
-	hstr="hh" \
 	qbt="qbittorrent-nox --daemon" \
 	mm="mpc" \
 	ma="mpc add" \
@@ -73,7 +74,6 @@ alias \
 	ytdl="yt-dlp" \
 	iv="nsxiv-rifle" \
 	ivu="nsxiv-url" \
-	yt="ytfzf" \
 	ncdu="ncdu --color off" \
 	rs="rsync -rvP" \
 	t="toot" \
@@ -81,23 +81,20 @@ alias \
 	tp="toot post -e" \
 	tn="toot notifications" \
 	fd="fd --unrestricted" \
-	mpm="mpv --no-save-position-on-quit --no-resume-playback" \
-	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
 	wi="vim -c VimwikiIndex" \
-	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
-	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
-	ph="cat /var/log/pacman.log" \
+	ph="bat /var/log/pacman.log" \
 	jkt="~/.local/share/Jackett/jackett" \
-	mpd="mpd && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf" \
+	mpd="mpd && mpc up" \
 	b="buku --suggest" \
 	bp="buku -p" \
 	bw="buku -w" \
 	msar="mpc search Artist" \
 	msal="mpc search Album" \
 	icat="kitty +kitten icat" \
-	c="calcurse"
+	c="calcurse" \
+	pgr="nvimpager"
 
 # External storage
 alias \
