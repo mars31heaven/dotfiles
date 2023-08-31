@@ -14,7 +14,7 @@ Plug 'vim-airline/vim-airline'
 call plug#end()
 
 " Leader key
-let mapleader =","
+let mapleader =" "
 
 " Disable compability with vi
 set nocompatible
