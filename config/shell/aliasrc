@@ -34,17 +34,22 @@ alias \
 	..="cd .." \
 	v="$EDITOR" \
 	vi="$EDITOR" \
-	ls="exa" \
-	l="exa" \
-	ll="exa -lht modified" \
-	lll="exa -alht modified" \
-	lr="exa -R" \
-	lh="exa -lhs modified | head -n 30" \
-	lhr="exa -lrhs modified | head -n 30" \
-	t="exa --tree" \
+	ls="eza" \
+	eza="eza --icons --color=always --group-directories-first" \
+	l="eza" \
+	ll="eza -lht modified" \
+	lll="eza -alht modified" \
+	lr="eza -R" \
+	lt="exa -aT" \
+	l.="exa -ald .*" \
+	lh="eza -lhs modified | head -n 30" \
+	lhr="eza -lrhs modified | head -n 30" \
+	t="eza --tree" \
 	g="grep" \
 	lg="ls | grep" \
 	cat="bat" \
+	c="cat" \
+	rmr="rm -r" \
 	gi="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -93,8 +98,33 @@ alias \
 	msar="mpc search Artist" \
 	msal="mpc search Album" \
 	icat="kitty +kitten icat" \
-	c="calcurse" \
 	pgr="nvimpager"
+
+# Common use
+alias fixpacman="sudo rm /var/lib/pacman/db.lck"
+alias tarnow='tar -acf '
+alias untar='tar -xvf '
+alias wget='wget -c '
+alias rmpkg="sudo pacman -Rdd"
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='grep -F --color=auto'
+alias egrep='grep -E --color=auto'
+alias hw='hwinfo --short'                          # Hardware Info
+alias big="expac -H M '%m\t%n' | sort -h | nl"     # Sort installed packages according to size in MB
+alias gitpkg='pacman -Q | grep -i "\-git" | wc -l' # List amount of -git packages
+
+# Cleanup orphaned packages
+alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
+
+# Recent installed packages
+alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -100 | nl"
 
 # External storage
 alias \
