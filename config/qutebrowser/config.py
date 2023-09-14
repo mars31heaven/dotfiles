@@ -118,7 +118,7 @@ c.completion.min_chars = 2
 ##   - bookmarks
 ##   - history
 ##   - filesystem
-c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history']
+c.completion.open_categories = ['quickmarks', 'bookmarks', 'history']
 
 ## Move on to the next part when there's only one possible completion
 ## left.
