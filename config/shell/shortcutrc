@@ -4,10 +4,11 @@
 alias \
 	h="cd ~ && ls" \
 	d="cd ~/Documents && ls" \
+	sy="cd ~/Documents/01_documentos_sincronizados && ls" \
 	D="cd ~/Downloads && ls" \
 	m="cd ~/Music && ls" \
-	im="cd ~/Pictures && ls" \
-	sy="cd ~/02_documents_android_sync && ls" \
+	P="cd ~/Pictures && ls" \
+	sc="cd ~/Pictures/02_screenshots && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -15,11 +16,9 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
-	sc="cd ~/06_imagens/04_capturas && ls" \
 	M="cd /mnt && ls" \
 	m3="cd /media/sdd1 && ls" \
 	hd1="cd /media/hdd1 && ls" \
 	hd2="cd /media/hdd2 && ls" \
 	sd1="cd /media/ssd1 && ls" \
-	T="cd /tmp" \
-	S="cd /media/ssd1/01_musica/00_soulseek && ls"
+	T="cd /tmp"
