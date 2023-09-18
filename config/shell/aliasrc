@@ -98,7 +98,8 @@ alias \
 	msar="mpc search Artist" \
 	msal="mpc search Album" \
 	icat="kitty +kitten icat" \
-	pgr="nvimpager"
+	pgr="nvimpager" \
+	win="vboxmanage startvm Windows\ 10"
 
 # Common use
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"
