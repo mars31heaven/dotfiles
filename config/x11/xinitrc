@@ -1,5 +1,6 @@
 #!/bin/sh
 
+unclutter &
 xrdb ~/.config/x11/xresources
 
 exec startplasma-x11
