@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if pidof qbittorrent-nox; then
+	killall -9 qbittorrent-nox
+else
+	qbittorrent-nox
+fi
