@@ -1,5 +1,5 @@
 library: library.db
-directory: /home/mrcl/05_musica/01_organizado/
+directory: /home/mrcl/Music/00_organizado
 
 import:
     write: yes
@@ -108,7 +108,7 @@ sort_item: artist+ album+ disc+ track+
 sort_case_insensitive: yes
 
 paths:
-    default: %the{$albumartist} - $album%aunique{}/$track $title
+    default: %the{$albumartist} - $album%aunique{}/$track - $albumartist - $album - $title
     singleton: Non-Album/$artist/$title
     comp: $albumartist - $album%aunique{}/$track $title
 
