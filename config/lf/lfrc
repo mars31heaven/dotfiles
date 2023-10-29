@@ -2,25 +2,22 @@
 
 set previewer "~/.config/lf/preview"
 set preview
-set shell bash
-set shellopts '-eu'
-set icons
-set ifs "\n"
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 set scrolloff 10
 set relativenumber
 set incsearch
+set icons
 
 # Open script
 map o open
 
 # Basic functions
 map . set hidden!
+map x cut
+map D delete
 map u half-up
 map d half-down
-map D delete
 map p paste
-map x cut
 map X extract
 map y copy
 map Y copyto
@@ -35,13 +32,8 @@ map <c-y> path_yank
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map E push :!nvim<space>
 map <enter> shell
-
-# Rename
-map A rename # at the very end
-map I push A<c-a> # at the very beginning
-map i push A<a-b><a-b><a-f> # before extention
-map a push A<a-b> # after extention
 map B bulkrename
+map A rename
 
 # cmd functions
 
@@ -77,21 +69,21 @@ cmd copyto ${{
 
 cmd extract ${{
 	case "$f" in
-		*.zip) unzip "$f" ;;
+		*.zip) for f in *.zip; do unzip "$f" -d "${f%.zip}"; done ;;
 	      	*.7z) 7z x "$f" ;;
 	      	*.tar.gz) tar -xzvf "$f" ;;
 	      	*.tar.xz) tar -xvf "$f" ;;
 	      	*.tar.bz2) tar -xjvf "$f" ;;
 	      	*.tar) tar -xvf "$f" ;;
 		*.tgz) tar zxvf "$f" ;;
-	      	*.rar) unrar x "$f" ;;
+	      	*.rar) for f in *.rar; do unrar x "$f"; done ;;
 	      	*) echo "Unsupported format" ;;
 	esac
 }}
 
 cmd path_yank ${{
 	for x in $fx; do
-		echo $x | xclip -r -sel c
+		echo $x | kitty +kitten clipboard
 	done
 }}
 

@@ -5,20 +5,14 @@ mv $HOME/dotfiles $HOME/.dotfiles
 
 mkdir -p $HOME/.w3m
 
-mkdir -p $HOME/.config/abook \
-	$HOME/.config/beets \
-	$HOME/.config/dunst \
+mkdir -p $HOME/.config/beets \
 	$HOME/.config/fontconfig \
 	$HOME/.config/git \
-	$HOME/.config/gtk-2.0 \
-	$HOME/.config/gtk-3.0 \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpd/playlists \
-	$HOME/.config/mutt \
 	$HOME/.config/mpv \
 	$HOME/.config/ncmpcpp \
-	$HOME/.config/newsboat \
 	$HOME/.config/nsxiv/exec \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
@@ -28,7 +22,6 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
 	$HOME/.config/sxhkd \
-	$HOME/.config/tmux \
 	$HOME/.config/urlscan \
 	$HOME/.config/x11 \
 	$HOME/.config/yt-dlp \
@@ -40,14 +33,9 @@ ln -s $HOME/.dotfiles/w3m/config $HOME/.w3m/config
 ln -s $HOME/.dotfiles/w3m/keymap $HOME/.w3m/keymap
 ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
-ln -s $HOME/.dotfiles/config/abook/abookrc $HOME/.config/abook/abookrc
 ln -s $HOME/.dotfiles/config/beets/config.yaml $HOME/.config/beets/config.yaml
-ln -s $HOME/.dotfiles/config/dunst/dunstrc $HOME/.config/dunst/dunstrc
 ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
-ln -s $HOME/.dotfiles/config/gtk-2.0/gtkfilechooser.ini $HOME/.config/gtk-2.0/gtkfilechooser.ini
-ln -s $HOME/.dotfiles/config/gtk-2.0/gtkrc-2.0 $HOME/.config/gtk-2.0/gtkrc-2.0
-ln -s $HOME/.dotfiles/config/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
@@ -57,10 +45,8 @@ ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
 ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
 ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
-ln -s $HOME/.dotfiles/config/mutt/mailcap $HOME/.config/mutt/mailcap
 ln -s $HOME/.dotfiles/config/ncmpcpp/bindings $HOME/.config/ncmpcpp/bindings
 ln -s $HOME/.dotfiles/config/ncmpcpp/config $HOME/.config/ncmpcpp/config
-ln -s $HOME/.dotfiles/config/newsboat/config $HOME/.config/newsboat/config
 ln -s $HOME/.dotfiles/config/nsxiv/exec/image-info $HOME/.config/nsxiv/exec/image-info
 ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key-handler
 ln -s $HOME/.dotfiles/config/nvim/autoload/plug.vim $HOME/.config/nvim/autoload/plug.vim
@@ -90,18 +76,7 @@ ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
 mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
 
-mkdir -p $HOME/.local/share/applications
-ln -s $HOME/.dotfiles/share/applications/st.desktop $HOME/.local/share/applications/st.desktop
-
-mkdir -p $HOME/.local/share/mpdscribble
-touch /home/mrcl/.local/share/mpdscribble/log
-
 mkdir -p $HOME/.cache/mpd
 touch $HOME/.cache/mpd/db
-
-mkdir -p $HOME/.cache/mpdscribble
-touch $HOME/.cache/mpdscribble/lastfm.journal
-touch $HOME/.cache/mpdscribble/librefm.journal
-touch $HOME/.cache/mpdscribble/listenbrainz.journal
 
 nvim +PlugInstall +qall

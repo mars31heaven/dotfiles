@@ -1,15 +1,18 @@
 #!/bin/sh
 
 # doas not required for some system commands
-for command in mount umount loginctl reboot poweroff shutdown pacman sv; do
+for command in mount umount loginctl reboot poweroff shutdown pacman sv rsm; do
 	alias $command="doas $command"
 done; unset command
+
+alias \
+	dv="doas nvim" \
+	doas vim="doas nvim"
 
 # Utilities configuration
 # Colored output, verbosity and protection
 # against overwriting.
 alias \
-	ls="ls --color=auto --group-directories-first" \
 	grep="grep -i --color=auto" \
 	diff="diff --color=auto" \
 	rm="rm -Iv" \
@@ -21,24 +24,32 @@ alias \
 # pacman, yay
 alias \
 	p="doas pacman" \
-	y="yay" \
-	pyu="doas pacman -Syu"
+	pyu="doas pacman -Syu" \
+	y="yay --removemake --noprovides --answerdiff None --answerclean None --mflags "--noconfirm""
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
-# Other abbreviations
 alias \
+	..="cd .." \
 	v="$EDITOR" \
 	vi="$EDITOR" \
-	l="ls" \
-	ll="ls -A" \
-	lll=" ls -lAcht" \
-	lr="ls -R" \
-	lh="ls -lAcht | head -n 30" \
-	lhr="ls -lArcht | head -n 30" \
+	ls="eza" \
+	eza="eza --color=always --group-directories-first" \
+	l="eza" \
+	ll="eza -lht modified" \
+	lll="eza -alht modified" \
+	lr="eza -R" \
+	lt="exa -aT" \
+	l.="exa -ald .*" \
+	lh="eza -lhs modified | head -n 30" \
+	lhr="eza -lrhs modified | head -n 30" \
+	t="eza --tree" \
 	g="grep" \
-	lg="l | g" \
+	lg="ls | grep" \
+	cat="bat" \
+	c="cat" \
+	rmr="rm -r" \
 	gi="git" \
 	gst="git status" \
 	gcl="git clone" \
@@ -48,15 +59,12 @@ alias \
 	gre="git restore" \
 	gcm="git commit -m" \
 	gca="git commit -a" \
-	t="tmux" \
-	ta="tmux attach-session" \
-	tl="tmux ls" \
+	gpu="git push" \
 	qtb="~/.local/bin/qtb" \
 	z="zathura" \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
-	hstr="hh" \
 	qbt="qbittorrent-nox --daemon" \
 	mm="mpc" \
 	ma="mpc add" \
@@ -64,50 +72,62 @@ alias \
 	mp="mpc playlist" \
 	mu="mpc up" \
 	mt="mpc toggle" \
-	b="beet" \
+	bt="beet" \
 	bi="beet import" \
 	br="beet remove" \
 	be="beet edit" \
 	ytdl="yt-dlp" \
-	iv="nsxiv -a" \
+	iv="nsxiv-rifle" \
 	ivu="nsxiv-url" \
-	yt="ytfzf" \
 	ncdu="ncdu --color off" \
-	zzz="loginctl suspend" \
 	rs="rsync -rvP" \
 	t="toot" \
 	tt="toot tui" \
 	tp="toot post -e" \
 	tn="toot notifications" \
-	abook="abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook" \
+	fd="fd --unrestricted" \
 	wi="vim -c VimwikiIndex" \
-	di="vim -c VimwikiDiaryIndex" \
 	www="w3m -B" \
-	mdcat="mdcat -p" \
-	ccat="highlight -O ansi" \
-	bat="bat --theme gruvbox-dark" \
 	sca="scrcpy" \
-	vsv="doas rsm" \
-	ph="cat /var/log/pacman.log" \
-	ncdu="ncdu --color dark" \
-	jkt="/usr/lib/jackett/jackett_launcher.sh" \
-	mpd="mpd && mpc up && mpdscribble"
+	ph="bat /var/log/pacman.log" \
+	jkt="~/.local/share/Jackett/jackett" \
+	mpd="mpd && mpc up" \
+	b="buku --suggest" \
+	bp="buku -p" \
+	bw="buku -w" \
+	msar="mpc search Artist" \
+	msal="mpc search Album" \
+	icat="kitty +kitten icat" \
+	pgr="nvimpager" \
+	win="vboxmanage startvm Windows\ 10"
+
+# Common use
+alias fixpacman="sudo rm /var/lib/pacman/db.lck"
+alias tarnow='tar -acf '
+alias untar='tar -xvf '
+alias wget='wget -c '
+alias rmpkg="sudo pacman -Rdd"
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='grep -F --color=auto'
+alias egrep='grep -E --color=auto'
+alias hw='hwinfo --short'                          # Hardware Info
+alias big="expac -H M '%m\t%n' | sort -h | nl"     # Sort installed packages according to size in MB
+alias gitpkg='pacman -Q | grep -i "\-git" | wc -l' # List amount of -git packages
+
+# Cleanup orphaned packages
+alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
+
+# Recent installed packages
+alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -100 | nl"
 
 # External storage
 alias \
-	m3m="pmount -e /dev/sdb1 m3" \
-	m3u="pumount /media/m3" \
-	mtpm="simple-mtpfs --device 1 /media/android" \
-	mtpu="fusermount -u /media/android"
-
-# Managing wi-fi, bluetooth and backlight
-alias \
-	wscan="iwctl station wlan0 scan" \
-	wgn="iwctl station wlan0 get-networks" \
-	bhp="bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	wup="doas sv up iwd && doas ip link set dev wlan0 up" \
-	wdown="doas ip link set dev wlan0 down && doas sv down iwd" \
-	bup="doas sv up bluetoothd && bluetoothctl power on && bluetoothctl connect 4C:65:A8:97:2F:9E" \
-	bdown="bluetoothctl disconnect 4C:65:A8:97:2F:9E && bluetoothctl power off && doas sv down bluetoothd" \
-	xb="xbacklight" \
-	xbs="xbacklight set"
+	m3m="pmount -e /dev/sdd1" \
+	m3u="pumount /media/sdd1"

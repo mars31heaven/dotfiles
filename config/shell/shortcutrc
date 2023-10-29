@@ -2,15 +2,13 @@
 
 # Directories shortcuts
 alias \
-	h="cd ~ && ls -A" \
-	d="cd ~/docs && ls" \
-	D="cd ~/dl && ls" \
-	m="cd ~/music && ls" \
-	P="cd ~/pics && ls" \
-	vv="cd ~/vids && ls" \
-	m3="cd /media/m3 && ls" \
-	sd="cd /media/sd && ls" \
-	M="cd /mnt && ls" \
+	h="cd ~ && ls" \
+	d="cd ~/Documents && ls" \
+	sy="cd ~/Documents/01_documentos_sincronizados && ls" \
+	D="cd ~/Downloads && ls" \
+	m="cd ~/Music && ls" \
+	P="cd ~/Pictures && ls" \
+	sc="cd ~/Pictures/02_screenshots && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -18,5 +16,9 @@ alias \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
-	pc="cd /media/pc/media && ls" \
+	M="cd /mnt && ls" \
+	m3="cd /media/sdd1 && ls" \
+	hd1="cd /media/hdd1 && ls" \
+	hd2="cd /media/hdd2 && ls" \
+	sd1="cd /media/ssd1 && ls" \
 	T="cd /tmp"

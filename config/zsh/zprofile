@@ -1,5 +1,5 @@
 #!/bin/sh
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-	pgrep -x dwm || exec startx "$XINITRC"
+	exec startx "$XINITRC"
 fi

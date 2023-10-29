@@ -1,5 +1,6 @@
 # Source external configuration files
-config.source("search_engines.py")
+#config.source("search_engines.py")
+config.source('themes/city-lights-theme.py')
 
 ## This is here so configs done via the GUI are still loaded.
 ## Remove it to not load settings done via the GUI.
@@ -11,9 +12,9 @@ config.bind(",cs", "config-source")
 config.bind(",v", "spawn mpv {url}")
 config.bind(",V", "hint links spawn mpv {hint-url}")
 config.bind(";V", "hint --rapid links spawn setsid -f mpv {hint-url}")
-config.bind(",m", "spawn tsp st -e mpv --no-video {url}")
-config.bind(",M", "hint links spawn tsp st -e mpv --no-video {hint-url}")
-config.bind(",W", "hint links spawn st -e w3m {url}")
+config.bind(",m", "spawn tsp konsole -e mpv --no-video {url}")
+config.bind(",M", "hint links spawn tsp konsole -e mpv --no-video {hint-url}")
+config.bind(",W", "hint links spawn konsole -e w3m {url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
 config.bind(",Gd", "hint --rapid links download")
@@ -117,7 +118,7 @@ c.completion.min_chars = 2
 ##   - bookmarks
 ##   - history
 ##   - filesystem
-c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history']
+c.completion.open_categories = ['quickmarks', 'bookmarks', 'history']
 
 ## Move on to the next part when there's only one possible completion
 ## left.
@@ -376,8 +377,8 @@ c.content.fullscreen.window = False
 ## between 5.12 and 5.14 (inclusive), changing the value exposed to
 ## JavaScript requires a restart.
 ## Type: FormatString
-c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
-#c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+# c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
 
 ## Enable hyperlink auditing (`<a ping>`).
 ## Type: Bool
@@ -645,7 +646,7 @@ c.content.prefers_reduced_motion = True
 ## Directory to save downloads to. If unset, a sensible OS-specific
 ## default is used.
 ## Type: Directory
-c.downloads.location.directory = '/home/mrcl/03_downloads/'
+#c.downloads.location.directory = '/media/ssd1/02_downloads/'
 
 ## Prompt the user for the download location. If set to false,
 ## `downloads.location.directory` will be used.
@@ -696,7 +697,7 @@ c.downloads.open_dispatcher = 'qtbopen'
 ## `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 ## Same as `{column}`, but starting from index 0.
 ## Type: ShellCommand
-c.editor.command = ['kitty', 'nvim', '{file}']
+c.editor.command = ['konsole', 'nvim', '{file}']
 
 ## Encoding to use for the editor.
 ## Type: Encoding
@@ -708,7 +709,7 @@ c.editor.command = ['kitty', 'nvim', '{file}']
 ## Filename of the file to be written to. If not contained in any
 ## argument, the   standard output of the command is read instead.
 ## Type: ShellCommand
-c.fileselect.folder.command = ['pcmanfm', '--choosedir={}']
+c.fileselect.folder.command = ['dolphin', '--choosedir={}']
 
 ## Handler for selecting file(s) in forms. If `external`, then the
 ## commands specified by `fileselect.single_file.command` and
@@ -1438,7 +1439,7 @@ c.tabs.last_close = 'close'
 ##   - never: Always hide the tab bar.
 ##   - multiple: Hide the tab bar if only one tab is open.
 ##   - switching: Show the tab bar when switching tabs.
-c.tabs.show = 'multiple'
+c.tabs.show = 'always'
 
 ## Duration (in milliseconds) to show the tab bar before hiding it when
 ## tabs.show is set to 'switching'.
@@ -1528,7 +1529,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
+#c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String
@@ -1880,3 +1881,90 @@ config.bind('gs', 'set-cmd-text -s :tab-select')
 # config.bind('Y', 'prompt-accept --save yes', mode='yesno')
 # config.bind('n', 'prompt-accept no', mode='yesno')
 # config.bind('y', 'prompt-accept yes', mode='yesno')
+
+## Which algorithm to use for modifying how colors are rendered with
+## darkmode. The `lightness-cielab` value was added with QtWebEngine 5.14
+## and is treated like `lightness-hsl` with older QtWebEngine versions.
+## Type: String
+## Valid values:
+##   - lightness-cielab: Modify colors by converting them to CIELAB color space and inverting the L value. Not available with Qt < 5.14.
+##   - lightness-hsl: Modify colors by converting them to the HSL color space and inverting the lightness (i.e. the "L" in HSL).
+##   - brightness-rgb: Modify colors by subtracting each of r, g, and b from their maximum value.
+# c.colors.webpage.darkmode.algorithm = 'lightness-hsl'
+
+## Contrast for dark mode. This only has an effect when
+## `colors.webpage.darkmode.algorithm` is set to `lightness-hsl` or
+## `brightness-rgb`.
+## Type: Float
+# c.colors.webpage.darkmode.contrast = 0.0
+
+## Render all web contents using a dark theme. Example configurations
+## from Chromium's `chrome://flags`:  - "With simple HSL/CIELAB/RGB-based
+## inversion": Set   `colors.webpage.darkmode.algorithm` accordingly.  -
+## "With selective image inversion": Set
+## `colors.webpage.darkmode.policy.images` to `smart`.  - "With selective
+## inversion of non-image elements": Set
+## `colors.webpage.darkmode.threshold.text` to 150 and
+## `colors.webpage.darkmode.threshold.background` to 205.  - "With
+## selective inversion of everything": Combines the two variants   above.
+## Type: Bool
+# c.colors.webpage.darkmode.enabled = True
+
+## Render all colors as grayscale. This only has an effect when
+## `colors.webpage.darkmode.algorithm` is set to `lightness-hsl` or
+## `brightness-rgb`.
+## Type: Bool
+# c.colors.webpage.darkmode.grayscale.all = True
+
+## Desaturation factor for images in dark mode. If set to 0, images are
+## left as-is. If set to 1, images are completely grayscale. Values
+## between 0 and 1 desaturate the colors accordingly.
+## Type: Float
+# c.colors.webpage.darkmode.grayscale.images = 0.0
+
+## Which images to apply dark mode to. With QtWebEngine 5.15.0, this
+## setting can cause frequent renderer process crashes due to a
+## https://codereview.qt-project.org/c/qt/qtwebengine-
+## chromium/+/304211[bug in Qt].
+## Type: String
+## Valid values:
+##   - always: Apply dark mode filter to all images.
+##   - never: Never apply dark mode filter to any images.
+##   - smart: Apply dark mode based on image content. Not available with Qt 5.15.0.
+# c.colors.webpage.darkmode.policy.images = 'smart'
+
+## Which pages to apply dark mode to. The underlying Chromium setting has
+## been removed in QtWebEngine 5.15.3, thus this setting is ignored
+## there. Instead, every element is now classified individually.
+## Type: String
+## Valid values:
+##   - always: Apply dark mode filter to all frames, regardless of content.
+##   - smart: Apply dark mode filter to frames based on background color.
+# c.colors.webpage.darkmode.policy.page = 'smart'
+
+## Threshold for inverting background elements with dark mode. Background
+## elements with brightness above this threshold will be inverted, and
+## below it will be left as in the original, non-dark-mode page. Set to
+## 256 to never invert the color or to 0 to always invert it. Note: This
+## behavior is the opposite of `colors.webpage.darkmode.threshold.text`!
+## Type: Int
+# c.colors.webpage.darkmode.threshold.background = 0
+
+## Threshold for inverting text with dark mode. Text colors with
+## brightness below this threshold will be inverted, and above it will be
+## left as in the original, non-dark-mode page. Set to 256 to always
+## invert text color or to 0 to never invert text color.
+## Type: Int
+# c.colors.webpage.darkmode.threshold.text = 256
+
+## Value to use for `prefers-color-scheme:` for websites. The "light"
+## value is only available with QtWebEngine 5.15.2+. On older versions,
+## it is the same as "auto". The "auto" value is broken on QtWebEngine
+## 5.15.2 due to a Qt bug. There, it will fall back to "light"
+## unconditionally.
+## Type: String
+## Valid values:
+##   - auto: Use the system-wide color scheme setting.
+##   - light: Force a light theme.
+##   - dark: Force a dark theme.
+c.colors.webpage.preferred_color_scheme = 'dark'
