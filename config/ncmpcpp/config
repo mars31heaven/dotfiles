@@ -308,11 +308,11 @@ mpd_music_dir = "~/music"
 #
 #playlist_show_mpd_host = no
 #
-#playlist_show_remaining_time = no
+playlist_show_remaining_time = yes
 #
 #playlist_shorten_total_times = no
 #
-#playlist_separate_albums = no
+playlist_separate_albums = yes
 #
 ##
 ## Note: Possible display modes: classic, columns.
@@ -450,7 +450,7 @@ startup_screen = "media_library"
 #
 display_bitrate = yes
 #
-#display_remaining_time = no
+display_remaining_time = yes
 #
 ## Available values: none, basic, extended, perl.
 ##

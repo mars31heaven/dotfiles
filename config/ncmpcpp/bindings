@@ -360,21 +360,19 @@ def_key "-"
 #def_key "z"
 #  toggle_random
 #
-#def_key "y"
-#  save_tag_changes
-#
-#def_key "y"
-#  start_searching
-#
-#def_key "S"
-#  toggle_single
-#
-#def_key "R"
-#  toggle_consume
-#
-#def_key "Y"
-#  toggle_replay_gain_mode
-#
+
+def_key "y"
+  dummy
+
+def_key "S"
+  dummy
+
+def_key "R"
+  dummy
+
+def_key "Y"
+  dummy
+
 #def_key "T"
 #  toggle_add_mode
 #

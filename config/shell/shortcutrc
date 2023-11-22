@@ -21,4 +21,6 @@ alias \
 	hd1="cd /media/hdd1 && ls" \
 	hd2="cd /media/hdd2 && ls" \
 	sd1="cd /media/ssd1 && ls" \
-	T="cd /tmp"
+	T="cd /tmp" \
+	S1="cd ~/Music/00_soulseek_nvme && eza -lrhs modified | head -n 20" \
+	S2="cd /media/hdd2/01_musica/02_desorganizado/00_soulseek_outubro_2023 && eza -lrhs modified | head -n 20"
