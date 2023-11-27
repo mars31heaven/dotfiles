@@ -103,6 +103,9 @@ alias \
 	tespbp="trans -d -p -speak -s es -t pt-BR" \
 	tes="trans -t es"
 
+alias rbt="reboot"
+alias pwr="poweroff"
+
 # Common use
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"
 alias tarnow='tar -acf '

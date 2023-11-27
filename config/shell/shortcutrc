@@ -22,6 +22,7 @@ alias \
 	hd2="cd /media/hdd2 && ls" \
 	sd1="cd /media/ssd1 && ls" \
 	T="cd /tmp" \
+	pas="cd ~/.local/share/password-store && ls" \
 	S1="cd ~/Music/00_soulseek_nvme && eza -lrhs modified | head -n 20" \
 	S2="cd /media/hdd2/01_musica/02_desorganizado/00_soulseek_outubro_2023 && eza -lrhs modified | head -n 20" \
 	S3="cd /media/hdd2/01_musica/02_desorganizado/00_soulseek_novembro_2023 && eza -lrhs modified | head -n 20"

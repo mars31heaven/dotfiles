@@ -8,7 +8,7 @@ Switch to Next Keyboard Layout=
 [StandardShortcuts]
 AboutApp=
 AboutKDE=
-Activate Next Tab=Ctrl+PgDown; Ctrl+]
+Activate Next Tab=Ctrl+]; Ctrl+PgDown
 Activate Previous Tab=Ctrl+[; Ctrl+PgUp
 ActualSize=Ctrl+0
 AddBookmark=Ctrl+B
@@ -17,7 +17,7 @@ BackwardWord=Ctrl+Left
 Begin=Ctrl+Home
 BeginningOfLine=Home
 Clear=
-Close=Ctrl+W; Ctrl+Esc
+Close=Ctrl+Esc; Ctrl+W
 ConfigureNotifications=
 ConfigureToolbars=
 Copy=Ctrl+Ins; Ctrl+C
@@ -39,7 +39,7 @@ FindPrev=Shift+F3
 FitToHeight=
 FitToPage=
 FitToWidth=
-Forward=Forward; Alt+Right
+Forward=Alt+Right; Forward
 ForwardWord=Ctrl+Right
 FullScreen=
 Goto=
@@ -88,7 +88,7 @@ Undo=Ctrl+Z
 Up=Alt+Up
 WhatsThis=Shift+F1
 Zoom=
-ZoomIn=Ctrl++; Ctrl+=
+ZoomIn=Ctrl+=; Ctrl++
 ZoomOut=Ctrl+-
 
 [bismuth][Global Shortcuts]
@@ -147,15 +147,18 @@ display=Display
 {1f91cd05-56ae-4729-be54-6169b50a32e6}=Meta+E
 {2f227ed5-afe2-477b-9433-7b0c5841da95}=Meta+Shift+N
 {35ede3d3-3c3e-494e-83d3-6d24432d1988}=Meta+Return
+{3df63a7a-fdfc-4077-aa93-0da7e7b51dfd}=Meta+F1
 {4e32ea75-203a-4762-9b59-e94731abe214}=Meta+Shift+F12
 {5bb39258-f632-4495-8493-3ecfc0ba3b91}=Meta+S
 {6f4d21e1-037e-46f3-aaa7-b55810666371}=Meta+Shift+V
 {87b90fef-fccd-4a98-bafa-8542258665ac}=Meta+M
 {ac7d5114-66bb-42ff-a7bf-e0ae9fc1ebab}=Meta+Ctrl+W
+{ad27db49-48e2-4322-8183-57794909e4bb}=Meta+P
 {bc283d50-9ffd-42cf-891a-17ef8e295ad5}=Meta+N
 {cc5755bd-b596-4b67-bfc7-d13a1b197cb2}=Meta+W
 {d03619b6-9b3c-48cc-9d9c-a2aadb485550}=
 {d2677366-4df7-45f8-ba52-4c95633f5c71}=Meta+D
+{d8b57772-ee56-4024-bfae-ed9c5185b51a}=Meta+Shift+P
 {dbdc0fa3-77ea-499c-80e6-6232be2103a4}=Meta+Shift+W
 {e1ef739f-f356-4bf3-9e97-9666028ac7eb}=Meta+Home
 {ee007af6-7a5c-4127-a058-12b00c7d679b}=Meta+V
@@ -171,7 +174,7 @@ mute=Volume Mute
 [ksmserver][Global Shortcuts]
 Halt Without Confirmation=
 Lock Session=Screensaver
-Log Out=Meta+Shift+End
+Log Out=
 Log Out Without Confirmation=
 Reboot Without Confirmation=
 
@@ -180,7 +183,7 @@ Activate Window Demanding Attention=Meta+Ctrl+A
 Decrease Opacity=
 Edit Tiles=
 Expose=Ctrl+F9
-ExposeAll=Ctrl+F10; Launch (C)
+ExposeAll=Launch (C); Ctrl+F10
 ExposeClass=Ctrl+F7
 ExposeClassCurrentDesktop=
 Increase Opacity=
@@ -193,13 +196,13 @@ MoveZoomRight=
 MoveZoomUp=
 Overview=
 Setup Window Shortcut=
-Show Desktop=Meta+Shift+Backspace
+Show Desktop=
 ShowDesktopGrid=Meta+Ctrl+Tab
 Suspend Compositing=Alt+Shift+F12
 Switch One Desktop Down=
 Switch One Desktop Up=
-Switch One Desktop to the Left=Meta+I; Meta+Ctrl+Left
-Switch One Desktop to the Right=Meta+Ctrl+Right; Meta+O
+Switch One Desktop to the Left=Meta+Ctrl+Left; Meta+I
+Switch One Desktop to the Right=Meta+O; Meta+Ctrl+Right
 Switch Window Down=Meta+Alt+Down
 Switch Window Left=Meta+Alt+Left
 Switch Window Right=Meta+Alt+Right
@@ -328,7 +331,7 @@ Window to Screen 5=
 Window to Screen 6=
 Window to Screen 7=
 view_actual_size=Meta+0
-view_zoom_in=Meta++; Meta+=
+view_zoom_in=Meta+=; Meta++
 view_zoom_out=Meta+-
 
 [mediacontrol][Global Shortcuts]
@@ -351,7 +354,7 @@ _launch=Meta+T
 
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=Alt+Shift+F2
-_launch=Alt+F2; Alt+Space; Search; Meta+Space
+_launch=Meta+Space; Alt+F2; Alt+Space; Search
 
 [org.kde.plasma.emojier.desktop][Global Shortcuts]
 _launch=Meta+.; Meta+Ctrl+Alt+Shift+Space
@@ -393,7 +396,8 @@ activate widget 129=
 activate widget 145=Meta+F3
 activate widget 147=
 activate widget 150=
-activate widget 151=Meta+P
+activate widget 151=
+activate widget 157=
 activate widget 22=
 activate widget 23=
 activate widget 26=

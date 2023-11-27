@@ -23,5 +23,5 @@ password=$(printf '%s\n' "${password_files[@]}" | fzf "$@")
 [[ -n $password ]] || exit
 
 if [[ $typeit -eq 0 ]]; then
-	pass show "$password" 2>/dev/null
+	pass show --clip "$password" 2>/dev/null
 fi

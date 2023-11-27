@@ -21,6 +21,7 @@ c.url.searchengines = {
     '!dis': 'https://www.discogs.com/search/?q={}',
     '!du': 'https://www.duckduckgo.com/?q={}',
     '!g': 'https://searx.be/search?q={}',
+    '!ia': 'https://archive.org/search?query={}',
     '!imdb': 'https://www.imdb.com/find/?q={}',
     '!git': 'https://github.com/search?type=Repositories&q={}',
     '!rym': 'https://rateyourmusic.com/search?searchterm={}',
