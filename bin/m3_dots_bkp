@@ -1,3 +1,0 @@
-#!/bin/sh
-
-rsync -rvP /home/mrcl/.config /home/mrcl/.dotfiles  /home/mrcl/.local  /home/mrcl/.ssh /media/m3/dots/

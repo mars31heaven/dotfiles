@@ -1,6 +1,0 @@
-#!/bin/sh
-
-img="/tmp/temp_$(date "+%Y_%m_%d_%s").png"
-
-maim -uso "$img"
-nsxiv "$img"
