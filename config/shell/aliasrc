@@ -25,7 +25,7 @@ alias \
 alias \
 	p="doas pacman" \
 	pyu="doas pacman -Syu" \
-	y="yay --removemake --noprovides --answerdiff None --answerclean None --mflags "--noconfirm""
+	y="yay --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm""
 
 # Use neovim for vim if present
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"

@@ -624,7 +624,7 @@ c.content.prefers_reduced_motion = True
 
 ## Enable WebGL.
 ## Type: Bool
-# c.content.webgl = True
+c.content.webgl = False
 
 ## Which interfaces to expose via WebRTC.
 ## Type: String
@@ -1256,7 +1256,7 @@ c.scrolling.bar = 'overlay'
 ##   - tr-TR: Turkish (Turkey)
 ##   - uk-UA: Ukrainian (Ukraine)
 ##   - vi-VN: Vietnamese (Viet Nam)
-# c.spellcheck.languages = []
+c.spellcheck.languages = ['en-US', 'pt-BR', 'es-ES']
 
 ## Padding (in pixels) for the statusbar.
 ## Type: Padding
@@ -1529,7 +1529,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = ['https://searx.be/']
+c.url.start_pages = ['https://rateyourmusic.com']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String
