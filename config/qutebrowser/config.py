@@ -1256,7 +1256,7 @@ c.scrolling.bar = 'overlay'
 ##   - tr-TR: Turkish (Turkey)
 ##   - uk-UA: Ukrainian (Ukraine)
 ##   - vi-VN: Vietnamese (Viet Nam)
-c.spellcheck.languages = ['en-US', 'pt-BR', 'es-ES']
+# c.spellcheck.languages = ['en-US', 'pt-BR', 'es-ES']
 
 ## Padding (in pixels) for the statusbar.
 ## Type: Padding
