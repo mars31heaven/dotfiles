@@ -1,6 +1,6 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
-export BROWSER="librewolf"
+export BROWSER="firefox"
 export TERMINAL="kitty"
 export READER="okular"
 export IMAGE="nsxiv"

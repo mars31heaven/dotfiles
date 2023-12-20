@@ -9,6 +9,7 @@ alias \
 	m="cd ~/Music && ls" \
 	P="cd ~/Pictures && ls" \
 	sc="cd ~/Pictures/02_screenshots && ls" \
+	V="cd ~/Video && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \

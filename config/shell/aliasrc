@@ -101,7 +101,8 @@ alias \
 	win="vboxmanage startvm Windows\ 10" \
 	tespb="trans -d -s es -t pt-BR" \
 	tespbp="trans -d -p -speak -s es -t pt-BR" \
-	tes="trans -t es"
+	tes="trans -t es" \
+	me="mullvad-exclude"
 
 alias rbt="reboot"
 alias pwr="poweroff"

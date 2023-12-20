@@ -1,5 +1,5 @@
 library: library.db
-directory: /home/mrcl/Music/00_organizado
+directory: /home/mrcl/
 
 import:
     write: yes
