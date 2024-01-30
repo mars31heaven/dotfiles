@@ -6,7 +6,6 @@ mv $HOME/dotfiles $HOME/.dotfiles
 mkdir -p $HOME/.w3m
 
 mkdir -p $HOME/.config/beets \
-	$HOME/.config/fontconfig \
 	$HOME/.config/git \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
@@ -34,7 +33,6 @@ ln -s $HOME/.dotfiles/w3m/keymap $HOME/.w3m/keymap
 ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
 ln -s $HOME/.dotfiles/config/beets/config.yaml $HOME/.config/beets/config.yaml
-ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc

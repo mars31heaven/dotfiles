@@ -8,14 +8,4 @@ makepkg -si
 
 yay -Y --devel --combinedupgrade --batchinstall --save
 
-yay -S --removemake --noprovides --answerdiff None --answerclean None --mflags "--noconfirm" arandr aria2 bat batsignal beets bc clipnotify docx2txt dunst exiv2 fd ffmpeg fzf highlight htop-vim imagemagick keepassxc libnotify lf maim mediainfo moreutils mpc mpd mpv ncdu ncmpcpp nicotine+ noto-fonts noto-fonts-emoji nsxiv odt2txt pamixer pass pinentry-dmenu pmount poppler python-pip qbittorrent qbittorrent-nox qutebrowser-git ripgrep rofi rsm rsync simple-scan socat soundconverter subdl surfraw sxhkd syncthing task-spooler terminus-font ttf-baekmuk ttf-hanazono ttf-play ttf-romande unclutter unzip urlscan w3m wget xcape xclip xdotool xorg-xbacklight xorg-server xorg-xinit xorg-xsetroot xsel yt-dlp zathura zathura-pdf-mupdf zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting
-
-# Clone x session software repositories
-# and move them to the src folder
-git clone https://github.com/graupe/brownout
-git clone https://github.com/cdown/clipmenu
-git clone https://github.com/mars31heaven/dmenu
-git clone https://github.com/mars31heaven/dwm
-
-mkdir -p ~/.local/src
-mv brownout clipmenu dmenu dwm ~/.local/src/
+yay -S --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm" aria2 bat beets bc docx2txt exiv2 fd fzf highlight htop-vim imagemagick keepassxc lf mediainfo moreutils mpc mpd mpv ncdu ncmpcpp nicotine+ noto-fonts noto-fonts-emoji nsxiv odt2txt pamixer pass pmount poppler qbittorrent qbittorrent-nox qutebrowser-git ripgrep rsm rsync simple-scan subdl surfraw syncthing task-spooler ttf-baekmuk ttf-hanazono unzip urlscan w3m wget yt-dlp zathura zathura-pdf-mupdf zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting mullvad-vpn-bin sshfs ntfs-3g firefox opendoas eza python-adblock
