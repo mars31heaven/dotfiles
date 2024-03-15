@@ -2,10 +2,7 @@ super + F1
 	laptopmononly
 
 super + shift + F1
-	bothmons
-
-super + F2
-	extmononly
+	livroomtv
 
 super + F3
 	brownout 600
@@ -25,19 +22,13 @@ super + shift + BackSpace
 	dmenupower
 
 super + w
-	qtb
+	qutebrowser
 
 super + shift + w
 	dmenuwireless
 
 super + e
 	$TERMINAL -e $EDITOR
-
-super + shift + e
-	$TERMINAL -e neomutt
-
-super + shift + u
-	dmenuumount
 
 super + p
 	dmenu_run_i
@@ -73,10 +64,7 @@ super + v
 	$TERMINAL -e pulsemixer
 
 super + shift + v
-	$TERMINAL -e pipe-viewer
-
-super + shift + b
-	brave
+	gtk-pipe-viewer
 
 super + n
 	$TERMINAL -e ncmpcpp
@@ -104,10 +92,10 @@ ctrl + space
 	dunstctl close-all
 
 Print
-	maim -u ~/pics/screenshots/full_$(date "+%Y_%m_%d_%s").png
+	maim ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + Print
-	maim -uso ~/pics/screenshots/sel_$(date "+%Y_%m_%d_%s").png
+	maim -uso ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + ctrl + Print
 	scrdis
@@ -137,10 +125,10 @@ XF86AudioRaiseVolume
 	kill -34 "$(cat ~/.cache/pidofbar)"
 
 XF86MonBrightnessDown
-	xbacklight -dec 2
+	doas xbacklight -dec 2
 
 XF86MonBrightnessUp
-	xbacklight -inc 2
+	doas xbacklight -inc 2
 
 XF86AudioPlay
 	mpc toggle
@@ -155,7 +143,7 @@ XF86AudioNext
 	mpc next
 
 XF86Mail
-	mw -Y
+	thunderbird
 
 XF86HomePage
 	$BROWSER

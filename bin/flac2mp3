@@ -1,0 +1,9 @@
+#!/bin/sh
+
+fd -t f -e flac -x ffmpeg -i "{}" -ac 2 -ar 44100 -joint_stereo 0 -qscale:a 0 "{.}.mp3"
+fd -t f -e wav -x ffmpeg -i "{}" -ac 2 -ar 44100 -joint_stereo 0 -qscale:a 0 "{.}.mp3"
+fd -t f -e m4a -x ffmpeg -i "{}" -ac 2 -ar 44100 -joint_stereo 0 -qscale:a 0 "{.}.mp3"
+
+fd -t f -e flac -x rm
+fd -t f -e wav -x rm
+fd -t f -e m4a -x rm

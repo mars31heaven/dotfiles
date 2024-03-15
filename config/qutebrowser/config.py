@@ -1,5 +1,5 @@
 # Source external configuration files
-#config.source("search_engines.py")
+config.source('searchengines.py')
 config.source('themes/city-lights-theme.py')
 
 ## This is here so configs done via the GUI are still loaded.
@@ -12,9 +12,9 @@ config.bind(",cs", "config-source")
 config.bind(",v", "spawn mpv {url}")
 config.bind(",V", "hint links spawn mpv {hint-url}")
 config.bind(";V", "hint --rapid links spawn setsid -f mpv {hint-url}")
-config.bind(",m", "spawn tsp konsole -e mpv --no-video {url}")
-config.bind(",M", "hint links spawn tsp konsole -e mpv --no-video {hint-url}")
-config.bind(",W", "hint links spawn konsole -e w3m {url}")
+config.bind(",m", "spawn tsp kitty -e mpv --no-video {url}")
+config.bind(",M", "hint links spawn tsp kitty -e mpv --no-video {hint-url}")
+config.bind(",W", "hint links spawn kitty -e w3m {url}")
 config.bind(",do", "download-open")
 config.bind(",gd", "hint links download")
 config.bind(",Gd", "hint --rapid links download")
@@ -624,7 +624,7 @@ c.content.prefers_reduced_motion = True
 
 ## Enable WebGL.
 ## Type: Bool
-# c.content.webgl = True
+c.content.webgl = False
 
 ## Which interfaces to expose via WebRTC.
 ## Type: String
@@ -697,7 +697,7 @@ c.downloads.open_dispatcher = 'qtbopen'
 ## `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 ## Same as `{column}`, but starting from index 0.
 ## Type: ShellCommand
-c.editor.command = ['konsole', 'nvim', '{file}']
+c.editor.command = ['kitty', 'nvim', '{file}']
 
 ## Encoding to use for the editor.
 ## Type: Encoding
@@ -709,7 +709,7 @@ c.editor.command = ['konsole', 'nvim', '{file}']
 ## Filename of the file to be written to. If not contained in any
 ## argument, the   standard output of the command is read instead.
 ## Type: ShellCommand
-c.fileselect.folder.command = ['dolphin', '--choosedir={}']
+c.fileselect.folder.command = ['pcmanfm', '--choosedir={}']
 
 ## Handler for selecting file(s) in forms. If `external`, then the
 ## commands specified by `fileselect.single_file.command` and
@@ -1256,7 +1256,7 @@ c.scrolling.bar = 'overlay'
 ##   - tr-TR: Turkish (Turkey)
 ##   - uk-UA: Ukrainian (Ukraine)
 ##   - vi-VN: Vietnamese (Viet Nam)
-# c.spellcheck.languages = []
+# c.spellcheck.languages = ['en-US', 'pt-BR', 'es-ES']
 
 ## Padding (in pixels) for the statusbar.
 ## Type: Padding
@@ -1529,7 +1529,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-#c.url.start_pages = ['~/.config/qutebrowser/startpage/startpage.html']
+c.url.start_pages = ['about:blank']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Open another terminal on the current working directory
+setsid -f "$TERMINAL"

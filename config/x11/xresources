@@ -26,19 +26,19 @@
 *colorBD: #e4e4e4
 
 !! dwm
-dwm.normbgcolor: #3a3a3a
+dwm.normbgcolor: #1c1c1c
 dwm.normbordercolor: #4e4e4e
 dwm.normfgcolor: #d0d0d0
-dwm.selbgcolor: #ffd787
-dwm.selbordercolor: #ffd787
-dwm.selfgcolor: #121212
+dwm.selbgcolor: #c79ec4
+dwm.selbordercolor: #c79ec4
+dwm.selfgcolor: #313131
 
 !! dmenu
 #dmenu.font: font or font set
-dmenu.background: #3a3a3a
+dmenu.background: #1c1c1c
 dmenu.foreground: #d0d0d0
-dmenu.selbackground: #ffd787
-dmenu.selforeground: #121212
+dmenu.selbackground: #c79ec4
+dmenu.selforeground: #313131
 
 !! nsxiv
 !! Color of the window background

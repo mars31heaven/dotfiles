@@ -6,7 +6,7 @@
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-PS1=' %F{white}%~%f > '
+PS1=' %F{red}%~%f $ '
 
 HISTFILE=$HISTFILE
 HISTSIZE=1000000
@@ -213,7 +213,6 @@ bindkey -s '^w' 'smdir\n'
 #Bindings for different ncurses programs
 bindkey -s '^n' 'ncmpcpp\n'
 bindkey -s '^p' 'pulsemixer\n'
-bindkey -s '^k' 'fzf-kill\n'
 
 # Play a random internet radio station
 radio() {

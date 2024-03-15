@@ -35,18 +35,18 @@ alias \
 	v="$EDITOR" \
 	vi="$EDITOR" \
 	ls="eza" \
-	eza="eza --color=always --group-directories-first" \
+	eza="eza --icons --color=always --group-directories-first" \
 	l="eza" \
 	ll="eza -lht modified" \
 	lll="eza -alht modified" \
 	lr="eza -R" \
 	lt="exa -aT" \
 	l.="exa -ald .*" \
-	lh="eza -lhs modified | head -n 30" \
-	lhr="eza -lrhs modified | head -n 30" \
+	lh="eza -lhs modified | head -n 40" \
+	lhr="eza -lrhs modified | head -n 40" \
 	t="eza --tree" \
-	g="grep" \
-	lg="ls | grep" \
+	g="grep -i --color=auto" \
+	lg="ls | grep -i --color=auto" \
 	cat="bat" \
 	c="cat" \
 	rmr="rm -r" \
@@ -61,7 +61,6 @@ alias \
 	gca="git commit -a" \
 	gpu="git push" \
 	qtb="~/.local/bin/qtb" \
-	z="zathura" \
 	ppv="pipe-viewer" \
 	pph="pipe-viewer -wv" \
 	pps="pipe-viewer -S" \
@@ -99,7 +98,14 @@ alias \
 	msal="mpc search Album" \
 	icat="kitty +kitten icat" \
 	pgr="nvimpager" \
-	win="vboxmanage startvm Windows\ 10"
+	win="vboxmanage startvm Windows\ 10" \
+	tespb="trans -d -s es -t pt-BR" \
+	tespbp="trans -d -p -speak -s es -t pt-BR" \
+	tes="trans -t es" \
+	me="mullvad-exclude"
+
+alias rbt="reboot"
+alias pwr="poweroff"
 
 # Common use
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"

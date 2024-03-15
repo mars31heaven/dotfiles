@@ -6,6 +6,9 @@ mv $HOME/dotfiles $HOME/.dotfiles
 mkdir -p $HOME/.w3m
 
 mkdir -p $HOME/.config/beets \
+	$HOME/.config/fontconfig \
+	$HOME/.config/gtk-2.0 \
+	$HOME/.config/gtk-3.0 \
 	$HOME/.config/git \
 	$HOME/.config/htop \
 	$HOME/.config/lf \
@@ -33,8 +36,13 @@ ln -s $HOME/.dotfiles/w3m/keymap $HOME/.w3m/keymap
 ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
 ln -s $HOME/.dotfiles/config/beets/config.yaml $HOME/.config/beets/config.yaml
+ln -s $HOME/.dotfiles/config/fontconfig/fonts.conf $HOME/.config/fontconfig/fonts.conf
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
+ln -s $HOME/.dotfiles/config/gtk-2.0/gtkfilechooser.ini $HOME/.config/gtk-2.0/gtkfilechooser.ini
+ln -s $HOME/.dotfiles/config/gtk-2.0/gtkrc-2.0 $HOME/.config/gtk-2.0/gtkrc-2.0
+ln -s $HOME/.dotfiles/config/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
+ln -s $HOME/.dotfiles/config/kitty $HOME/.config/kitty
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
@@ -54,8 +62,8 @@ ln -s $HOME/.dotfiles/config/qBittorrent/search_plugins $HOME/.config/qBittorren
 ln -s $HOME/.dotfiles/config/qBittorrent/qBittorrent.conf $HOME/.config/qBittorrent/qBittorrent.conf
 ln -s $HOME/.dotfiles/config/qBittorrent/mumble-dark.qbtheme $HOME/.config/qBittorrent/mumble-dark.qbtheme
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
-ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
 ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
+ln -s $HOME/.dotfiles/config/qutebrowser/themes $HOME/.config/qutebrowser/themes
 ln -s $HOME/.dotfiles/config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc
 ln -s $HOME/.dotfiles/config/shell/functionrc $HOME/.config/shell/functionrc

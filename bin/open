@@ -6,11 +6,11 @@
 if [ "$1" = "" ]; then exit; fi
 
 case "$1" in
-	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.m3u|*.pls)
-		tsp "$TERMINAL" -e mpv --no-video "$1" >/dev/null 2>&1
+	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
+		tsp "$TERMINAL" -e mpv --no-video --no-save-position-on-quit --no-resume-playback "$1" >/dev/null 2>&1
 		;;
 
-	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*.rmvb|*youtu.be*|watch?*|*/playlist?*)
+	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
 		setsid -f mpv "$1"
 		;;
 
@@ -23,7 +23,7 @@ case "$1" in
 		;;
 
 	*.pdf|*.cbr|*.epub)
-		zathura "$1" >/dev/null 2>&1
+		okular "$1"
 		;;
 
 	http*|www*)
