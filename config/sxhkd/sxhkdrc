@@ -1,3 +1,9 @@
+super + F1
+	laptopmononly
+
+super + shift + F1
+	livroomtv
+
 super + F3
 	brownout 600
 
@@ -16,22 +22,31 @@ super + shift + BackSpace
 	dmenupower
 
 super + w
-	qtb
+	qutebrowser
+
+super + shift + w
+	dmenuwireless
 
 super + e
-	$TERMINAL -e $EDITOR
+	kitty $EDITOR
 
 super + p
+	dmenu_run_i
+
+super + shift + p
 	passmenu
 
 super + shift + a
-	$TERMINAL -e abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
+	kitty abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
 
 super + s
-	$TERMINAL -e syncthing --no-browser
+	kitty syncthing --no-browser
 
 super + shift + s
 	pkill syncthing
+
+super + d
+	kitty $EDITOR -c VimwikiDiaryIndex
 
 super + shift + k
 	dmenukill
@@ -40,25 +55,25 @@ super + x
 	dim
 
 super + shift + x
-	xset s 99999
+	xset s 999
 
 super + c
 	dmenucalc
 
 super + v
-	$TERMINAL -e pulsemixer
+	kitty pulsemixer
 
 super + shift + v
-	$TERMINAL -e gtk-pipe-viewer
+	gtk-pipe-viewer
 
 super + n
-	$TERMINAL -e ncmpcpp
+	kitty ncmpcpp
 
 super + shift + n
 	nicotine
 
 super + m
-	rofi-mpd -a
+	mpdmenu
 
 super + shift + m
 	pamixer --toggle-mute ; \
@@ -70,14 +85,17 @@ super + shift + less
 super + shift + greater
 	mpc next
 
+super + slash
+  	dunstify -h string:x-canonical-private-synchronous:mpd-audio "MPD Notification" "`mpc --format '<b>%title%</b>\nby <i>%artist%</i>\nfrom <i>%album%</i>' current`"
+
 ctrl + space
 	dunstctl close-all
 
 Print
-	maim -u ~/06_imagens/04_capturas/cheia_$(date "+%Y_%m_%d_%s").png
+	maim ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + Print
-	maim -uso ~/06_imagens/04_capturas/sel_$(date "+%Y_%m_%d_%s").png
+	maim -uso ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + ctrl + Print
 	scrdis
@@ -86,13 +104,13 @@ super + Insert
 	clipmenu -l 20
 
 super + space
-	rofi -show drun
+	rofi -show run
 
-super + Home
-	$TERMINAL -e htop
+super + shift + Home
+	kitty htop
 
 XF86Tools
-	$TERMINAL -e ncmpcpp
+	kitty ncmpcpp
 
 XF86AudioMute
 	pamixer --toggle-mute ; \
@@ -107,10 +125,10 @@ XF86AudioRaiseVolume
 	kill -34 "$(cat ~/.cache/pidofbar)"
 
 XF86MonBrightnessDown
-	xbacklight -dec 2
+	doas xbacklight -dec 2
 
 XF86MonBrightnessUp
-	xbacklight -inc 2
+	doas xbacklight -inc 2
 
 XF86AudioPlay
 	mpc toggle
@@ -125,7 +143,7 @@ XF86AudioNext
 	mpc next
 
 XF86Mail
-	mw -Y
+	thunderbird
 
 XF86HomePage
 	$BROWSER

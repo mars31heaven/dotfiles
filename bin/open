@@ -10,7 +10,7 @@ case "$1" in
 		tsp "$TERMINAL" -e mpv --no-video --no-save-position-on-quit --no-resume-playback "$1" >/dev/null 2>&1
 		;;
 
-	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
+	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*.mpeg|*youtu.be*|watch?*|*/playlist?*)
 		setsid -f mpv "$1"
 		;;
 
@@ -23,7 +23,7 @@ case "$1" in
 		;;
 
 	*.pdf|*.cbr|*.epub)
-		okular "$1"
+		zathura "$1"
 		;;
 
 	http*|www*)

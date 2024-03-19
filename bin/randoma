@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mpc clear && mpc findadd album "$(mpc list album | shuf -n 1)" && mpc play

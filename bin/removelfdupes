@@ -1,0 +1,3 @@
+#!/bin/sh
+
+fd -t f -e ~1~ -x rm -rf

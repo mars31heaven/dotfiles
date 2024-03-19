@@ -1,6 +1,17 @@
 #!/bin/sh
 
+remaps &
 unclutter &
-xrdb ~/.config/x11/xresources
+clipmenud &
+sxhkd &
+sbar &
+xrdb .config/x11/xresources
+xset s 240
+xsetroot -solid "#1c1c1c"
+dunst &
+brownout 600
+/usr/bin/pipewire &
+/usr/bin/pipewire-pulse &
+/usr/bin/wireplumber &
 
-exec startplasma-x11
+exec dwm

@@ -38,9 +38,8 @@ macro , open-in-browser
 macro o set browser "open" ; open-in-browser ; set browser open
 macro w set browser "w3m" ; open-in-browser ; set browser open
 macro b set browser "$BROWSER" ; open-in-browser ; set browser open
-macro a set browser "ts music-dl" ; open-in-browser ; set browser open
-macro d set browser "ts youtube-dl" ; open-in-browser ; set browser open
-macro v set browser "setsid -f umpv" ; open-in-browser ; set browser open
+macro d set browser "ts yt-dlp" ; open-in-browser ; set browser open
+macro v set browser "setsid -f mpv" ; open-in-browser ; set browser open
 macro m set browser "ts $TERMINAL -e mpv" ; open-in-browser ; set browser open
 macro y set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser open
 macro i set browser "nsxiv-url" ; open-in-browser ; set browser open

@@ -76,6 +76,7 @@ alias \
 	br="beet remove" \
 	be="beet edit" \
 	ytdl="yt-dlp" \
+	ytm="yt-dlp -x -f bestaudio --embed-metadata --embed-thumbnail" \
 	iv="nsxiv-rifle" \
 	ivu="nsxiv-url" \
 	ncdu="ncdu --color off" \
@@ -104,8 +105,8 @@ alias \
 	tes="trans -t es" \
 	me="mullvad-exclude"
 
-alias rbt="reboot"
-alias pwr="poweroff"
+alias rbt="qdbus org.kde.ksmserver /KSMServer logout 0 1 1"
+alias pwr="qdbus org.kde.ksmserver /KSMServer logout 0 2 1"
 
 # Common use
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"

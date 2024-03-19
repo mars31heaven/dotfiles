@@ -1529,7 +1529,7 @@ c.url.open_base_url = True
 
 ## Page(s) to open at the start.
 ## Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = ['https://rateyourmusic.com']
+c.url.start_pages = ['about:blank']
 
 ## URL parameters to strip with `:yank url`.
 ## Type: List of String

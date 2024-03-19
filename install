@@ -24,7 +24,7 @@ mkdir -p $HOME/.config/abook \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
 	$HOME/.config/qBittorrent \
-	$HOME/.config/qutebrowser/greasemonkey \
+	$HOME/.config/qutebrowser \
 	$HOME/.config/rofi \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
@@ -75,7 +75,8 @@ ln -s $HOME/.dotfiles/config/qBittorrent/search_plugins $HOME/.config/qBittorren
 ln -s $HOME/.dotfiles/config/qBittorrent/qBittorrent.conf $HOME/.config/qBittorrent/qBittorrent.conf
 ln -s $HOME/.dotfiles/config/qBittorrent/mumble-dark.qbtheme $HOME/.config/qBittorrent/mumble-dark.qbtheme
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
-ln -s $HOME/.dotfiles/config/qutebrowser/gruvbox.py $HOME/.config/qutebrowser/gruvbox.py
+ln -s $HOME/.dotfiles/config/qutebrowser/searchengines.py $HOME/.config/qutebrowser/searchengines.py
+ln -s $HOME/.dotfiles/config/qutebrowser/themes $HOME/.config/qutebrowser/themes
 ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
 ln -s $HOME/.dotfiles/config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc

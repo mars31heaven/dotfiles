@@ -1,0 +1,6 @@
+#!/bin/sh
+
+fd -t f __ia_thumb -x rm -rf
+fd -t f -e sqlite -x rm -rf
+fd -t f -e torrent -x rm -rf
+fd -t f -e xml -x rm -rf
