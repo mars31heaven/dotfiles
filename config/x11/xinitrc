@@ -9,7 +9,8 @@ xrdb .config/x11/xresources
 xset s 240
 xsetroot -solid "#1c1c1c"
 dunst &
-brownout 600
+brownout 800
+rmemptydirs
 /usr/bin/pipewire &
 /usr/bin/pipewire-pulse &
 /usr/bin/wireplumber &

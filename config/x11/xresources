@@ -2,7 +2,7 @@
 !st.font: monoscape:pixelsize=14:antialias=true:autohint=true
 !st.alpha: 0.8
 
-*background: #3a3a3a
+!! seoul256 (dark) theme
 *background: #121212
 *foreground: #d0d0d0
 *color0: #4e4e4e
@@ -26,18 +26,18 @@
 *colorBD: #e4e4e4
 
 !! dwm
-dwm.normbgcolor: #1c1c1c
+dwm.normbgcolor: #121212
 dwm.normbordercolor: #4e4e4e
 dwm.normfgcolor: #d0d0d0
-dwm.selbgcolor: #c79ec4
-dwm.selbordercolor: #c79ec4
+dwm.selbgcolor: #d75f87
+dwm.selbordercolor: #d75f87
 dwm.selfgcolor: #313131
 
 !! dmenu
-#dmenu.font: font or font set
-dmenu.background: #1c1c1c
+!dmenu.font: font or font set
+dmenu.background: #121212
 dmenu.foreground: #d0d0d0
-dmenu.selbackground: #c79ec4
+dmenu.selbackground: #d75f87
 dmenu.selforeground: #313131
 
 !! nsxiv
@@ -127,27 +127,3 @@ dmenu.selforeground: #313131
 ! LightGrey + White
 !*color7:  #a89984
 !*color15: #ebdbb2
-
-!! seoul256 (dark) theme
-*background: #3a3a3a
-*background: #121212
-*foreground: #d0d0d0
-*color0: #4e4e4e
-*color1: #d68787
-*color2: #5f865f
-*color3: #d8af5f
-*color4: #85add4
-*color5: #d7afaf
-*color6: #87afaf
-*color7: #d0d0d0
-*color8: #626262
-*color9: #d75f87
-*color10: #87af87
-*color11: #ffd787
-*color12: #add4fb
-*color13: #ffafaf
-*color14: #87d7d7
-*color15: #e4e4e4
-*cursorColor: #d0d0d0
-*cursorColor2: #3a3a3a
-*colorBD: #e4e4e4
