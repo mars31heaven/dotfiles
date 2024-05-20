@@ -9,8 +9,8 @@ autoload -U colors && colors	# Load colors
 PS1=' %F{red}%~%f $ '
 
 HISTFILE=$HISTFILE
-HISTSIZE=1000000
-SAVEHIST=1000000
+HISTSIZE=999999
+SAVEHIST=999999
 
 setopt autocd
 setopt auto_pushd

@@ -137,3 +137,7 @@ alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -100 | nl"
 alias \
 	m3m="pmount -e /dev/sdd1" \
 	m3u="pumount /media/sdd1"
+
+alias pcm="sshfs mrcl@192.168.15.11:/ /media/pc" \
+	pc="cd /media/pc/media/hdd1 && ls" \
+	wt="cd /media/pc/media/hdd1/02_video && ls"

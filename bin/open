@@ -14,7 +14,7 @@ case "$1" in
 		setsid -f mpv "$1"
 		;;
 
-	http*.png|http*.gif|http*.jpg|http*.jpe|http*.jpeg|http*.jpg*)
+	http*.png|http*.gif|http*.jpg|http*.jpe|http*.jpeg|http*.jpg*|*.webp)
 		nsxiv-url "$1"
 		;;
 
