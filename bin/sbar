@@ -11,9 +11,9 @@ update_time () {
 	time="$(date "+%a, %d %b %R")"
 }
 
-update_vol () {
-	vol="$([ "$(pamixer --get-mute)" = "false" ] && printf '' || printf 'Muted ')$(pamixer --get-volume)%"
-}
+#update_vol () {
+#	vol="$([ "$(pamixer --get-mute)" = "false" ] && printf '' || printf 'Muted ')$(pamixer --get-volume)%"
+#}
 
 update_disk () {
 	free_space_root="$(df -h | awk '{ if ($6 == "/") print $4 }')"
@@ -21,16 +21,16 @@ update_disk () {
 }
 
 # modules that don't update on their own need to be run at the start for getting their initial value
-update_vol
+#update_vol
 
 display () {
 	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $vol $time "
-	xsetroot -name " / $free_space_root V $vol $time "
+	xsetroot -name " / $free_space_root $time "
 }
 
 # SIGNALLING
 # trap	"<function>;display"		"RTMIN+n"
-trap	"update_vol;display"		"RTMIN"
+#trap	"update_vol;display"		"RTMIN"
 # to update it from external commands
 ## kill -m "$(cat ~/.cache/pidofbar)"
 # where m = 34 + n

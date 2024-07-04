@@ -91,7 +91,6 @@ alias \
 	sca="scrcpy" \
 	ph="bat /var/log/pacman.log" \
 	jkt="~/.local/share/Jackett/jackett" \
-	mpd="mpd && mpc up" \
 	b="buku --suggest" \
 	bp="buku -p" \
 	bw="buku -w" \
@@ -105,8 +104,8 @@ alias \
 	tes="trans -t es" \
 	me="mullvad-exclude"
 
-alias rbt="qdbus org.kde.ksmserver /KSMServer logout 0 1 1"
-alias pwr="qdbus org.kde.ksmserver /KSMServer logout 0 2 1"
+alias rbt="reboot"
+alias pwr="poweroff"
 
 # Common use
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"

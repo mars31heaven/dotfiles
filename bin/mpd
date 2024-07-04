@@ -1,3 +1,0 @@
-#!/bin/sh
-
-mpd && mpdscribble --conf ~/.config/mpd/mpdscribble.conf

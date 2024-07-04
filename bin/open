@@ -18,7 +18,7 @@ case "$1" in
 		nsxiv-url "$1"
 		;;
 
-	*.png|*.gif|*.jpg|*.jpe|*.jpeg)
+	*.png|*.gif|*.jpg|*.jpe|*.jpeg|*.webp)
 		nsxiv-rifle "$1"
 		;;
 

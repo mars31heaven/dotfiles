@@ -1,11 +1,15 @@
 super + F1
-	laptopmononly
+	bothmons
 
 super + shift + F1
-	livroomtv
+
+super + F2
+
+super + shift + F2
+	firefox https://web.whatsapp.com/
 
 super + F3
-	brownout 600
+	brownout 200
 
 super + shift + F3
 	brownout 0
@@ -22,10 +26,10 @@ super + shift + BackSpace
 	dmenupower
 
 super + w
-	qutebrowser
+	firefox
 
 super + shift + w
-	dmenuwireless
+	mullvad-browser
 
 super + e
 	kitty $EDITOR
@@ -67,7 +71,6 @@ super + shift + v
 	gtk-pipe-viewer
 
 super + n
-	kitty ncmpcpp
 
 super + shift + n
 	nicotine
@@ -92,10 +95,10 @@ ctrl + space
 	dunstctl close-all
 
 Print
-	maim ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
+	maim ~/Pictures/02_screenshots/full$(date "+%Y_%m_%d_%s").png
 
 shift + Print
-	maim -uso ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png
+	maim -uso ~/Pictures/02_screenshots/sel_$(date "+%Y_%m_%d_%s").png
 
 shift + ctrl + Print
 	scrdis
