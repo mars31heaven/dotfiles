@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rmdir AnyDesk \
+	~/Documents/Anyesk \
+	~/System\ Volume\ Information \
+	~/UpdateInfo
