@@ -9,7 +9,7 @@ super + shift + F2
 	firefox https://web.whatsapp.com/
 
 super + F3
-	brownout 200
+	brownout 500
 
 super + shift + F3
 	brownout 0
@@ -34,6 +34,9 @@ super + shift + w
 super + e
 	kitty $EDITOR
 
+super + shift + e
+	kitty $EDITOR +VimwikiIndex
+
 super + p
 	dmenu_run_i
 
@@ -52,14 +55,15 @@ super + shift + s
 super + d
 	kitty $EDITOR -c VimwikiDiaryIndex
 
+super + shift + f
+	thunar
+
 super + shift + k
 	dmenukill
 
 super + x
-	dim
 
 super + shift + x
-	xset s 999
 
 super + c
 	dmenucalc

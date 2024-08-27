@@ -6,10 +6,10 @@ alias \
 	d="cd ~/Documents && ls" \
 	sy="cd ~/Documents/01_documentos_sincronizados && ls" \
 	D="cd ~/Downloads && ls" \
-	m="cd /media/hdd1/01_musica && ls" \
+	m="cd /media/hdd1/00_hdd1_musica && ls" \
 	P="cd ~/Pictures && ls" \
 	sc="cd ~/Pictures/02_screenshots && ls" \
-	V="cd ~/Video && ls" \
+	V="cd ~/Videos && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
 	x="cd ~/.local/bin && ls" \
@@ -24,6 +24,6 @@ alias \
 	sd1="cd /media/ssd1 && ls" \
 	T="cd /tmp" \
 	pas="cd ~/.local/share/password-store && ls" \
-	S="cd /media/hdd1/01_musica/03_desorganizado/2024_soulseek && ls -lrhs modified | head -n 20" \
-	PU="cd /media/hdd1/01_musica/01_archive/01_punk && ls" \
-	R=" cd /media/hdd1/01_musica/03_desorganizado/radio && ls"
+	S="cd /media/hdd1/00_hdd1_musica/03_desorganizado/2024_soulseek && ls -lrhs modified | head -n 20" \
+	PU="cd /media/hdd1/00_hdd1_musica/01_archive/01_punk && ls" \
+	R=" cd /media/hdd1/00_hdd1_musica/03_desorganizado/radio && ls"
