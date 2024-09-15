@@ -23,3 +23,4 @@ export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
 export FZF_DEFAULT_OPTS="-i --layout=reverse"
 export PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
 export MPD_HOST="$HOME/.config/mpd/socket"
+export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE

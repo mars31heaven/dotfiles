@@ -2,17 +2,9 @@
 
 remaps &
 unclutter &
-clipmenud &
 sxhkd &
-sbar &
-currentlayout
-xrdb .config/x11/xresources
 xset s 240
-xsetroot -solid "#1c1c1c"
-dunst &
-brownout 500
 rmemptydirs
-mull &
 
 /usr/bin/pipewire &
 /usr/bin/pipewire-pulse &

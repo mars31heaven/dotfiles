@@ -111,7 +111,6 @@ super + Insert
 	clipmenu -l 20
 
 super + space
-	rofi -show run
 
 super + shift + Home
 	kitty htop
