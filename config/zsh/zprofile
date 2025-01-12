@@ -1,5 +1,5 @@
 #!/bin/sh
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-	exec startx "$XINITRC"
+	exec Hyprland
 fi

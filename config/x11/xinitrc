@@ -1,15 +1,8 @@
 #!/bin/sh
 
 unclutter &
-clipmenud &
 sxhkd &
-batsignal -c 10 -d 8 -f 92 -D "doas loginctl suspend" -e &
-sbar &
-xrdb .config/x11/xresources
 xset s 240
-xsetroot -solid "#1c1c1c"
-dunst &
-#brownout 600
-doas xbacklight -set 10
+xbacklight -set 10
 
-exec dwm
+exec startplasma-x11

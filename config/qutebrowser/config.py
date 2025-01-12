@@ -1,5 +1,5 @@
 # Source external configuration files
-config.source('searchengines.py')
+#config.source('searchengines.py')
 config.source('themes/city-lights-theme.py')
 
 ## This is here so configs done via the GUI are still loaded.
