@@ -5,13 +5,13 @@ mv $HOME/dotfiles $HOME/.dotfiles
 mkdir -p $HOME/.w3m
 
 mkdir -p $HOME/.config/git \
+    $HOME/.config/htop \
 	$HOME/.config/lf \
 	$HOME/.config/mpv \
 	$HOME/.config/nsxiv/exec \
 	$HOME/.config/nvim/autoload \
 	$HOME/.config/pipe-viewer \
-	$HOME/.config/qBittorrent \
-	$HOME/.config/qutebrowser/greasemonkey \
+	$HOME/.config/qutebrowser \
 	$HOME/.config/rofi \
 	$HOME/.config/shell \
 	$HOME/.config/surfraw \
@@ -26,25 +26,22 @@ ln -s $HOME/.dotfiles/w3m/config $HOME/.w3m/config
 ln -s $HOME/.dotfiles/w3m/keymap $HOME/.w3m/keymap
 ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
+ln -s $HOME/.dotfiles/config/dunst $HOME/.config/dunst
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
+ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
 ln -s $HOME/.dotfiles/config/kitty $HOME/.config/kitty
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
 ln -s $HOME/.dotfiles/config/mpv/input.conf $HOME/.config/mpv/input.conf
 ln -s $HOME/.dotfiles/config/mpv/mpv.conf $HOME/.config/mpv/mpv.conf
-ln -s $HOME/.dotfiles/config/mpv/scripts $HOME/.config/mpv/scripts
-ln -s $HOME/.dotfiles/config/mpv/scripts-opts $HOME/.config/mpv/scripts-opts
 ln -s $HOME/.dotfiles/config/nsxiv/exec/image-info $HOME/.config/nsxiv/exec/image-info
 ln -s $HOME/.dotfiles/config/nsxiv/exec/key-handler $HOME/.config/nsxiv/exec/key-handler
 ln -s $HOME/.dotfiles/config/nvim/autoload/plug.vim $HOME/.config/nvim/autoload/plug.vim
 ln -s $HOME/.dotfiles/config/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s $HOME/.dotfiles/config/pipe-viewer/pipe-viewer.conf $HOME/.config/pipe-viewer/pipe-viewer.conf
-ln -s $HOME/.dotfiles/config/qBittorrent/search_plugins $HOME/.config/qBittorrent/search_plugins
-ln -s $HOME/.dotfiles/config/qBittorrent/qBittorrent.conf $HOME/.config/qBittorrent/qBittorrent.conf
-ln -s $HOME/.dotfiles/config/qBittorrent/mumble-dark.qbtheme $HOME/.config/qBittorrent/mumble-dark.qbtheme
+ln -s $HOME/.dotfiles/config/pipe-viewer/gtk-pipe-viewer.conf $HOME/.config/pipe-viewer/gtk-pipe-viewer.conf
 ln -s $HOME/.dotfiles/config/qutebrowser/config.py $HOME/.config/qutebrowser/config.py
-ln -s $HOME/.dotfiles/config/qutebrowser/greasemonkey $HOME/.config/qutebrowser/greasemonkey
 ln -s $HOME/.dotfiles/config/qutebrowser/themes $HOME/.config/qutebrowser/themes
 ln -s $HOME/.dotfiles/config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 ln -s $HOME/.dotfiles/config/shell/aliasrc $HOME/.config/shell/aliasrc

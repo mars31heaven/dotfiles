@@ -8,4 +8,12 @@ makepkg -si
 
 yay -Y --devel --combinedupgrade --batchinstall --save
 
-yay -S --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm" aria2 bat bc docx2txt exiv2 fd fzf htop-vim imagemagick keepassxc lf mediainfo moreutils ncdu noto-fonts noto-fonts-emoji nsxiv odt2txt pamixer pass pmount poppler qbittorrent qbittorrent-nox qutebrowser-git ripgrep simple-scan surfraw syncthing task-spooler ttf-baekmuk ttf-hanazono unzip w3m wget yt-dlp zathura zathura-pdf-mupdf zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting sshfs firefox opendoas eza python-adblock ttf-romande otf-hermit-nerd pipe-viewer-git mdcat nvimpager man-db chromium-widevine
+yay -S --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm" aria2 bat bc docx2txt exiv2 fd fzf htop-vim imagemagick keepassxc lf mediainfo moreutils ncdu noto-fonts noto-fonts-emoji nsxiv odt2txt pamixer pass pmount poppler qutebrowser-git ripgrep simple-scan surfraw syncthing task-spooler ttf-baekmuk ttf-hanazono unzip w3m wget yt-dlp zathura zathura-pdf-mupdf zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting sshfs opendoas eza python-adblock ttf-romande otf-hermit-nerd pipe-viewer-git mdcat nvimpager man-db chromium-widevine kitty xorg-xinit xorg-server rofi batsignal mpv pulseaudio pulsemixer acpilight acpi xsel clipnotify xdotool dunst arandr highlight unclutter
+
+git clone https://github.com/graupe/brownout
+git clone https://github.com/cdown/clipmenu
+git clone https://github.com/mars31heaven/dmenu
+git clone https://github.com/mars31heaven/dwm
+
+mkdir -p ~/.local/src
+mv brownout clipmenu dmenu dwm ~/.local/src/
