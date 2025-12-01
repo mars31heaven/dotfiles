@@ -92,7 +92,7 @@ ctrl + space
 	dunstctl close-all
 
 Print
-	maim ~/Pictures/Screenshots/cheia_$(date "+%Y_%m_%d_%s").png
+	maim -u ~/Pictures/Screenshots/cheia_$(date "+%Y_%m_%d_%s").png
 
 shift + Print
 	maim -uso ~/Pictures/Screenshots/sel_$(date "+%Y_%m_%d_%s").png

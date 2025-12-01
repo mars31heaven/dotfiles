@@ -25,13 +25,13 @@ set shortmess+=Imrc         " Disable the default Vim startup message
                             " Use [+] instead of [Modified], [RO] instead of [readonly]
                             " Don't give completion match messages
 set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching 
-set ignorecase              " case insensitive 
+set showmatch               " show matching
+set ignorecase              " case insensitive
 set smartcase
-set mouse=v                 " middle-click paste with 
-set hlsearch                " highlight search 
+set mouse=v                 " middle-click paste with
+set hlsearch                " highlight search
 set incsearch               " incremental search
-set tabstop=4               " number of columns occupied by a tab 
+set tabstop=4               " number of columns occupied by a tab
 set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
 set expandtab               " converts tabs to white space
 set shiftwidth=4            " width for autoindents
@@ -113,7 +113,7 @@ nnoremap <silent> <C-+> <C-w>+
 
 " Vimwiki and Calcurse configuration
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '/home/mrcl/Documents/01_documentos_sincronizados/markor', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '/home/mrcl/Documents/Sincronizados/Obsidian-Vault', 'syntax': 'markdown', 'ext': '.md'}]
 autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 
 " Disables automatic commenting on newline:

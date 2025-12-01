@@ -3,7 +3,6 @@ set recolor-darkcolor \#1d2021
 set recolor-lightcolor \#ebdbb2
 set highlight-color \#fabd2f
 set highlight-active-color \#d79921
-set highlight-transparency 0.4
 set statusbar-h-padding 0
 set statusbar-v-padding 0
 set statusbar-home-tilde
