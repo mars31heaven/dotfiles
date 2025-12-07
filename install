@@ -28,6 +28,8 @@ ln -s $HOME/.dotfiles/w3m/mailcap $HOME/.w3m/mailcap
 
 ln -s $HOME/.dotfiles/config/dunst $HOME/.config/dunst
 ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
+ln -s $HOME/.dotfiles/config/gtk-2.0 $HOME/.config/gtk-2.0
+ln -s $HOME/.dotfiles/config/gtk-3.0 $HOME/.config/gtk-3.0
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
 ln -s $HOME/.dotfiles/config/kitty $HOME/.config/kitty
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+fd -t f torrent -x rm -rf
+fd -t f xml -x rm -rf
+fd -t f sqlite -x rm -rf
+fd -t f thumb -x rm -rf
