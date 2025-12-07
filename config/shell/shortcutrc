@@ -4,11 +4,11 @@
 alias \
 	h="cd ~ && ls" \
 	d="cd ~/Documents && ls" \
-	sy="cd ~/Documents/01_documentos_sincronizados && ls" \
+	sy="" \
 	D="cd ~/Downloads && ls" \
 	m="cd ~/Music && ls" \
 	P="cd ~/Pictures && ls" \
-	sc="cd ~/Pictures/02_screenshots && ls" \
+	sc="" \
 	V="cd ~/Video && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
@@ -18,7 +18,10 @@ alias \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
 	M="cd /mnt && ls" \
-	m3="cd /media/sdd1 && ls" \
 	T="cd /tmp" \
 	pas="cd ~/.local/share/password-store && ls" \
-	pc="cd /media/pc && ls"
+	hd1="cd /media/hdd1 && ls" \
+	hd2="cd /media/hdd2 && ls" \
+	hd3="cd /media/hdd3 && ls" \
+	sd1="cd /media/ssd1 && ls" \
+	win="cd /media/nvme0n1p3/Users/Marcelo && ls" \

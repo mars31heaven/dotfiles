@@ -1,13 +1,11 @@
 super + F1
-	laptopmononly
 
 super + shift + F1
-	livroomtv
 
-super + F3
+super + 3
 	brownout 600
 
-super + shift + F3
+super + shift + 3
 	brownout 0
 
 super + minus
@@ -37,7 +35,6 @@ super + shift + p
 	passmenu
 
 super + shift + a
-	$TERMINAL -e abook -C ~/.config/abook/abookrc --datafile ~/.local/share/abook/addressbook
 
 super + s
 	$TERMINAL -e syncthing --no-browser
@@ -46,7 +43,9 @@ super + shift + s
 	pkill syncthing
 
 super + d
-	$TERMINAL -e $EDITOR -c VimwikiDiaryIndex
+
+super + h
+    clipmenu -l 20
 
 super + shift + k
 	dmenukill
@@ -101,12 +100,11 @@ shift + ctrl + Print
 	scrdis
 
 super + Insert
-	clipmenu -l 20
 
 super + space
 	rofi -show drun
 
-super + shift + Home
+super + Home
 	$TERMINAL -e htop
 
 XF86Tools
@@ -125,10 +123,8 @@ XF86AudioRaiseVolume
 	kill -34 "$(cat ~/.cache/pidofbar)"
 
 XF86MonBrightnessDown
-	doas xbacklight -dec 2
 
 XF86MonBrightnessUp
-	doas xbacklight -inc 2
 
 XF86AudioPlay
 	mpc toggle

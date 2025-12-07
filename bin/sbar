@@ -11,13 +11,6 @@ update_time () {
 	time="$(date "+%a %b %d %R")"
 }
 
-update_bat () {
-	# you might need to change the path depending on your device
-	read -r bat_status </sys/class/power_supply/BAT0/status
-	read -r bat_capacity </sys/class/power_supply/BAT0/capacity
-	bat="$bat_status $bat_capacity%"
-}
-
 update_vol () {
 	vol="$([ "$(pamixer --get-mute)" = "false" ] && printf '' || printf 'Muted ')$(pamixer --get-volume)%"
 }
@@ -31,14 +24,13 @@ update_disk () {
 update_vol
 
 display () {
-	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $bat $vol $time "
-	xsetroot -name " / $free_space_root V $vol B $bat $time "
+	#printf "%s\n" " / $free_space_root ~ $free_space_home $weather $vol $time "
+	xsetroot -name " / $free_space_root V $vol $time "
 }
 
 # SIGNALLING
 # trap	"<function>;display"		"RTMIN+n"
 trap	"update_vol;display"		"RTMIN"
-trap	"update_bat;display" 		"RTMIN+2"
 # to update it from external commands
 ## kill -m "$(cat ~/.cache/pidofbar)"
 # where m = 34 + n
@@ -49,7 +41,6 @@ do
 		# to update item ever n seconds with a offset of m
 		## [ $((sec % n)) -eq m ] && udpate_item
 		[ $((sec % 30 )) -eq 0 ] && update_time # update time every 30 seconds
-		[ $((sec % 60)) -eq 0 ] && update_bat
 		[ $((sec % 3600)) -eq 2 ] && update_disk
 
 		# how often the display updates ( 5 seconds )
