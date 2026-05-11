@@ -1,0 +1,165 @@
+#!/bin/bash
+
+INPUT="*.jpg"
+BASE_DIR="resultados_analogicos"
+
+mkdir -p "$BASE_DIR"
+
+# Controle de vermelho (leve e consistente)
+RED_FIX="-channel R -evaluate multiply 0.90 +channel"
+
+# =====================================
+# 1. color_estourado_2000 (mantido, ajustado)
+# =====================================
+mkdir -p "$BASE_DIR/color_estourado_2000"
+magick mogrify -path "$BASE_DIR/color_estourado_2000" -format jpg \
+  -modulate 120,170,100 \
+  -colorspace RGB -level 8%,92% \
+  $RED_FIX \
+  -sigmoidal-contrast 7,45% \
+  -gaussian-blur 0x1.5 \
+  -attenuate 0.35 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# 2. color_estourado_2000_soft (novo)
+# =====================================
+mkdir -p "$BASE_DIR/color_estourado_2000_soft"
+magick mogrify -path "$BASE_DIR/color_estourado_2000_soft" -format jpg \
+  -modulate 110,140,100 \
+  -colorspace RGB -level 6%,94% \
+  $RED_FIX \
+  -sigmoidal-contrast 5,50% \
+  -gaussian-blur 0x1 \
+  -attenuate 0.25 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# 3. color_glow_lofi (corrigido: mais claro, menos vermelho)
+# =====================================
+mkdir -p "$BASE_DIR/color_glow_lofi"
+magick mogrify -path "$BASE_DIR/color_glow_lofi" -format jpg \
+  -modulate 105,140,100 \
+  -colorspace RGB -level 4%,96% \
+  -channel R -evaluate multiply 0.88 +channel \
+  -gaussian-blur 0x2.5 \
+  -sigmoidal-contrast 4,55% \
+  -attenuate 0.3 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# 4. color_iso_alto (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/color_iso_alto"
+magick mogrify -path "$BASE_DIR/color_iso_alto" -format jpg \
+  -modulate 110,150,100 \
+  -level 5%,95% \
+  $RED_FIX \
+  -attenuate 1.0 +noise Gaussian \
+  -sigmoidal-contrast 5,50% \
+  $INPUT
+
+# =====================================
+# 5. color_glitch (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/color_glitch"
+magick mogrify -path "$BASE_DIR/color_glitch" -format jpg \
+  -modulate 130,180,100 \
+  -level 10%,90% \
+  $RED_FIX \
+  -wave 3x60 \
+  -gaussian-blur 0x2 \
+  -attenuate 0.5 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# 6. color_opaco_apagado (refeito: filme vencido / pastel)
+# =====================================
+mkdir -p "$BASE_DIR/color_opaco_apagado"
+magick mogrify -path "$BASE_DIR/color_opaco_apagado" -format jpg \
+  -modulate 95,70,100 \
+  -colorspace RGB \
+  -channel R -evaluate multiply 0.90 +channel \
+  -level 5%,98% \
+  -sigmoidal-contrast 3,60% \
+  -gamma 1.05 \
+  -gaussian-blur 0x1 \
+  -attenuate 0.2 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# COLORIDOS derivados do PB
+# =====================================
+
+# =====================================
+# 7. color_analogico_pb_style
+# =====================================
+mkdir -p "$BASE_DIR/color_analogico_pb_style"
+magick mogrify -path "$BASE_DIR/color_analogico_pb_style" -format jpg \
+  -modulate 100,60,100 \
+  -level 20%,85% \
+  $RED_FIX \
+  -sigmoidal-contrast 10,40% \
+  -attenuate 0.4 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# 8. color_xerox_sujo_style
+# =====================================
+mkdir -p "$BASE_DIR/color_xerox_sujo_style"
+magick mogrify -path "$BASE_DIR/color_xerox_sujo_style" -format jpg \
+  -modulate 100,50,100 \
+  -level 25%,85% \
+  $RED_FIX \
+  -sigmoidal-contrast 12,35% \
+  -attenuate 0.7 +noise Gaussian \
+  $INPUT
+
+# =====================================
+# PB (mantidos)
+# =====================================
+
+mkdir -p "$BASE_DIR/pb_analogico"
+magick mogrify -path "$BASE_DIR/pb_analogico" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 20%,85% \
+  -sigmoidal-contrast 10,40% \
+  -attenuate 0.5 +noise Gaussian \
+  -ordered-dither o8x8 \
+  $INPUT
+
+mkdir -p "$BASE_DIR/xerox_pesado"
+magick mogrify -path "$BASE_DIR/xerox_pesado" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 30%,80% \
+  -threshold 55% \
+  -ordered-dither o8x8 \
+  $INPUT
+
+mkdir -p "$BASE_DIR/xerox_sujo"
+magick mogrify -path "$BASE_DIR/xerox_sujo" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 25%,85% \
+  -sigmoidal-contrast 12,35% \
+  -attenuate 0.8 +noise Gaussian \
+  -ordered-dither o8x8 \
+  $INPUT
+
+mkdir -p "$BASE_DIR/pb_lofi"
+magick mogrify -path "$BASE_DIR/pb_lofi" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 15%,90% \
+  -sigmoidal-contrast 6,50% \
+  -attenuate 0.3 +noise Gaussian \
+  -ordered-dither o4x4 \
+  $INPUT
+
+mkdir -p "$BASE_DIR/pb_fotografico"
+magick mogrify -path "$BASE_DIR/pb_fotografico" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 10%,90% \
+  -sigmoidal-contrast 14,50% \
+  -attenuate 0.2 +noise Gaussian \
+  $INPUT
+
+echo "Todos os efeitos aplicados."

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# 1. Procura o arquivo cover na pasta atual
+img=$(find . -maxdepth 1 -type f \( -iname "cover.jpg" -o -iname "cover.png" -o -iname "cover.jpeg" \) | head -n 1)
+
+if [ -n "$img" ]; then
+    echo "🎨 Processando imagem: $(basename "$img")"
+
+    # 2. Redimensiona e garante Baseline JPEG (mais compatível com DAPs)
+    # Adicionamos -colorspace sRGB para evitar perfis de cores que travam players
+    magick "$img" -resize 600x600^ -gravity center -extent 600x600 -colorspace sRGB "cover_final.jpg"
+
+    # 3. Limpeza do arquivo de imagem original se necessário
+    if [ "$img" != "./cover.jpg" ]; then
+        rm -f "$img"
+    fi
+    mv "cover_final.jpg" "cover.jpg"
+
+    # 4. Faz o embed nos áudios
+    shopt -s nullglob
+    for audio in *.{mp3,flac,m4a}; do
+        echo "🎵 Embutindo em: $audio"
+        
+        # -map_metadata -1: Remove tags lixo que podem confundir o DAP
+        # -id3v2_version 3: Força ID3v2.3 (O padrão ouro de compatibilidade)
+        # -metadata:s:v title="Album cover": Ajuda alguns sistemas a identificar a imagem
+        ffmpeg -y -loglevel error -i "$audio" -i "cover.jpg" \
+            -map 0:a -map 1:v \
+            -c copy \
+            -disposition:v:0 attached_pic \
+            -id3v2_version 3 \
+            -metadata:s:v title="Album cover" \
+            -metadata:s:v comment="Cover (Front)" \
+            "tmp_$audio" && \
+        mv "tmp_$audio" "$audio"
+    done
+    shopt -u nullglob
+
+    echo "✅ Concluído!"
+else
+    echo "❌ Erro: Nenhum arquivo de imagem encontrado."
+fi

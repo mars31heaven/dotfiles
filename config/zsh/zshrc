@@ -202,14 +202,6 @@ mag2torrent() {
 	aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
 }
 
-# Open another terminal on the current working directory
-# and bind it to ctrl+w
-smdir() {
-	setsid -f "$TERMINAL"
-}
-
-bindkey -s '^w' 'smdir\n'
-
 #Bindings for different ncurses programs
 bindkey -s '^n' 'ncmpcpp\n'
 bindkey -s '^p' 'pulsemixer\n'

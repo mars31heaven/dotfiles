@@ -1,6 +1,6 @@
 set recolor true
 set recolor-darkcolor \#1d2021
-set recolor-lightcolor \#ebdbb2
+set recolor-lightcolor \#edd1b0
 set highlight-color \#fabd2f
 set highlight-active-color \#d79921
 set statusbar-h-padding 0

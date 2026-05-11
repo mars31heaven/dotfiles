@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# 1. Procura o arquivo cover (jpg ou png) apenas na pasta atual
+img=$(find . -maxdepth 1 -type f \( -iname "cover.jpg" -o -iname "cover.png" -o -iname "cover.jpeg" \) | head -n 1)
+
+if [ -n "$img" ]; then
+    echo "Processando imagem: $(basename "$img")"
+
+    # 2. Converte/Redimensiona para cover.jpg (600x600)
+    # Criamos um temporário para evitar conflito se o original já for cover.jpg
+    convert "$img" -resize 600x600^ -gravity center -extent 600x600 "cover_final.jpg"
+
+    # 3. Se o original não for o arquivo final, remove o original (limpeza de png/jpeg)
+    if [ "$img" != "./cover.jpg" ]; then
+        rm -f "$img"
+    fi
+    mv "cover_final.jpg" "cover.jpg"
+
+    # 4. Faz o embed em todos os áudios da pasta atual
+    shopt -s nullglob
+    for audio in *.{mp3,flac,wav,m4a}; do
+        echo "Embutindo em: $audio"
+        
+        ffmpeg -y -loglevel error -i "$audio" -i "cover.jpg" \
+            -map 0:a -map 1:0 -c copy \
+            -disposition:v attached_pic \
+            -id3v2_version 3 \
+            "tmp_$audio" && \
+        mv "tmp_$audio" "$audio"
+    done
+    shopt -u nullglob
+
+    echo "Concluído! Arquivos atualizados e cover.jpg mantido."
+else
+    echo "Erro: Nenhum arquivo 'cover.jpg' ou 'cover.png' encontrado nesta pasta."
+fi

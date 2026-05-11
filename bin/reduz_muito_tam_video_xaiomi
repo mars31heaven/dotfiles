@@ -1,0 +1,12 @@
+#!/bin/sh
+
+mkdir -p Comprimidos
+
+for f in *.mp4; do
+  ffmpeg -i "$f" \
+  -vf "scale=-2:720" \
+  -c:v libx264 -preset medium -crf 28 \
+  -c:a aac -b:a 128k \
+  -movflags +faststart \
+  "Comprimidos/$f"
+done

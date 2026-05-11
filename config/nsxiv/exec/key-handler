@@ -15,8 +15,10 @@ do
         	"R")
 	      		convert -rotate -90 "$file" "$file" ;;
         	"w")
-              		xwallpaper --zoom "$file" ;;
+        		xwallpaper --zoom "$file" ;;
         	"y")
-              		echo -n "$file" | xclip -selection clipboard ;;
+        		echo -n "$file" | xclip -selection clipboard ;;
+          "i")
+          	magick "$file" -negate "$file" ;;
 	esac
 done

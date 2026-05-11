@@ -81,9 +81,8 @@ cmd extract ${{
 }}
 
 cmd path_yank ${{
-	for x in $fx; do
-		echo $x | kitty +kitten clipboard
-	done
+    # Junta todos os caminhos selecionados em uma string, um por linha
+    echo "$fx" | kitty +kitten clipboard
 }}
 
 # Source file for bound bookmarked directories

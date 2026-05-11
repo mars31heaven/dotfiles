@@ -89,7 +89,7 @@ alias \
 	www="w3m -B" \
 	sca="scrcpy" \
 	ph="bat /var/log/pacman.log" \
-	jkt="~/.local/share/Jackett/jackett" \
+	jkt="/usr/lib/jackett/jackett_launcher.sh" \
 	mpd="mpd && mpc up" \
 	b="buku --suggest" \
 	bp="buku -p" \
@@ -98,11 +98,12 @@ alias \
 	msal="mpc search Album" \
 	icat="kitty +kitten icat" \
 	pgr="nvimpager" \
-	win="vboxmanage startvm Windows\ 10" \
+	win="VBoxManage startvm Windows" \
 	tespb="trans -d -s es -t pt-BR" \
 	tespbp="trans -d -p -speak -s es -t pt-BR" \
 	tes="trans -t es" \
-	me="mullvad-exclude"
+	me="mullvad-exclude" \
+	fatsort="doas fatsort -L en_US.UTF-8"
 
 alias rbt="reboot"
 alias pwr="poweroff"

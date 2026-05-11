@@ -1,0 +1,51 @@
+#!/bin/bash
+
+RAIZ_ATUAL=$(pwd)
+
+echo "-------------------------------------------------------"
+echo "📂 Garimpando no diretório atual: $RAIZ_ATUAL"
+echo "🎲 Escolhendo 3 álbuns aleatórios..."
+echo "-------------------------------------------------------"
+
+# 1. Sorteia as 3 pastas
+mapfile -t albuns < <(find "$RAIZ_ATUAL" -type f \( -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4a" \) -printf '%h\n' | sort -u | shuf -n 3)
+
+if [ ${#albuns[@]} -eq 0 ]; then
+    echo "❌ Nenhuma pasta com áudio encontrada aqui."
+    exit 1
+fi
+
+# 2. Exibe os caminhos e as capas com CHAFA
+for i in "${!albuns[@]}"; do
+    index=$((i+1))
+    echo "[$index] ${albuns[$index-1]}"
+    
+    # Busca por cover.jpg ou cover.png
+    capa=$(find "${albuns[$i]}" -maxdepth 1 -type f \( -iname "cover.jpg" -o -iname "cover.png" \) | head -n 1)
+    
+    if [ -n "$capa" ]; then
+        # --size=40x20 aproxima um quadrado de 200px na maioria das fontes
+        # O chafa usa o protocolo do Kitty automaticamente se detectar o terminal
+        chafa --size=40x20 "$capa"
+        echo ""
+    else
+        echo "[Sem capa encontrada]"
+    fi
+    echo "-------------------------------------------------------"
+done
+
+# 3. Pergunta sobre o Modo Degustação
+echo -n "Deseja ouvir uma prévia de 30s de cada? (s/n): "
+read -r resposta
+
+if [[ "$resposta" =~ ^[sS]$ ]]; then
+    for pasta in "${albuns[@]}"; do
+        echo "🎵 Agora em: $(basename "$pasta")"
+        echo "(Pressione 'q' para pular para a próxima)"
+        
+        # Toca 30s de uma faixa aleatória
+        mpv --shuffle --no-video --length=30 "$pasta"/* 2>/dev/null
+    done
+fi
+
+echo "Bom garimpo!"
