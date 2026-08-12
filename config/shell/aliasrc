@@ -1,13 +1,13 @@
 #!/bin/sh
 
-# doas not required for some system commands
+# sudo not required for some system commands
 for command in mount umount loginctl reboot poweroff shutdown pacman sv rsm; do
-	alias $command="doas $command"
+	alias $command="sudo $command"
 done; unset command
 
 alias \
-	dv="doas nvim" \
-	doas vim="doas nvim"
+	dv="sudo nvim" \
+	sudo vim="sudo nvim"
 
 # Utilities configuration
 # Colored output, verbosity and protection
@@ -23,8 +23,8 @@ alias \
 
 # pacman, yay
 alias \
-	p="doas pacman" \
-	pyu="doas pacman -Syu" \
+	p="sudo pacman" \
+	pyu="sudo pacman -Syu" \
 	y="yay --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm""
 
 # Use neovim for vim if present
@@ -103,7 +103,7 @@ alias \
 	tespbp="trans -d -p -speak -s es -t pt-BR" \
 	tes="trans -t es" \
 	me="mullvad-exclude" \
-	fatsort="doas fatsort -L en_US.UTF-8"
+	fatsort="sudo fatsort -L en_US.UTF-8"
 
 alias rbt="reboot"
 alias pwr="poweroff"

@@ -1511,6 +1511,7 @@ c.tabs.show_switching_delay = 8000
 ## for a blank page.
 ## Type: FuzzyUrl
 c.url.default_page = 'about:blank'
+c.colors.webpage.bg = "#313131"
 
 ## URL segments where `:navigate increment/decrement` will search for a
 ## number.

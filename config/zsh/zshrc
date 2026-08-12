@@ -232,6 +232,12 @@ lfcd () {
     fi
 }
 
+qbn() {
+    pano-scrobbler &
+    disown
+    qobine-tui
+}
+
 bindkey -s '^o' 'lfcd\n'
 
 # bc shell

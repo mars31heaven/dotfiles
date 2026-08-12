@@ -15,11 +15,11 @@ case "$1" in
 		;;
 
 	*.png|*.gif|*.jpg|*.jpe|*.jpeg)
-		nsxiv-rifle "$1"
+		swayimg "$1"
 		;;
 
 	*.pdf|*.cbr|*.epub)
-		okular "$1"
+		zathura "$1"
 		;;
 
 	http*|www*|*.html)
