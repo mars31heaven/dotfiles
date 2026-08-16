@@ -1,0 +1,20 @@
+background-color=#313131
+text-color=#E1E1DB
+border-color=#E1E1DB
+border-size=1
+font=monospace 11
+padding=8
+margin=10
+width=320
+height=100
+
+default-timeout=5000
+
+[urgency=high]
+default-timeout=10000
+border-color=#de7484
+
+[urgency=critical]
+default-timeout=0
+border-color=#db3d3f
+on-notify=exec mpv --no-video --really-quiet ~/.local/share/sound-notifications/Windows XP - Battery low.opus

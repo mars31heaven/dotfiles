@@ -1,144 +1,105 @@
 #!/bin/sh
 
-# sudo not required for some system commands
-for command in mount umount loginctl reboot poweroff shutdown pacman sv rsm; do
-	alias $command="sudo $command"
-done; unset command
+# Root commands
+for command in mount umount loginctl reboot poweroff shutdown pacman; do
+    alias "$command"="sudo $command"
+done
+unset command
 
+# Neovim
+alias dv="sudo nvim"
+
+# Utilities
 alias \
-	dv="sudo nvim" \
-	sudo vim="sudo nvim"
+    grep="grep -i --color=auto" \
+    diff="diff --color=auto" \
+    rm="rm -Iv" \
+    cp="cp -riv" \
+    mv="mv -iv" \
+    vidir="vidir -v" \
+    mkdir="mkdir -p"
 
-# Utilities configuration
-# Colored output, verbosity and protection
-# against overwriting.
+# Pacman / yay
 alias \
-	grep="grep -i --color=auto" \
-	diff="diff --color=auto" \
-	rm="rm -Iv" \
-	cp="cp -riv" \
-	mv="mv -iv" \
-	vidir="vidir -v" \
-	mkdir="mkdir -p"
+    p="sudo pacman" \
+    pyu="sudo pacman -Syu" \
+    y="yay --removemake --provides=false --answerdiff None --answerclean None --mflags '--noconfirm'" \
+    rmpkg="sudo pacman -Rdd" \
+    ph="bat /var/log/pacman.log" \
+    fixpacman="sudo rm /var/lib/pacman/db.lck"
 
-# pacman, yay
-alias \
-	p="sudo pacman" \
-	pyu="sudo pacman -Syu" \
-	y="yay --removemake --provides=false --answerdiff None --answerclean None --mflags "--noconfirm""
-
-# Use neovim for vim if present
-[ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
-
-alias \
-	..="cd .." \
-	v="$EDITOR" \
-	vi="$EDITOR" \
-	ls="eza" \
-	eza="eza --icons --color=always --group-directories-first" \
-	l="eza" \
-	ll="eza -lht modified" \
-	lll="eza -alht modified" \
-	lr="eza -R" \
-	lt="exa -aT" \
-	l.="exa -ald .*" \
-	lh="eza -lhs modified | head -n 40" \
-	lhr="eza -lrhs modified | head -n 40" \
-	t="eza --tree" \
-	g="grep -i --color=auto" \
-	lg="ls | grep -i --color=auto" \
-	cat="bat" \
-	c="cat" \
-	rmr="rm -r" \
-	gi="git" \
-	gst="git status" \
-	gcl="git clone" \
-	gdi="git diff" \
-	gad="git add" \
-	glo="git log" \
-	gre="git restore" \
-	gcm="git commit -m" \
-	gca="git commit -a" \
-	gpu="git push" \
-	qtb="~/.local/bin/qtb" \
-	ppv="pipe-viewer" \
-	pph="pipe-viewer -wv" \
-	pps="pipe-viewer -S" \
-	qbt="qbittorrent-nox --daemon" \
-	mm="mpc" \
-	ma="mpc add" \
-	mc="mpc clear" \
-	mp="mpc playlist" \
-	mu="mpc up" \
-	mt="mpc toggle" \
-	bt="beet" \
-	bi="beet import" \
-	br="beet remove" \
-	be="beet edit" \
-	ytdl="yt-dlp" \
-	iv="nsxiv-rifle" \
-	ivu="nsxiv-url" \
-	ncdu="ncdu --color off" \
-	rs="rsync -rvP" \
-	t="toot" \
-	tt="toot tui" \
-	tp="toot post -e" \
-	tn="toot notifications" \
-	fd="fd --unrestricted" \
-	wi="vim -c VimwikiIndex" \
-	www="w3m -B" \
-	sca="scrcpy" \
-	ph="bat /var/log/pacman.log" \
-	jkt="/usr/lib/jackett/jackett_launcher.sh" \
-	mpd="mpd && mpc up" \
-	b="buku --suggest" \
-	bp="buku -p" \
-	bw="buku -w" \
-	msar="mpc search Artist" \
-	msal="mpc search Album" \
-	icat="kitty +kitten icat" \
-	pgr="nvimpager" \
-	win="VBoxManage startvm Windows" \
-	tespb="trans -d -s es -t pt-BR" \
-	tespbp="trans -d -p -speak -s es -t pt-BR" \
-	tes="trans -t es" \
-	me="mullvad-exclude" \
-	fatsort="sudo fatsort -L en_US.UTF-8"
-
-alias rbt="reboot"
-alias pwr="poweroff"
-
-# Common use
-alias fixpacman="sudo rm /var/lib/pacman/db.lck"
-alias tarnow='tar -acf '
-alias untar='tar -xvf '
-alias wget='wget -c '
-alias rmpkg="sudo pacman -Rdd"
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias dir='dir --color=auto'
-alias vdir='vdir --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='grep -F --color=auto'
-alias egrep='grep -E --color=auto'
-alias hw='hwinfo --short'                          # Hardware Info
-alias big="expac -H M '%m\t%n' | sort -h | nl"     # Sort installed packages according to size in MB
-alias gitpkg='pacman -Q | grep -i "\-git" | wc -l' # List amount of -git packages
-
-# Cleanup orphaned packages
-alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
-
-# Recent installed packages
+alias big='expac -H M "%m\t%n" | sort -h | nl'
+alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'
+alias cleanup='orphans=$(pacman -Qtdq); [ -n "$orphans" ] && sudo pacman -Rns $orphans'
 alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -100 | nl"
 
-# External storage
-alias \
-	m3m="pmount -e /dev/sdd1" \
-	m3u="pumount /media/sdd1"
+# Neovim
+[ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
-alias pcm="sshfs mrcl@192.168.15.11:/ /media/pc" \
-	pc="cd /media/pc/media/hdd1 && ls" \
-	wt="cd /media/pc/media/hdd1/02_video && ls"
+# Utilities
+alias \
+    ..="cd .." \
+    ...="cd ../.." \
+    ....="cd ../../.." \
+    .....="cd ../../../.." \
+    ......="cd ../../../../.." \
+    v="$EDITOR" \
+    vi="$EDITOR" \
+    ls="eza" \
+    eza="eza --icons --color=always --group-directories-first" \
+    l="eza" \
+    ll="eza -lht modified" \
+    lll="eza -alht modified" \
+    lr="eza -R" \
+    lt="eza -aT" \
+    l.="eza -ald .*" \
+    lh="eza -lhs modified | head -n 40" \
+    lhr="eza -lrhs modified | head -n 40" \
+    t="eza --tree" \
+    g="grep -i --color=auto" \
+    lg="ls | grep -i --color=auto" \
+    cat="bat" \
+    c="cat" \
+    rmr="rm -r" \
+    dir="dir --color=auto" \
+    vdir="vdir --color=auto" \
+    gi="git" \
+    gst="git status" \
+    gcl="git clone" \
+    gdi="git diff" \
+    gad="git add" \
+    glo="git log" \
+    gre="git restore" \
+    gcm="git commit -m" \
+    gca="git commit -a" \
+    gpu="git push" \
+    ytdl="yt-dlp" \
+    ncdu="ncdu --color off" \
+    rs="rsync -rvP" \
+    fd="fd --unrestricted" \
+    wi="vim -c VimwikiIndex" \
+    sca="scrcpy" \
+    pgr="nvimpager" \
+    fatsort="sudo fatsort -L en_US.UTF-8" \
+    tarnow="tar -acf" \
+    untar="tar -xvf" \
+    wget="wget -c" \
+    hw="hwinfo --short"
+
+# Power management
+alias \
+    rbt="reboot" \
+    pwr="poweroff" \
+    sus="systemctl suspend"
+
+# Radio
+alias \
+    wup="nmcli radio wifi on" \
+    wdown="nmcli radio wifi off" \
+    bup="rfkill unblock bluetooth" \
+    bdown="rfkill block bluetooth"
+
+# SSHFS
+alias \
+    pcm="sshfs mrcl@192.168.15.7:/ /media/pc" \
+    pc="cd /media/pc && ls"

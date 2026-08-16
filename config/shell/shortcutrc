@@ -10,14 +10,11 @@ alias \
 	V="cd ~/Videos && ls" \
 	dfs="cd ~/.dotfiles && ls && git status" \
 	dx="cd ~/.dotfiles/bin && ls" \
+	dcf="cd ~/.dotfiles/config && ls" \
 	x="cd ~/.local/bin && ls" \
 	shr="cd ~/.local/share && ls" \
 	src="cd ~/.local/src && ls" \
 	cf="cd ~/.config && ls" \
 	ca="cd ~/.cache && ls" \
 	M="cd /mnt && ls" \
-	hd1="cd /media/hdd1 && ls" \
-	hd2="cd /media/hdd2 && ls" \
-	hd3="cd /media/hdd3 && ls" \
-	sd1="cd /media/ssd1/Users/mrcl/Documents && ls" \
 	T="cd /tmp"

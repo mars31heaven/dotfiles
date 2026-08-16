@@ -1,3 +1,0 @@
-#! /bin/bash
-
-doas sv up bluetoothd && bluetoothctl power on

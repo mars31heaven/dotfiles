@@ -203,7 +203,6 @@ mag2torrent() {
 }
 
 #Bindings for different ncurses programs
-bindkey -s '^n' 'ncmpcpp\n'
 bindkey -s '^p' 'pulsemixer\n'
 
 # Play a random internet radio station

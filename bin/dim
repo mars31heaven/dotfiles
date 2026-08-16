@@ -1,5 +1,0 @@
-#!/bin/sh
-
-doas xbacklight -set 1
-xset s 60
-brownout 600 >/dev/null 2>&1
