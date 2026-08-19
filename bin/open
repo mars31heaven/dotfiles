@@ -1,36 +1,35 @@
-#!/bin/sh -e
-#
-# open file in application based on file extension
+#!/bin/sh
 
-# exit script if there's no input
-if [ "$1" = "" ]; then exit; fi
+# Open files in applications baseds on file extension
+
+[ -n "$1" ] || exit 1
 
 case "$1" in
-	*.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
-		tsp "$TERMINAL" -e mpv --no-video --no-save-position-on-quit --no-resume-playback "$1" >/dev/null 2>&1
-		;;
+    *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
+        exec mpv --no-video --no-save-position-on-quit --no-resume-playback "$1"
+        ;;
 
-	*.mp4|*.mkv|*.webm|*.avi|*.mpg|*youtu.be*|watch?*|*/playlist?*)
-		setsid -f tsp mpv "$1"
-		;;
+    *.mp4|*.mkv|*.webm|*.avi|*.mpg)
+        setsid -f mpv "$1" >/dev/null 2>&1
+        ;;
 
-	*.png|*.gif|*.jpg|*.jpe|*.jpeg)
-		swayimg "$1"
-		;;
+    *.png|*.gif|*.jpg|*.jpeg|*.jpe)
+        exec swayimg "$1"
+        ;;
 
-	*.pdf|*.cbr|*.epub)
-		zathura "$1"
-		;;
+    *.pdf|*.cbr|*.epub)
+        exec zathura "$1"
+        ;;
 
-	http*|www*|*.html)
-		setsid -f "$BROWSER" "$1" >/dev/null 2>&1
-		;;
+    http*|www*|*.html)
+        setsid -f "$BROWSER" "$1" >/dev/null 2>&1
+        ;;
 
-	*.torrent)
-		setsid -f qbittorrent "$1" >/dev/null 2>&1
-		;;
+    *.torrent)
+        setsid -f qbittorrent "$1" >/dev/null 2>&1
+        ;;
 
-	*)
-		"$EDITOR" "$1"
-		;;
+    *)
+        exec "$EDITOR" "$1"
+        ;;
 esac

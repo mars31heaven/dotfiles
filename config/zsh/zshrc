@@ -189,31 +189,16 @@ fi
 
 # open files with fzf
 o() {
-	open "$(find -type f | fzf)"
-}
+    file=$(
+        find . -type f -not -path '*/.git/*' |
+        fzf --layout=reverse
+    ) || return
 
-# Autogenerate .m3u playlist files
-play() {
-	for f in *.mp3; do echo "$f" >> play.m3u; done
-}
-
-# Convert magnet links into .torrent files
-mag2torrent() {
-	aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
+    open "$file"
 }
 
 #Bindings for different ncurses programs
 bindkey -s '^p' 'pulsemixer\n'
-
-# Play a random internet radio station
-radio() {
-	pkill -f "mpv --no-terminal http*"; cat ~/.local/share/internet_radio | shuf | sed -n 1p | xargs bgmus
-}
-
-# Get a colored prompt
-cprompt() {
-	PS1='\[\033[01;34m\]\w \[\033[00m\]\ \[\033[01;32m\]\u@\h$ '
-}
 
 # Get the current ip address
 ipa() {
@@ -229,12 +214,6 @@ lfcd () {
         rm -f "$tmp" >/dev/null
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
-}
-
-qbn() {
-    pano-scrobbler &
-    disown
-    qobine-tui
 }
 
 bindkey -s '^o' 'lfcd\n'

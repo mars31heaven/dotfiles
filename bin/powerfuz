@@ -1,0 +1,19 @@
+#!/bin/sh
+
+choice=$(printf '%s\n' \
+    "Suspend" \
+    "Reboot" \
+    "Poweroff" |
+    fuzzel --dmenu --prompt="Power: ")
+
+case "$choice" in
+    Suspend)
+        systemctl suspend
+        ;;
+    Reboot)
+        systemctl reboot
+        ;;
+    Poweroff)
+        systemctl poweroff
+        ;;
+esac

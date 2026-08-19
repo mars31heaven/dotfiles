@@ -67,6 +67,13 @@ set $browser qutebrowser
     # Start a terminal
     bindsym $mod+Return exec $term
 
+    # Floating terminal
+    for_window [app_id="foot-float"] floating enable
+    for_window [app_id="foot-float"] resize set 800 500
+    for_window [app_id="foot-float"] move position center
+
+    bindsym $mod+Shift+Return exec foot --app-id=foot-float
+
     # Kill focused window
     bindsym $mod+Shift+q kill
 
@@ -245,12 +252,16 @@ bindsym $mod+r mode "resize"
     bindsym $mod+Shift+o move container to workspace next
 
     # Multi monitor settings
-    bindsym $mod+F1 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 disable'
-    bindsym $mod+F2 exec swaymsg 'output eDP-1 disable; output HDMI-A-2 enable'
-    bindsym $mod+F3 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 enable'
+    bindsym $mod+F1 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 disable' && wlsunset -t 4000 -T 4200
+    bindsym $mod+F2 exec swaymsg 'output eDP-1 disable; output HDMI-A-2 enable' && pkill wlsunset
+    bindsym $mod+F3 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 enable' && pkill wlsunset
 
     # Other shorcuts
     bindsym $mod+F12 exec ~/.local/bin/itoggle
+
+    bindsym $mod+Shift+Backspace exec powerfuz
+
+    bindsym $mod+Home exec foot htop
 
     bindsym $mod+Shift+v exec foot pulsemixer
     bindsym $mod+Shift+p exec keepassxc
@@ -278,10 +289,13 @@ bindsym $mod+r mode "resize"
     resume 'swaymsg "output * power on"' \
     timeout 600 'systemctl suspend'
 
-    for_window [app_id="reaper"] inhibit_idle focus
+    for_window [app_id="reaper"] inhibit_idle open
+    for_window [app_id="duckstation-qt"] inhibit_idle open
 
     # Autostart
     exec batsignal -b -w 20 -c 15 -d 12 -D "notify-send -u critical 'Battery critically low' 'Suspending now'; systemctl suspend" -f 90 -p
+
+    exec sway-audio-idle-inhibit
 
     exec wl-paste --type text --watch cliphist store
     exec wl-paste --type image --watch cliphist store
