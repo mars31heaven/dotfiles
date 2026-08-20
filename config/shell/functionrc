@@ -1,30 +1,44 @@
-#!/bin/sh
+# ── Personal functions ────────────────────────────────────────
 
-# open files with fzf
 o() {
-	open "$(find -type f | fzf)"
+    local file
+    file=$(find . -type f -not -path '*/.git/*' | fzf --layout=reverse) || return
+    open "$file"
 }
 
-# cd with fzf
-# and bind it to ctrl+f
-fcd() {
-	cd "$(find -type d | fzf)"
+ipa() {
+    ip addr | grep 192 | awk '{print $2}' | sed 's/\/24//'
 }
 
-bind '"\C-f":"fcd\n"'
-
-# Use lf to switch directories and bind it to ctrl+o
 lfcd() {
-    tmp="$(mktemp)"
+    local tmp dir
+
+    tmp=$(mktemp)
     lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
+
+    if [[ -f "$tmp" ]]; then
+        dir=$(<"$tmp")
         rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+        [[ -d "$dir" && "$dir" != "$PWD" ]] && cd -- "$dir"
     fi
 }
 
-bind '"\C-o":"lfcd\n"'
+fcd() {
+    local dir
+    dir=$(find . -type d | fzf --layout=reverse) || return
+    cd -- "$dir"
+}
 
-# Edit a command with vim when in insert mode and bind it to ctrl+e
-bind '"\C-e": "\e^v \n"'
+
+# ── Personal shortcuts ───────────────────────────────────────
+
+bindkey -s '^p' 'pulsemixer\n'
+bindkey -s '^o' 'lfcd\n'
+bindkey -s '^a' 'bc -lq\n'
+bindkey -s '^f' 'fcd\n'
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^v' edit-command-line
+
+bindkey -s '^e' '$EDITOR\n'

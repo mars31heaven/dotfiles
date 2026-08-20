@@ -257,14 +257,18 @@ bindsym $mod+r mode "resize"
     bindsym $mod+F3 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 enable' && pkill wlsunset
 
     # Other shorcuts
-    bindsym $mod+F12 exec ~/.local/bin/itoggle
+    bindsym $mod+F12 exec itoggle
 
-    bindsym $mod+Shift+Backspace exec powerfuz
+    bindsym $mod+Shift+Backspace exec fuzzpower
+    bindsym $mod+p exec fuzzpass
+
+    bindsym $mod+Shift+e exec foot nvim
 
     bindsym $mod+Home exec foot htop
 
+    bindsym $mod+Shift+m exec foot lf
+
     bindsym $mod+Shift+v exec foot pulsemixer
-    bindsym $mod+Shift+p exec keepassxc
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 

@@ -46,7 +46,7 @@ alias \
     v="$EDITOR" \
     vi="$EDITOR" \
     ls="eza" \
-    eza="eza --icons --color=always --group-directories-first" \
+    eza="eza --color=always --group-directories-first" \
     l="eza" \
     ll="eza -lht modified" \
     lll="eza -alht modified" \
@@ -88,9 +88,9 @@ alias \
 
 # Power management
 alias \
-    rbt="reboot" \
-    pwr="poweroff" \
-    sus="systemctl suspend"
+    sus="systemctl suspend" \
+    rbt="systemctl reboot" \
+    pwr="systemctl poweroff"
 
 # Radio
 alias \
@@ -103,3 +103,7 @@ alias \
 alias \
     pcm="sshfs mrcl@192.168.15.7:/ /media/pc" \
     pc="cd /media/pc && ls"
+
+# Media player
+alias \
+    mm="mpv --profile=music"

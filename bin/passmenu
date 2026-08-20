@@ -1,37 +1,96 @@
 #!/usr/bin/env bash
 
-# https://git.zx2c4.com/password-store/tree/contrib/dmenu
+set -euo pipefail
 
-shopt -s nullglob globstar
+# Wayland password menu using pass + fuzzel.
+#
+# Dependencies:
+#   pass
+#   fuzzel
+#   wl-clipboard
+#   wtype
+#
+# Usage:
+#   passmenu
 
-typeit=0
-if [[ $1 == "--type" ]]; then
-	typeit=1
-	shift
+PASSWORD_STORE_DIR="${PASSWORD_STORE_DIR:-$HOME/.local/share/password-store}"
+
+# Make sure the password store exists.
+if [[ ! -d "$PASSWORD_STORE_DIR" ]]; then
+    printf 'Password store not found: %s\n' "$PASSWORD_STORE_DIR" >&2
+    exit 1
 fi
 
-if [[ -n $WAYLAND_DISPLAY ]]; then
-	dmenu=dmenu-wl
-	xdotool="ydotool type --file -"
-elif [[ -n $DISPLAY ]]; then
-	dmenu=dmenu
-	xdotool="xdotool type --clearmodifiers --file -"
-else
-	echo "Error: No Wayland or X11 display detected" >&2
-	exit 1
+# Find password entries.
+mapfile -t entries < <(
+    find "$PASSWORD_STORE_DIR" \
+        -type f \
+        -name '*.gpg' \
+        -printf '%P\n' |
+    sed 's/\.gpg$//' |
+    sort
+)
+
+if ((${#entries[@]} == 0)); then
+    exit 0
 fi
 
-prefix=${PASSWORD_STORE_DIR-~/.local/share/password-store}
-password_files=( "$prefix"/**/*.gpg )
-password_files=( "${password_files[@]#"$prefix"/}" )
-password_files=( "${password_files[@]%.gpg}" )
+# Select an entry.
+entry=$(
+    printf '%s\n' "${entries[@]}" |
+    fuzzel --dmenu --prompt='Password: '
+)
 
-password=$(printf '%s\n' "${password_files[@]}" | "$dmenu" "$@")
+[[ -n "$entry" ]] || exit 0
 
-[[ -n $password ]] || exit
+# Select an action.
+action=$(
+    printf '%s\n' \
+        'Copy username' \
+        'Copy password' \
+        'Type username' \
+        'Type password' |
+    fuzzel --dmenu --prompt='Action: '
+)
 
-if [[ $typeit -eq 0 ]]; then
-	pass show -c "$password" 2>/dev/null
-else
-	pass show "$password" | { IFS= read -r pass; printf %s "$pass"; } | $xdotool
-fi
+[[ -n "$action" ]] || exit 0
+
+case "$action" in
+    'Copy username')
+        username=$(
+            pass show "$entry" |
+            sed -n 's/^username:[[:space:]]*//p' |
+            head -n1
+        )
+
+        [[ -n "$username" ]] || exit 1
+
+        printf '%s' "$username" | wl-copy
+        ;;
+
+    'Copy password')
+        pass show -c "$entry" >/dev/null
+        ;;
+
+    'Type username')
+        username=$(
+            pass show "$entry" |
+            sed -n 's/^username:[[:space:]]*//p' |
+            head -n1
+        )
+
+        [[ -n "$username" ]] || exit 1
+
+        printf '%s' "$username" | wtype -
+        ;;
+
+    'Type password')
+        pass show "$entry" |
+            head -n1 |
+            wtype -
+        ;;
+
+    *)
+        exit 1
+        ;;
+esac

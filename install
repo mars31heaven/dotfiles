@@ -18,7 +18,6 @@ ln -s $HOME/.dotfiles/config/git/config $HOME/.config/git/config
 ln -s $HOME/.dotfiles/config/gtk-2.0 $HOME/.config/gtk-2.0
 ln -s $HOME/.dotfiles/config/gtk-3.0 $HOME/.config/gtk-3.0
 ln -s $HOME/.dotfiles/config/htop/htoprc $HOME/.config/htop/htoprc
-ln -s $HOME/.dotfiles/config/kitty $HOME/.config/kitty
 ln -s $HOME/.dotfiles/config/lf/lfrc $HOME/.config/lf/lfrc
 ln -s $HOME/.dotfiles/config/lf/preview $HOME/.config/lf/preview
 ln -s $HOME/.dotfiles/config/lf/shortcutrc $HOME/.config/lf/shortcutrc
@@ -32,10 +31,7 @@ ln -s $HOME/.dotfiles/config/shell/inputrc $HOME/.config/shell/inputrc
 ln -s $HOME/.dotfiles/config/shell/shortcutrc $HOME/.config/shell/shortcutrc
 ln -s $HOME/.dotfiles/config/yt-dlp/config $HOME/.config/yt-dlp/config
 ln -s $HOME/.dotfiles/config/zathura/zathurarc $HOME/.config/zathura/zathurarc
-ln -s $HOME/.dotfiles/config/zsh/zprofile $HOME/.config/zsh/.zprofile
 ln -s $HOME/.dotfiles/config/zsh/zshrc $HOME/.config/zsh/.zshrc
 
 mkdir -p $HOME/.cache/zsh
 touch $HOME/.cache/zsh/history
-
-nvim +PlugInstall +qall

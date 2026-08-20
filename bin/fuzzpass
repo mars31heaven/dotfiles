@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+shopt -s nullglob globstar
+
+prefix="${PASSWORD_STORE_DIR:-$HOME/.local/share/password-store}"
+
+password_files=( "$prefix"/**/*.gpg )
+password_files=( "${password_files[@]#"$prefix"/}" )
+password_files=( "${password_files[@]%.gpg}" )
+
+# Select an entry with Fuzzel.
+entry=$(
+    printf '%s\n' "${password_files[@]}" |
+        fuzzel --dmenu --prompt="Password: "
+)
+
+[[ -n "$entry" ]] || exit 0
+
+# Choose what to copy.
+choice=$(
+    printf '%s\n' "Login" "Password" |
+        fuzzel --dmenu --prompt="$entry: "
+)
+
+[[ -n "$choice" ]] || exit 0
+
+case "$choice" in
+    Login)
+        value=$(
+            pass show "$entry" 2>/dev/null |
+                sed -n 's/^login:[[:space:]]*//p' |
+                head -n 1
+        )
+
+        [[ -n "$value" ]] || exit 1
+
+        printf '%s' "$value" | wl-copy
+        ;;
+
+    Password)
+        value=$(
+            pass show "$entry" 2>/dev/null |
+                head -n 1
+        )
+
+        [[ -n "$value" ]] || exit 1
+
+        printf '%s' "$value" | wl-copy
+        ;;
+esac

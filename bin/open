@@ -6,7 +6,7 @@
 
 case "$1" in
     *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
-        exec mpv --no-video --no-save-position-on-quit --no-resume-playback "$1"
+        exec mpv "$1"
         ;;
 
     *.mp4|*.mkv|*.webm|*.avi|*.mpg)

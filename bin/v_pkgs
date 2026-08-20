@@ -1,3 +1,0 @@
-#!/bin/sh
-# Prints a list of every currently installed package on a Void Linux system
-echo "$(date "+%b/%d/%Y %R")" && echo "$(uname -sr)"@"$(hostname)" && echo "$(xbps-query -l | awk '{ print $2 }' | xargs -n1 xbps-uhelper getpkgname)"
