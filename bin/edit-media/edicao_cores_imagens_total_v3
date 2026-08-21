@@ -1,0 +1,59 @@
+#!/bin/bash
+
+INPUT="*.jpg"
+BASE_DIR="resultados_analogicos"
+
+mkdir -p "$BASE_DIR"
+
+# Controle leve de vermelho (apenas para colorido)
+RED_FIX="-channel R -evaluate multiply 0.90 +channel"
+
+# =====================================
+# 1. color_iso_alto (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/color_iso_alto"
+magick mogrify -path "$BASE_DIR/color_iso_alto" -format jpg \
+  -modulate 110,150,100 \
+  -level 5%,95% \
+  $RED_FIX \
+  -attenuate 1.0 +noise Gaussian \
+  -sigmoidal-contrast 5,50% \
+  $INPUT
+
+# =====================================
+# 2. pb_analogico (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/pb_analogico"
+magick mogrify -path "$BASE_DIR/pb_analogico" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 20%,85% \
+  -sigmoidal-contrast 10,40% \
+  -attenuate 0.5 +noise Gaussian \
+  -ordered-dither o8x8 \
+  $INPUT
+
+# =====================================
+# 3. pb_lofi (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/pb_lofi"
+magick mogrify -path "$BASE_DIR/pb_lofi" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 15%,90% \
+  -sigmoidal-contrast 6,50% \
+  -attenuate 0.3 +noise Gaussian \
+  -ordered-dither o4x4 \
+  $INPUT
+
+# =====================================
+# 4. xerox_sujo (mantido)
+# =====================================
+mkdir -p "$BASE_DIR/xerox_sujo"
+magick mogrify -path "$BASE_DIR/xerox_sujo" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 25%,85% \
+  -sigmoidal-contrast 12,35% \
+  -attenuate 0.8 +noise Gaussian \
+  -ordered-dither o8x8 \
+  $INPUT
+
+echo "Processamento concluído (modo rápido)."

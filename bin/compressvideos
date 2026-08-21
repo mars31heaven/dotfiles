@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for input in "$@"; do
+    output="${input%.*}_compressed.mp4"
+
+    ffmpeg -i "$input" \
+        -c:v libx265 \
+        -crf 23 \
+        -preset medium \
+        -c:a aac \
+        -b:a 192k \
+        -map 0 \
+        -movflags +faststart \
+        "$output"
+done
