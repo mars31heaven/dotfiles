@@ -1,0 +1,381 @@
+#!/usr/bin/env bash
+
+# Wayland/Sway screen and audio recorder
+#
+# Modes:
+#   screen-mic-system  Screen + microphone + system audio
+#   screen-mic         Screen + microphone
+#   screen-system      Screen + system audio
+#   mic                Microphone only
+#   system             System audio only
+#   kill               Stop current recording
+#
+# Requirements:
+#   wf-recorder
+#   ffmpeg
+#   fuzzel
+#   pactl
+#
+# Audio:
+#   PipeWire + pipewire-pulse
+#
+# Recording files are saved to:
+#   ~/Videos/Recordings/
+
+set -euo pipefail
+
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/recording.pid"
+MODEFILE="${XDG_RUNTIME_DIR:-/tmp}/recording.mode"
+
+OUTPUT_DIR="$HOME/Videos/Recordings"
+
+mkdir -p "$OUTPUT_DIR"
+
+
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
+
+die() {
+    printf 'Error: %s\n' "$1" >&2
+    exit 1
+}
+
+
+timestamp() {
+    date '+%y%m%d-%H%M-%S'
+}
+
+
+is_recording() {
+    [[ -f "$PIDFILE" ]] || return 1
+
+    local pid
+    pid=$(cat "$PIDFILE")
+
+    kill -0 "$pid" 2>/dev/null
+}
+
+
+cleanup_pidfile() {
+    rm -f "$PIDFILE" "$MODEFILE"
+}
+
+
+get_mic() {
+    pactl get-default-source
+}
+
+
+get_sink() {
+    pactl get-default-sink
+}
+
+
+get_system_audio() {
+    printf '%s.monitor\n' "$(get_sink)"
+}
+
+
+# ------------------------------------------------------------
+# Combined microphone + system audio
+# ------------------------------------------------------------
+
+COMBINED_SINK="record_mix"
+LOOP_MIC=""
+LOOP_SYSTEM=""
+
+
+create_combined_source() {
+    local mic
+    local system
+
+    mic="$(get_mic)"
+    system="$(get_system_audio)"
+
+    # Create a silent virtual sink.
+    pactl load-module module-null-sink \
+        sink_name="$COMBINED_SINK" \
+        sink_properties=device.description=RecordingMix \
+        >/dev/null
+
+    # Feed microphone into it.
+    LOOP_MIC=$(pactl load-module module-loopback \
+        source="$mic" \
+        sink="$COMBINED_SINK" \
+        latency_msec=20)
+
+    # Feed system audio into it.
+    LOOP_SYSTEM=$(pactl load-module module-loopback \
+        source="$system" \
+        sink="$COMBINED_SINK" \
+        latency_msec=20)
+}
+
+
+destroy_combined_source() {
+    if [[ -n "$LOOP_MIC" ]]; then
+        pactl unload-module "$LOOP_MIC" 2>/dev/null || true
+        LOOP_MIC=""
+    fi
+
+    if [[ -n "$LOOP_SYSTEM" ]]; then
+        pactl unload-module "$LOOP_SYSTEM" 2>/dev/null || true
+        LOOP_SYSTEM=""
+    fi
+
+    pactl unload-module module-null-sink 2>/dev/null || true
+}
+
+
+# ------------------------------------------------------------
+# Stop recording
+# ------------------------------------------------------------
+
+kill_recording() {
+    if ! is_recording; then
+        cleanup_pidfile
+        destroy_combined_source
+        exit 0
+    fi
+
+    local pid
+    pid=$(cat "$PIDFILE")
+
+    kill -INT "$pid" 2>/dev/null || true
+
+    # Give wf-recorder/ffmpeg time to finalize the file.
+    for _ in {1..50}; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+            break
+        fi
+        sleep 0.1
+    done
+
+    if kill -0 "$pid" 2>/dev/null; then
+        kill -TERM "$pid" 2>/dev/null || true
+    fi
+
+    destroy_combined_source
+    cleanup_pidfile
+}
+
+
+# ------------------------------------------------------------
+# Screen recording
+# ------------------------------------------------------------
+
+record_screen() {
+    local audio_source="$1"
+    local output="$2"
+
+    wf-recorder \
+        --audio="$audio_source" \
+        --framerate=24 \
+        --codec=libx264 \
+        --codec-param=preset=ultrafast \
+        --codec-param=crf=23 \
+        --audio-codec=aac \
+        --audio-codec-param=b=160k \
+        --file="$output" &
+
+    echo $! > "$PIDFILE"
+}
+
+
+record_screen_silent() {
+    local output="$1"
+
+    wf-recorder \
+        --framerate=24 \
+        --codec=libx264 \
+        --codec-param=preset=ultrafast \
+        --codec-param=crf=23 \
+        --file="$output" &
+
+    echo $! > "$PIDFILE"
+}
+
+
+# ------------------------------------------------------------
+# Audio-only recording
+# ------------------------------------------------------------
+
+record_audio() {
+    local source="$1"
+    local output="$2"
+
+    ffmpeg \
+        -hide_banner \
+        -loglevel warning \
+        -f pulse \
+        -i "$source" \
+        -c:a flac \
+        "$output" &
+
+    echo $! > "$PIDFILE"
+}
+
+
+# ------------------------------------------------------------
+# Recording modes
+# ------------------------------------------------------------
+
+screen_mic_system() {
+    local output
+    output="$OUTPUT_DIR/screen-$(timestamp).mp4"
+
+    create_combined_source
+
+    trap destroy_combined_source EXIT
+
+    record_screen \
+        "$COMBINED_SINK.monitor" \
+        "$output"
+
+    echo "Recording screen + microphone + system audio."
+    echo "Output: $output"
+}
+
+
+screen_mic() {
+    local output
+    output="$OUTPUT_DIR/screen-$(timestamp).mp4"
+
+    record_screen \
+        "$(get_mic)" \
+        "$output"
+
+    echo "Recording screen + microphone."
+    echo "Output: $output"
+}
+
+
+screen_system() {
+    local output
+    output="$OUTPUT_DIR/screen-$(timestamp).mp4"
+
+    record_screen \
+        "$(get_system_audio)" \
+        "$output"
+
+    echo "Recording screen + system audio."
+    echo "Output: $output"
+}
+
+
+mic() {
+    local output
+    output="$OUTPUT_DIR/microphone-$(timestamp).flac"
+
+    record_audio \
+        "$(get_mic)" \
+        "$output"
+
+    echo "Recording microphone."
+    echo "Output: $output"
+}
+
+
+system_audio() {
+    local output
+    output="$OUTPUT_DIR/system-$(timestamp).flac"
+
+    record_audio \
+        "$(get_system_audio)" \
+        "$output"
+
+    echo "Recording system audio."
+    echo "Output: $output"
+}
+
+
+# ------------------------------------------------------------
+# Fuzzel menu
+# ------------------------------------------------------------
+
+menu() {
+    printf '%s\n' \
+        'Screen + microphone + system audio' \
+        'Screen + microphone' \
+        'Screen + system audio' \
+        'Microphone only' \
+        'System audio only' |
+        fuzzel --dmenu --prompt 'Record: '
+}
+
+
+choose_recording() {
+    local choice
+
+    choice="$(menu)" || exit 0
+
+    case "$choice" in
+        'Screen + microphone + system audio')
+            screen_mic_system
+            ;;
+        'Screen + microphone')
+            screen_mic
+            ;;
+        'Screen + system audio')
+            screen_system
+            ;;
+        'Microphone only')
+            mic
+            ;;
+        'System audio only')
+            system_audio
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+}
+
+
+# ------------------------------------------------------------
+# Main
+# ------------------------------------------------------------
+
+case "${1:-}" in
+
+    screen-mic-system)
+        screen_mic_system
+        ;;
+
+    screen-mic)
+        screen_mic
+        ;;
+
+    screen-system)
+        screen_system
+        ;;
+
+    mic)
+        mic
+        ;;
+
+    system)
+        system_audio
+        ;;
+
+    kill)
+        kill_recording
+        ;;
+
+    '')
+        if is_recording; then
+            printf '%s\n' 'A recording is already running.'
+            printf '%s\n' 'Stop it with: record kill'
+            exit 1
+        fi
+
+        choose_recording
+        ;;
+
+    *)
+        printf 'Usage: %s [screen-mic-system|screen-mic|screen-system|mic|system|kill]\n' \
+            "${0##*/}"
+        exit 1
+        ;;
+esac
