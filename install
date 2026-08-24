@@ -1,275 +1,821 @@
 #!/bin/bash
 
+# ============================================================
+# Arch Linux + Sway
+# install
+#
+# Base system installation for Archinstall or minimal Arch.
+#
+# The script can be used for both laptops and desktop PCs.
+# Laptop-specific power management is enabled only when the
+# laptop installation is selected.
+#
+# Run as the normal user:
+#
+#     ./install
+#
+# The script assumes that the dotfiles repository is already
+# located at:
+#
+#     $HOME/.dotfiles
+# ============================================================
+
 set -e
 
-echo "========================================="
-echo " Installing personal Arch Linux setup"
-echo "========================================="
-echo
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
 
-# ---------------------------------------------------------
-# Update package database
-# ---------------------------------------------------------
+info() {
+    printf '\n\033[1;34m==> %s\033[0m\n' "$1"
+}
 
-echo "Updating package database..."
-sudo pacman -Syu --needed
+success() {
+    printf '\033[1;32m==> %s\033[0m\n' "$1"
+}
 
-# ---------------------------------------------------------
-# Sway / Wayland environment
-# ---------------------------------------------------------
+error() {
+    printf '\033[1;31m==> %s\033[0m\n' "$1"
+}
 
-echo
-echo "Installing Sway / Wayland environment..."
+# ------------------------------------------------------------
+# Checks
+# ------------------------------------------------------------
 
-sudo pacman -S --needed \
-    sway \
-    foot \
-    waybar \
-    mako \
-    fuzzel \
-    swayimg \
-    grim \
-    slurp \
-    wdisplays \
-    wlsunset \
-    wtype \
-    wl-clipboard \
-    brightnessctl \
-    playerctl \
-    cliphist
+if [ "$EUID" -eq 0 ]; then
+    error "Do not run this script as root."
+    exit 1
+fi
 
-# ---------------------------------------------------------
-# Audio
-# ---------------------------------------------------------
+if ! command -v pacman >/dev/null 2>&1; then
+    error "This does not appear to be an Arch Linux system."
+    exit 1
+fi
 
-echo
-echo "Installing audio utilities..."
+DOTFILES="$HOME/.dotfiles"
 
-sudo pacman -S --needed \
-    pamixer \
-    pulsemixer \
-    cava \
-    ffmpeg
+if [ ! -d "$DOTFILES" ]; then
+    error "Dotfiles directory not found:"
+    error "$DOTFILES"
+    error "Clone your repository first."
+    exit 1
+fi
 
-# ---------------------------------------------------------
-# Fonts
-# ---------------------------------------------------------
+# ------------------------------------------------------------
+# Installation target
+# ------------------------------------------------------------
 
-echo
-echo "Installing fonts..."
+printf '\n'
+printf '%s\n' "Select installation type:"
+printf '%s\n' "  1) Laptop"
+printf '%s\n' "  2) Desktop PC"
+printf '\n'
 
-sudo pacman -S --needed \
-    otf-hermit
+while true; do
+    read -r -p "Choice [1-2]: " INSTALL_TYPE
 
-# ---------------------------------------------------------
-# Terminal / CLI utilities
-# ---------------------------------------------------------
+    case "$INSTALL_TYPE" in
+        1)
+            LAPTOP=true
+            break
+            ;;
+        2)
+            LAPTOP=false
+            break
+            ;;
+        *)
+            printf '%s\n' "Please enter 1 or 2."
+            ;;
+    esac
+done
 
-echo
-echo "Installing command-line utilities..."
+# ============================================================
+# OFFICIAL REPOSITORIES
+# ============================================================
+
+info "Installing packages from the official repositories"
 
 sudo pacman -S --needed \
     7zip \
+    base \
+    base-devel \
     bat \
     bc \
+    batsignal \
+    bluetui \
+    bluez \
+    bluez-utils \
+    brightnessctl \
+    cava \
+    chafa \
+    cliphist \
+    cpupower \
+    cups \
+    cups-pkhelper \
+    docx2txt \
+    efibootmgr \
+    exiv2 \
+    expac \
     eza \
+    fastfetch \
+    fatsort \
     fd \
+    foot \
+    fuzzel \
     fzf \
+    git \
+    grim \
+    gst-plugin-pipewire \
+    gvfs \
+    gvfs-mtp \
     highlight \
+    imagemagick \
+    intel-media-driver \
+    intel-ucode \
+    iwd \
+    jq \
+    kdeconnect \
+    keepassxc \
     lf \
+    libpulse \
+    libretro-core-info \
+    libretro-genesis-plus-gx \
+    libretro-mgba \
+    libretro-overlays \
+    libretro-snes9x \
+    librewolf \
+    libva-intel-driver \
+    libva-utils \
+    linux-firmware \
+    linux-zen \
+    ly \
+    mako \
+    man-db \
+    mediainfo \
+    mkinitcpio \
     moreutils \
+    mpv \
     ncdu \
+    neovim \
+    network-manager-applet \
+    networkmanager \
+    nicotine+ \
+    noto-fonts \
+    noto-fonts-cjk \
+    noto-fonts-emoji \
+    ntfs-3g \
+    odt2txt \
+    otf-font-awesome \
+    otf-hermit \
+    pamixer \
+    pass \
+    pcmanfm \
+    pipewire \
+    pipewire-alsa \
+    pipewire-jack \
+    pipewire-pulse \
+    pmount \
+    powertop \
+    pulsemixer \
+    python-adblock \
+    python-pykeepass \
+    qutebrowser \
+    reaper \
+    retroarch \
+    retroarch-assets-ozone \
     ripgrep \
     rsync \
-    wget \
-    zip
-
-# ---------------------------------------------------------
-# File / media utilities
-# ---------------------------------------------------------
-
-echo
-echo "Installing file and media utilities..."
-
-sudo pacman -S --needed \
-    fatsort \
-    mediainfo \
-    ntfs-3g \
-    docx2txt \
-    odt2txt
-
-# ---------------------------------------------------------
-# System information / monitoring
-# ---------------------------------------------------------
-
-echo
-echo "Installing system utilities..."
-
-sudo pacman -S --needed \
-    fastfetch \
-    hwinfo \
-    powertop \
-    cpupower
-
-# ---------------------------------------------------------
-# Network / desktop integration
-# ---------------------------------------------------------
-
-echo
-echo "Installing desktop integration utilities..."
-
-sudo pacman -S --needed \
-    network-manager-applet \
-    kdeconnect
-
-# ---------------------------------------------------------
-# Services / utilities
-# ---------------------------------------------------------
-
-echo
-echo "Installing utilities and services..."
-
-sudo pacman -S --needed \
+    scrcpy \
+    slurp \
+    smartmontools \
+    sshfs \
+    sudo \
+    sway \
+    swaybg \
+    swayidle \
+    swayimg \
+    swaylock \
     syncthing \
-    batsignal \
-    tlp-rdw \
+    system-config-printer \
     thermald \
-    ufw
+    tlp \
+    tlp-rdw \
+    torbrowser-launcher \
+    tree \
+    ttf-dejavu \
+    ttf-liberation \
+    ufw \
+    unrar \
+    unzip \
+    w3m \
+    waybar \
+    wf-recorder \
+    wget \
+    wireplumber \
+    wlsunset \
+    wmenu \
+    woff2-font-awesome \
+    wtype \
+    xdg-utils \
+    xorg-xwayland \
+    yt-dlp \
+    zathura \
+    zathura-pdf-mupdf \
+    zip \
+    zsh \
+    zsh-autosuggestions \
+    zsh-completions \
+    zsh-history-substring-search \
+    zsh-syntax-highlighting
 
-# ---------------------------------------------------------
-# Printing
-# ---------------------------------------------------------
+# ============================================================
+# AUR
+# ============================================================
 
-echo
-echo "Installing printing support..."
-
-sudo pacman -S --needed \
-    cups \
-    system-config-printer
-
-# ---------------------------------------------------------
-# Browsers / terminal web tools
-# ---------------------------------------------------------
-
-echo
-echo "Installing web utilities..."
-
-sudo pacman -S --needed \
-    qutebrowser \
-    w3m
-
-# ---------------------------------------------------------
-# Music / recording
-# ---------------------------------------------------------
-
-echo
-echo "Installing music and recording software..."
-
-sudo pacman -S --needed \
-    reaper
-
-# ---------------------------------------------------------
-# Android / device utilities
-# ---------------------------------------------------------
-
-echo
-echo "Installing device utilities..."
-
-sudo pacman -S --needed \
-    scrcpy
-
-# ---------------------------------------------------------
-# Password management
-# ---------------------------------------------------------
-
-echo
-echo "Installing password management tools..."
-
-sudo pacman -S --needed \
-    pass
-
-# ---------------------------------------------------------
-# AUR helper
-# ---------------------------------------------------------
-
-echo
-echo "Installing yay..."
+info "Installing AUR helper"
 
 if ! command -v yay >/dev/null 2>&1; then
-    tmpdir=$(mktemp -d)
+    tmpdir="$(mktemp -d)"
 
-    git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
+    git clone \
+        https://aur.archlinux.org/yay-bin.git \
+        "$tmpdir/yay-bin"
 
     (
-        cd "$tmpdir/yay"
+        cd "$tmpdir/yay-bin"
         makepkg -si --noconfirm
     )
 
     rm -rf "$tmpdir"
-else
-    echo "yay is already installed."
 fi
 
-# ---------------------------------------------------------
-# AUR packages
-# ---------------------------------------------------------
-
-echo
-echo "Installing selected AUR packages..."
+info "Installing packages from the AUR"
 
 yay -S --needed \
+    duckstation-qt-bin \
+    google-chrome \
+    htop-vim \
+    mdcat \
+    nvimpager \
+    otf-romande \
+    pass-import \
+    pmount \
+    sixpair \
+    task-spooler \
     timr-bin \
     ttf-romande \
-    wayclip
+    wayclip \
+    yay-bin \
+    ytcui \
+    zapzap
 
-# ---------------------------------------------------------
-# Optional packages
-# ---------------------------------------------------------
-#
-# The original install had these packages that may be
-# installed manually later:
-#
-# qBittorrent
-# LibreWolf
-# Nicotine+
-# Tor Browser Launcher
-# RetroArch
-# DuckStation
-#
-# Hardware-specific packages / utilities:
-#
-# cpupower
-# hwinfo
-# intel-ucode
-# thermald
-# tlp-rdw
-#
-# Other packages from the original installation were
-# intentionally left out because they are either:
-#
-# - part of the Archinstall/base installation
-# - hardware-specific
-# - development/build dependencies
-# - temporary dependencies
-# - optional software
-# - no longer used
-#
-# ---------------------------------------------------------
+# ============================================================
+# SERVICES
+# ============================================================
 
-sudo tee /etc/sudoers.d/passwordless-commands > /dev/null <<'EOF'
-mrcl ALL=(ALL) NOPASSWD: /bin/pacman, /bin/reboot, /bin/poweroff, /bin/su, /bin/nvim
+info "Enabling common services"
+
+sudo systemctl enable --now NetworkManager.service
+sudo systemctl enable --now bluetooth.service
+sudo systemctl enable --now cups.service
+
+# UFW is installed and enabled, but its service does not need
+# to remain running as a conventional daemon.
+sudo systemctl enable ufw.service
+
+# ============================================================
+# BLUETOOTH
+#
+# Bluetooth is installed and enabled on both machines.
+# Laptop-specific radio blocking is configured later.
+# ============================================================
+
+info "Configuring Bluetooth"
+
+sudo systemctl enable bluetooth.service
+
+# ============================================================
+# SYSTEMD-JOURNALD
+#
+# Keep the journal in volatile storage and limit its size.
+# This avoids persistent journal writes while retaining a
+# useful journal during the current boot.
+# ============================================================
+
+info "Configuring systemd-journald"
+
+sudo mkdir -p /etc/systemd/journald.conf.d
+
+sudo tee /etc/systemd/journald.conf.d/99-reduce-journal-writes.conf >/dev/null <<'EOF'
+[Journal]
+Storage=volatile
+SystemMaxUse=50M
+ForwardToSyslog=no
+EOF
+
+sudo systemctl restart systemd-journald
+
+# ============================================================
+# SUDOERS
+#
+# Passwordless commands used by the dotfiles.
+# ============================================================
+
+info "Configuring sudoers"
+
+sudo tee /etc/sudoers.d/passwordless-commands >/dev/null <<EOF
+$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/reboot, /usr/bin/poweroff, /usr/bin/su, /usr/bin/nvim
 EOF
 
 sudo chmod 440 /etc/sudoers.d/passwordless-commands
+
 sudo visudo -cf /etc/sudoers.d/passwordless-commands
 
-# ---------------------------------------------------------
+# ============================================================
+# UFW
+# ============================================================
 
-echo
-echo "========================================="
-echo " Installation complete."
-echo "========================================="
-echo
-echo "You may want to reboot before using the"
-echo "complete Sway environment."
-echo
+info "Configuring UFW"
+
+sudo ufw --force enable
+
+# ============================================================
+# DOTFILES
+# ============================================================
+
+info "Installing dotfiles"
+
+cd "$DOTFILES"
+
+# ------------------------------------------------------------
+# Create configuration directories
+#
+# Most configuration directories are represented directly by
+# symlinks to the repository. The exceptions are applications
+# that create private state inside their configuration
+# directory.
+# ------------------------------------------------------------
+
+mkdir -p "$HOME/.config"
+
+# ------------------------------------------------------------
+# Remove old managed configuration
+#
+# This prevents conflicts with previous installations while
+# leaving unrelated user files untouched.
+# ------------------------------------------------------------
+
+info "Preparing configuration directories"
+
+for directory in \
+    fontconfig \
+    foot \
+    fuzzel \
+    git \
+    gtk-2.0 \
+    gtk-3.0 \
+    lf \
+    mako \
+    nvim \
+    shell \
+    sway \
+    swayimg \
+    waybar \
+    zathura \
+    zsh
+do
+    rm -rf "$HOME/.config/$directory"
+done
+
+# htop, mpv and qutebrowser are handled separately because
+# their configuration directories may contain private state.
+
+mkdir -p "$HOME/.config/htop"
+mkdir -p "$HOME/.config/mpv"
+mkdir -p "$HOME/.config/qutebrowser"
+
+# ------------------------------------------------------------
+# Symlink complete configuration directories
+# ------------------------------------------------------------
+
+info "Linking configuration directories"
+
+ln -s "$DOTFILES/config/fontconfig" \
+    "$HOME/.config/fontconfig"
+
+ln -s "$DOTFILES/config/foot" \
+    "$HOME/.config/foot"
+
+ln -s "$DOTFILES/config/fuzzel" \
+    "$HOME/.config/fuzzel"
+
+ln -s "$DOTFILES/config/git" \
+    "$HOME/.config/git"
+
+ln -s "$DOTFILES/config/gtk-2.0" \
+    "$HOME/.config/gtk-2.0"
+
+ln -s "$DOTFILES/config/gtk-3.0" \
+    "$HOME/.config/gtk-3.0"
+
+ln -s "$DOTFILES/config/lf" \
+    "$HOME/.config/lf"
+
+ln -s "$DOTFILES/config/mako" \
+    "$HOME/.config/mako"
+
+ln -s "$DOTFILES/config/nvim" \
+    "$HOME/.config/nvim"
+
+ln -s "$DOTFILES/config/shell" \
+    "$HOME/.config/shell"
+
+ln -s "$DOTFILES/config/sway" \
+    "$HOME/.config/sway"
+
+ln -s "$DOTFILES/config/swayimg" \
+    "$HOME/.config/swayimg"
+
+ln -s "$DOTFILES/config/waybar" \
+    "$HOME/.config/waybar"
+
+ln -s "$DOTFILES/config/zathura" \
+    "$HOME/.config/zathura"
+
+ln -s "$DOTFILES/config/zsh" \
+    "$HOME/.config/zsh"
+
+# ------------------------------------------------------------
+# htop
+#
+# Only the configuration file is linked so that any private
+# or generated htop state remains outside the repository.
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/config/htop/htoprc" ]; then
+    ln -sf "$DOTFILES/config/htop/htoprc" \
+        "$HOME/.config/htop/htoprc"
+fi
+
+# ------------------------------------------------------------
+# mpv
+#
+# Only configuration files and scripts are linked. Generated
+# state and private files remain in the local configuration
+# directory.
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/config/mpv/input.conf" ]; then
+    ln -sf "$DOTFILES/config/mpv/input.conf" \
+        "$HOME/.config/mpv/input.conf"
+fi
+
+if [ -f "$DOTFILES/config/mpv/mpv.conf" ]; then
+    ln -sf "$DOTFILES/config/mpv/mpv.conf" \
+        "$HOME/.config/mpv/mpv.conf"
+fi
+
+if [ -d "$DOTFILES/config/mpv/scripts" ]; then
+    ln -sf "$DOTFILES/config/mpv/scripts" \
+        "$HOME/.config/mpv/scripts"
+fi
+
+# ------------------------------------------------------------
+# qutebrowser
+#
+# Only the version-controlled configuration and theme are
+# linked. History, bookmarks and other private state remain
+# local to the machine.
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
+    ln -sf "$DOTFILES/config/qutebrowser/config.py" \
+        "$HOME/.config/qutebrowser/config.py"
+fi
+
+if [ -d "$DOTFILES/config/qutebrowser/themes" ]; then
+    ln -sf "$DOTFILES/config/qutebrowser/themes" \
+        "$HOME/.config/qutebrowser/themes"
+fi
+
+# ------------------------------------------------------------
+# zshenv
+# ------------------------------------------------------------
+
+info "Linking zshenv"
+
+ln -sf "$DOTFILES/zshenv" \
+    "$HOME/.zshenv"
+
+# ============================================================
+# LOCAL BIN
+# ============================================================
+
+info "Installing personal scripts"
+
+mkdir -p "$HOME/.local/bin"
+
+if [ -d "$DOTFILES/bin" ]; then
+    for file in "$DOTFILES/bin"/*; do
+        [ -f "$file" ] || continue
+
+        target="$HOME/.local/bin/$(basename "$file")"
+
+        rm -f "$target"
+        cp "$file" "$target"
+        chmod +x "$target"
+    done
+fi
+
+# ============================================================
+# ZSH
+# ============================================================
+
+info "Preparing Zsh history"
+
+mkdir -p "$HOME/.cache/zsh"
+touch "$HOME/.cache/zsh/history"
+
+# ============================================================
+# LAPTOP
+#
+# Everything below this point is laptop-specific.
+#
+# The entire section is controlled by the interactive
+# installation choice above. A desktop installation skips it.
+# ============================================================
+
+if [ "$LAPTOP" = true ]; then
+
+    # --------------------------------------------------------
+    # TLP
+    #
+    # TLP provides the primary laptop power-management policy.
+    # power-profiles-daemon must not run alongside it.
+    # --------------------------------------------------------
+
+    info "Configuring TLP"
+
+    sudo systemctl enable tlp.service
+
+    if systemctl list-unit-files | grep -q '^power-profiles-daemon.service'; then
+        sudo systemctl disable --now power-profiles-daemon.service || true
+    fi
+
+    # --------------------------------------------------------
+    # TLP configuration
+    #
+    # These settings reproduce the current configuration used
+    # on the laptop.
+    #
+    # Device-specific values are intentionally kept here rather
+    # than in the common PC installation.
+    # --------------------------------------------------------
+
+    info "Installing TLP configuration"
+
+    sudo mkdir -p /etc/tlp.d
+
+    sudo tee /etc/tlp.d/10-dotfiles.conf >/dev/null <<'EOF'
+TLP_ENABLE="1"
+TLP_WARN_LEVEL="3"
+TLP_AUTO_SWITCH="2"
+
+TLP_PROFILE_AC="PRF"
+TLP_PROFILE_BAT="BAL"
+
+DISK_IDLE_SECS_ON_AC="0"
+DISK_IDLE_SECS_ON_BAT="2"
+
+MAX_LOST_WORK_SECS_ON_AC="15"
+MAX_LOST_WORK_SECS_ON_BAT="60"
+
+CPU_ENERGY_PERF_POLICY_ON_AC="balance_performance"
+CPU_ENERGY_PERF_POLICY_ON_BAT="balance_power"
+CPU_ENERGY_PERF_POLICY_ON_SAV="power"
+
+PLATFORM_PROFILE_ON_AC="performance"
+PLATFORM_PROFILE_ON_BAT="balanced"
+PLATFORM_PROFILE_ON_SAV="low-power"
+
+NMI_WATCHDOG="0"
+
+DISK_DEVICES="nvme0n1 sda"
+DISK_APM_LEVEL_ON_AC="254 254"
+DISK_APM_LEVEL_ON_BAT="128 128"
+DISK_APM_CLASS_DENYLIST="usb ieee1394"
+DISK_IOSCHED="keep keep"
+
+SATA_LINKPWR_ON_AC="med_power_with_dipm"
+SATA_LINKPWR_ON_BAT="med_power_with_dipm"
+
+AHCI_RUNTIME_PM_ON_AC="on"
+AHCI_RUNTIME_PM_ON_BAT="auto"
+AHCI_RUNTIME_PM_TIMEOUT="15"
+
+PCIE_ASPM_ON_AC="default"
+PCIE_ASPM_ON_BAT="default"
+PCIE_ASPM_ON_SAV="default"
+
+INTEL_GPU_POWER_PROFILE_ON_AC="base"
+INTEL_GPU_POWER_PROFILE_ON_BAT="power_saving"
+INTEL_GPU_POWER_PROFILE_ON_SAV="power_saving"
+
+RADEON_DPM_PERF_LEVEL_ON_AC="auto"
+RADEON_DPM_PERF_LEVEL_ON_BAT="auto"
+RADEON_DPM_PERF_LEVEL_ON_SAV="low"
+
+AMDGPU_ABM_LEVEL_ON_AC="0"
+AMDGPU_ABM_LEVEL_ON_BAT="1"
+AMDGPU_ABM_LEVEL_ON_SAV="3"
+
+WIFI_PWR_ON_AC="off"
+WIFI_PWR_ON_BAT="on"
+
+WOL_DISABLE="Y"
+
+SOUND_POWER_SAVE_ON_AC="1"
+SOUND_POWER_SAVE_ON_BAT="1"
+SOUND_POWER_SAVE_CONTROLLER="Y"
+
+BAY_POWEROFF_ON_AC="0"
+BAY_POWEROFF_ON_BAT="0"
+BAY_DEVICE="sr0"
+
+RUNTIME_PM_ON_AC="on"
+RUNTIME_PM_ON_BAT="auto"
+RUNTIME_PM_DRIVER_DENYLIST="amdgpu mei_me nouveau nvidia xhci_hcd"
+
+USB_AUTOSUSPEND="1"
+USB_EXCLUDE_AUDIO="1"
+USB_EXCLUDE_BTUSB="0"
+USB_EXCLUDE_PHONE="0"
+USB_EXCLUDE_PRINTER="1"
+USB_EXCLUDE_WWAN="0"
+
+RESTORE_THRESHOLDS_ON_BAT="1"
+
+NATACPI_ENABLE="1"
+TPSMAPI_ENABLE="1"
+EOF
+
+    # --------------------------------------------------------
+    # USB device exception
+    #
+    # The current laptop configuration explicitly denies
+    # autosuspend for the M-Audio Fast Track Pro.
+    # --------------------------------------------------------
+
+    sudo tee /etc/tlp.d/11-audio.conf >/dev/null <<'EOF'
+USB_DENYLIST="0763:2012"
+EOF
+
+    sudo tlp start
+
+    # --------------------------------------------------------
+    # Thermald
+    #
+    # Provides additional thermal management on Intel systems.
+    # --------------------------------------------------------
+
+    info "Enabling thermald"
+
+    sudo systemctl enable --now thermald.service
+
+    # --------------------------------------------------------
+    # Powertop
+    #
+    # Applies Powertop's automatic power-saving tunings at boot.
+    # --------------------------------------------------------
+
+    info "Configuring Powertop"
+
+    sudo tee /etc/systemd/system/powertop.service >/dev/null <<'EOF'
+[Unit]
+Description=Powertop tunings
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/powertop --auto-tune
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable powertop.service
+
+    # --------------------------------------------------------
+    # Bluetooth radio blocking
+    #
+    # Bluetooth remains installed and bluetooth.service remains
+    # enabled, but the radio starts blocked to save battery.
+    #
+    # Manual control:
+    #
+    #     bup     -> unblock Bluetooth
+    #     bdown   -> block Bluetooth
+    #
+    # The actual bup/bdown commands are provided by the user's
+    # shell configuration.
+    # --------------------------------------------------------
+
+    info "Configuring laptop Bluetooth power saving"
+
+    sudo tee /etc/systemd/system/bluetooth-block.service >/dev/null <<'EOF'
+[Unit]
+Description=Block Bluetooth radio
+After=bluetooth.service
+Wants=bluetooth.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rfkill block bluetooth
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable bluetooth-block.service
+
+    # --------------------------------------------------------
+    # Laptop power-management tools
+    #
+    # These are already included in the package list above,
+    # but the desktop installation does not require their
+    # services to be configured.
+    # --------------------------------------------------------
+
+    info "Enabling laptop power-management services"
+
+    sudo systemctl enable tlp.service
+    sudo systemctl enable powertop.service
+    sudo systemctl enable bluetooth-block.service
+
+else
+
+    # --------------------------------------------------------
+    # Desktop PC
+    #
+    # No laptop-specific power-management configuration is
+    # applied.
+    # --------------------------------------------------------
+
+    info "Desktop installation selected"
+
+fi
+
+# ============================================================
+# FINALIZATION
+# ============================================================
+
+info "Refreshing font cache"
+
+fc-cache -f
+
+info "Reloading systemd"
+
+sudo systemctl daemon-reload
+
+# ------------------------------------------------------------
+# Ensure common services are running
+# ------------------------------------------------------------
+
+sudo systemctl restart NetworkManager.service
+sudo systemctl restart bluetooth.service
+sudo systemctl restart cups.service
+
+# ------------------------------------------------------------
+# Apply laptop Bluetooth blocking immediately if this is a
+# laptop installation. The service itself will also perform
+# the action on subsequent boots.
+# ------------------------------------------------------------
+
+if [ "$LAPTOP" = true ]; then
+    sudo systemctl start bluetooth-block.service
+fi
+
+# ============================================================
+# COMPLETION
+# ============================================================
+
+success "Installation completed."
+
+printf '\n'
+printf '%s\n' "Next steps:"
+printf '%s\n' "  1. Log out and back into Sway."
+printf '%s\n' "  2. Check services with: systemctl --failed"
+printf '%s\n' "  3. Check Bluetooth with: rfkill list"
+printf '%s\n' "  4. Check sudoers with: sudo visudo -c"
+printf '%s\n' "  5. Check journald with: systemd-analyze cat-config systemd/journald.conf"
+
+if [ "$LAPTOP" = true ]; then
+    printf '%s\n' "  6. Check TLP with: sudo tlp-stat -s"
+    printf '%s\n' "  7. Check TLP configuration with: sudo tlp-stat -c"
+fi
+
+printf '\n'
