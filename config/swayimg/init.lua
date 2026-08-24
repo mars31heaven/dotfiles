@@ -107,6 +107,15 @@ end)
 swayimg.viewer.on_key("Delete", function()
 end)
 
+-- Permanently delete the current file from the hard drive:
+swayimg.viewer.on_key("Shift+Delete", function()
+    local img = swayimg.viewer.get_image()
+    if img and img.path then
+        os.remove(img.path)
+        swayimg.imagelist.remove(img.path)
+    end
+end)
+
 
 --------------------------------------------------------------------------------
 -- Gallery
