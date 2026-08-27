@@ -219,8 +219,11 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86MonBrightnessDown exec brightnessctl set 2%-
     bindsym --locked XF86MonBrightnessUp exec brightnessctl set 2%+
 
-    # Special key to take a screenshot with grim
+    # Special keys to take a screenshots with grim
     bindsym Print exec grim
+    bindsym Shift+Print exec grim -g "$(slurp)"
+    bindsym Shift+Ctrl+Print exec grim -g "$(slurp)" | wl-copy
+    bindsym $mod+Print exec grim -g "$(slurp)" - | swappy -f -
 
     # Clipboard history
     bindsym $mod+v exec cliphist list | fuzzel --dmenu | cliphist decode | wl-copy
@@ -301,6 +304,8 @@ bindsym $mod+r mode "resize"
 
     for_window [app_id="reaper"] inhibit_idle open
     for_window [app_id="duckstation-qt"] inhibit_idle open
+    for_window [title="kew"] inhibit_idle open
+    for_window [title="mpv"] inhibit_idle open
 
     # Autostart
     exec batsignal -b -w 25 -c 20 -d 15 -D "notify-send -u critical 'Battery critically low' 'Suspending now'; systemctl suspend" -f 90 -p

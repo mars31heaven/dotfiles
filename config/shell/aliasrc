@@ -31,7 +31,7 @@ alias \
 alias big='expac -H M "%m\t%n" | sort -h | nl'
 alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'
 alias cleanup='orphans=$(pacman -Qtdq); [ -n "$orphans" ] && sudo pacman -Rns $orphans'
-alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -100 | nl"
+alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
 # Neovim
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"

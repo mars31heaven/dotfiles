@@ -251,18 +251,38 @@ config.bind('ZZ', 'quit --save')
 
 # Open qutebrowser's config.py directly in Neovim.
 config.bind(
-    ',c',
-    'spawn foot -e nvim ~/.config/qutebrowser/config.py'
+    ',ce',
+    'spawn foot nvim /home/mrcl/.config/qutebrowser/config.py'
+)
+
+config.bind(
+    ',cs',
+    'config-source'
 )
 
 # Put the current URL into the command line for editing.
 config.bind(
-    ',u',
-    'set-cmd-text -s :open {url:pretty}'
+    'eu',
+    'edit-url'
 )
 
-# Put the current URL into a new-tab command for editing.
+# Close tabs with double d ('dd') instead of a single d keypress
+config.unbind(
+    'd'
+)
+
 config.bind(
-    ',U',
-    'set-cmd-text -s :open -t {url:pretty}'
+    'dd',
+    'tab-close'
+)
+
+# Play videos with mpv.
+config.bind(
+    ',m',
+    'spawn umpv {url}'
+)
+
+config.bind(
+    ',M',
+    'hint links spawn umpv {hint-url}'
 )

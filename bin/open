@@ -6,11 +6,11 @@
 
 case "$1" in
     *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
-        exec mpv "$1"
+        exec foot mpv --profile=music "$1"
         ;;
 
     *.mp4|*.mkv|*.webm|*.avi|*.mpg)
-        setsid -f mpv "$1" >/dev/null 2>&1
+        umpv "$1" >/dev/null 2>&1
         ;;
 
     *.png|*.gif|*.jpg|*.jpeg|*.jpe)

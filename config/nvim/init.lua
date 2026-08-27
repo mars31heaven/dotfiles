@@ -158,6 +158,9 @@ local map = vim.keymap.set
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Save" })
 map("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit" })
 
+-- Replace all
+map("n", "<leader>S", ":%s//g<Left><Left>", { desc = "Replace all" })
+
 -- Reload configuration
 map("n", "<leader>r", "<cmd>source $MYVIMRC<CR>", {
     desc = "Reload config",
