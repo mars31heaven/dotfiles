@@ -23,7 +23,7 @@ alias \
 alias \
     p="sudo pacman" \
     pyu="sudo pacman -Syu" \
-    y="yay --removemake --provides=false --answerdiff None --answerclean None --mflags '--noconfirm'" \
+    y="yay" \
     rmpkg="sudo pacman -Rdd" \
     ph="bat /var/log/pacman.log" \
     fixpacman="sudo rm /var/lib/pacman/db.lck"
@@ -32,6 +32,7 @@ alias big='expac -H M "%m\t%n" | sort -h | nl'
 alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'
 alias cleanup='orphans=$(pacman -Qtdq); [ -n "$orphans" ] && sudo pacman -Rns $orphans'
 alias exr="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+alias latest="grep -Ff <(pacman -Qeq) /var/log/pacman.log | grep 'installed' | tail -n 20"
 
 # Neovim
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"

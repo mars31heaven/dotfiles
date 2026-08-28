@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+#
+# whipper-batch-rip.sh
+#
+# Continuous CD ripping loop:
+# insert CD -> rip -> eject -> remove CD -> repeat
+#
+# Whipper handles:
+#   - secure ripping / Test & Copy
+#   - AccurateRip verification
+#   - FLAC encoding
+#   - MusicBrainz metadata
+#   - cover art
+#   - CUE / M3U / EAC-style logs
+#   - output naming
+#   - automatic eject
+#
+# Those settings are kept in ~/.config/whipper/whipper.conf.
+#
+
+set -uo pipefail
+
+DEVICE="${1:-/dev/sr0}"
+RUN_LOG_DIR="$HOME/.local/state/whipper"
+
+mkdir -p "$RUN_LOG_DIR"
+
+command -v whipper >/dev/null 2>&1 || {
+    echo "ERROR: whipper not found in PATH"
+    exit 1
+}
+
+command -v cd-discid >/dev/null 2>&1 || {
+    echo "ERROR: cd-discid not found in PATH"
+    exit 1
+}
+
+disc_present() {
+    cd-discid "$DEVICE" >/dev/null 2>&1
+}
+
+wait_for_disc() {
+    echo
+    echo "Waiting for a CD in $DEVICE ..."
+
+    until disc_present; do
+        sleep 2
+    done
+
+    # Give the drive a moment to finish spinning up.
+    sleep 3
+}
+
+wait_for_removal() {
+    echo "Waiting for disc removal..."
+
+    while disc_present; do
+        sleep 2
+    done
+}
+
+rip_current_disc() {
+    local timestamp status
+
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+
+    echo
+    echo "========================================"
+    echo "Starting Whipper rip: $timestamp"
+    echo "Device: $DEVICE"
+    echo "========================================"
+    echo
+
+    whipper cd rip -d "$DEVICE" 2>&1 |
+        tee "$RUN_LOG_DIR/rip-$timestamp.log"
+
+    # Because Whipper is piped through tee, PIPESTATUS is required
+    # to obtain Whipper's actual exit status.
+    status=${PIPESTATUS[0]}
+
+    echo
+
+    if (( status == 0 )); then
+        echo "Whipper completed successfully."
+    else
+        echo "WARNING: Whipper exited with status $status."
+        echo "Review: $RUN_LOG_DIR/rip-$timestamp.log"
+    fi
+}
+
+trap 'echo; echo "Stopped."; exit 0' INT TERM
+
+echo "=== Whipper batch ripping loop ==="
+echo "Device: $DEVICE"
+echo "Output: $HOME/Music"
+echo "Press Ctrl+C to stop."
+
+while true; do
+    wait_for_disc
+    rip_current_disc
+    wait_for_removal
+    echo "---"
+done
