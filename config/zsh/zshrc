@@ -13,7 +13,7 @@ done
 # ── Prompt ────────────────────────────────────────────────────
 
 autoload -U colors && colors
-PS1=' %F{red}%~%f $ '
+PS1=' [%F{yellow}%m%f] %F{red}%~%f $ '
 
 
 # ── History ───────────────────────────────────────────────────
@@ -63,6 +63,9 @@ setopt correct
 autoload -Uz compinit
 compinit
 
+# Enable the completion menu and its interactive selection keymap.
+zmodload -i zsh/complist
+
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -78,10 +81,33 @@ bindkey '^?' backward-delete-char
 bindkey '^[[3~' delete-char
 
 
+# ── Plugins ───────────────────────────────────────────────────
+
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=magenta,underline'
+typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=yellow,underline'
+
+
+# ── Completion menu navigation ────────────────────────────────
+
+# Use Vim keys while navigating the completion menu.
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+
+
 # ── History search ────────────────────────────────────────────
 
+# Search through history for commands containing the text
+# currently typed on the command line.
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+# Search history with Vim's j/k keys in command mode.
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
@@ -90,14 +116,3 @@ bindkey -M vicmd 'j' history-substring-search-down
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-
-
-# ── Plugins ───────────────────────────────────────────────────
-
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=magenta,underline'
-typeset -g HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=yellow,underline'
-
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
