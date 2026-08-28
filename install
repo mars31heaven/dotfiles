@@ -533,6 +533,19 @@ if [ -d "$DOTFILES/bin" ]; then
 fi
 
 # ============================================================
+# WALLPAPERS
+# ============================================================
+
+info "Installing wallpapers"
+
+
+mkdir -p "$HOME/.local/share"
+
+if [ -d "$DOTFILES/share/wallpapers" ]; then
+    ln -s "$DOTFILES/share/wallpapers" "$HOME/.local/share/"
+fi
+
+# ============================================================
 # ZSH
 # ============================================================
 
