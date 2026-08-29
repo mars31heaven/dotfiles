@@ -301,7 +301,7 @@ bindsym $mod+r mode "resize"
 
     # Swayidle
     exec swayidle -w \
-    timeout 600 'swaymsg "output * power off"' \
+    timeout 300 'swaymsg "output * power off"' \
     resume 'swaymsg "output * power on"'
 
     for_window [app_id="reaper"] inhibit_idle open
