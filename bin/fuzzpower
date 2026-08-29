@@ -7,9 +7,11 @@ choice=$(printf '%s\n' \
     "Poweroff" |
     fuzzel --dmenu --prompt="Power: ")
 
+# This line was missing:
 case "$choice" in
     "Turn Off Screen")
-        pkill -USR1 swayidle
+        sleep 1
+        wlopm --off \*
         ;;
     Suspend)
         systemctl suspend
@@ -21,4 +23,3 @@ case "$choice" in
         systemctl poweroff
         ;;
 esac
-

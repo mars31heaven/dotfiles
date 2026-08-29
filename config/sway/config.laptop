@@ -278,6 +278,9 @@ bindsym $mod+r mode "resize"
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 
+    bindsym $mod+f11 exec wlopm --off \*
+    bindsym $mod+shift+f11 exec wlopm --on \*
+
     # Windows borders
     default_border pixel 1
     default_floating_border pixel 1

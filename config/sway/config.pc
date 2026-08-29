@@ -278,8 +278,8 @@ bindsym $mod+r mode "resize"
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 
-    bindsym $mod+F11 exec swaymsg "output * dpms off"
-    bindsym $mod+Shift+F11 exec swaymsg "output * dpms on"
+    bindsym $mod+f11 exec wlopm --off \*
+    bindsym $mod+shift+f11 exec wlopm --on \*
 
     # Windows borders
     default_border pixel 1
