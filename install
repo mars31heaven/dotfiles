@@ -136,9 +136,6 @@ sudo pacman -S --needed \
     gvfs-mtp \
     highlight \
     imagemagick \
-    intel-media-driver \
-    intel-ucode \
-    iwd \
     jq \
     kdeconnect \
     keepassxc \
@@ -151,7 +148,6 @@ sudo pacman -S --needed \
     libretro-overlays \
     libretro-snes9x \
     librewolf \
-    libva-intel-driver \
     libva-utils \
     ly \
     mako \
@@ -181,7 +177,6 @@ sudo pacman -S --needed \
     pipewire-alsa \
     pipewire-jack \
     pipewire-pulse \
-    puddletag \
     pulsemixer \
     python-adblock \
     python-pykeepass \
@@ -286,6 +281,7 @@ yay -S --needed \
     otf-romande \
     pass-import \
     pmount \
+    puddletag \
     sixpair \
     task-spooler \
     timr-bin \
@@ -312,6 +308,10 @@ sudo systemctl enable ufw.service
 # Open ports for KDE Connect to work
 sudo ufw allow 1714:1764/udp
 sudo ufw allow 1714:1764/tcp
+
+# Allow SSH
+sudo ufw allow ssh
+
 sudo ufw reload
 
 # Turn off UFW logging
@@ -347,7 +347,7 @@ sudo systemctl restart systemd-journald
 info "Configuring sudoers"
 
 sudo tee /etc/sudoers.d/passwordless-commands >/dev/null <<EOF
-$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/reboot, /usr/bin/poweroff, /usr/sbin/su, /usr/bin/nvim
+$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/reboot, /usr/bin/poweroff, /usr/bin/nvim, /usr/bin/mount/, /usr/bin/umount
 EOF
 
 sudo chmod 440 /etc/sudoers.d/passwordless-commands
@@ -400,21 +400,24 @@ for directory in \
     lf \
     mako \
     nvim \
-    shell \
     sway \
     swayimg \
     waybar \
-    zathura \
-    zsh
+    zathura
 do
     rm -rf "$HOME/.config/$directory"
 done
 
 # mpv and qutebrowser are handled separately because
 # their configuration directories may contain private state.
+# same with shell directory.
+
+# zsh needs to be symlinked as a hidden file.
 
 mkdir -p "$HOME/.config/mpv"
 mkdir -p "$HOME/.config/qutebrowser"
+mkdir -p "$HOME/.config/shell"
+mkdir -p "$HOME/.config/zsh"
 
 # ------------------------------------------------------------
 # Symlink complete configuration directories
@@ -448,9 +451,6 @@ ln -s "$DOTFILES/config/mako" \
 
 ln -s "$DOTFILES/config/nvim" \
     "$HOME/.config/nvim"
-
-ln -s "$DOTFILES/config/shell" \
-    "$HOME/.config/shell"
 
 ln -s "$DOTFILES/config/sway" \
     "$HOME/.config/sway"
@@ -504,7 +504,30 @@ if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
 fi
 
 # ------------------------------------------------------------
-# zshenv
+# qutebrowser
+#
+# Only the version-controlled configuration is
+# linked. History, bookmarks and other private state remain
+# local to the machine.
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/config/shell/aliasrc" ]; then
+    ln -sf "$DOTFILES/config/shell/aliasrc" \
+        "$HOME/.config/shell/aliasrc"
+fi
+
+if [ -f "$DOTFILES/config/shell/functionrc" ]; then
+    ln -sf "$DOTFILES/config/shell/functionrc" \
+        "$HOME/.config/shell/functionrc"
+fi
+
+if [ -f "$DOTFILES/config/shell/functionrc" ]; then
+    ln -sf "$DOTFILES/config/shell/shortcutrc" \
+        "$HOME/.config/shell/shortcutrc"
+fi
+
+# ------------------------------------------------------------
+# zshenv and zshrc
 # ------------------------------------------------------------
 
 info "Linking zshenv"
@@ -512,25 +535,10 @@ info "Linking zshenv"
 ln -sf "$DOTFILES/zshenv" \
     "$HOME/.zshenv"
 
-# ============================================================
-# LOCAL BIN
-# ============================================================
+info "Linking zshrc"
 
-info "Installing personal scripts"
-
-mkdir -p "$HOME/.local/bin"
-
-if [ -d "$DOTFILES/bin" ]; then
-    for file in "$DOTFILES/bin"/*; do
-        [ -f "$file" ] || continue
-
-        target="$HOME/.local/bin/$(basename "$file")"
-
-        rm -f "$target"
-        cp "$file" "$target"
-        chmod +x "$target"
-    done
-fi
+ln -sf "$DOTFILES/config/zsh/zshrc" \
+    "$HOME/.config/zsh/.zshrc"
 
 # ============================================================
 # WALLPAPERS
@@ -553,6 +561,10 @@ info "Preparing Zsh history"
 
 mkdir -p "$HOME/.cache/zsh"
 touch "$HOME/.cache/zsh/history"
+
+info "Changing user's shell to Zsh"
+
+chsh -s /bin/zsh mrcl
 
 # ============================================================
 # LAPTOP POWER MANAGEMENT
