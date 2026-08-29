@@ -16,5 +16,4 @@ alias \
     cf="cd ~/.config && ls" \
     ca="cd ~/.cache && ls" \
     M="cd /mnt && ls" \
-    T="cd /tmp" \
-    pc="cd /media/pc && ls"
+    T="cd /tmp"
