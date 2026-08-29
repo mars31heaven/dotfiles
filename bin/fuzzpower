@@ -1,12 +1,16 @@
 #!/bin/sh
 
 choice=$(printf '%s\n' \
+    "Turn Off Screen" \
     "Suspend" \
     "Reboot" \
     "Poweroff" |
     fuzzel --dmenu --prompt="Power: ")
 
 case "$choice" in
+    "Turn Off Screen")
+        pkill -USR1 swayidle
+        ;;
     Suspend)
         systemctl suspend
         ;;
@@ -17,3 +21,4 @@ case "$choice" in
         systemctl poweroff
         ;;
 esac
+
