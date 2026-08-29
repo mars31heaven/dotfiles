@@ -6,7 +6,7 @@
 
 case "$1" in
     *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
-        exec foot mpv --profile=music "$1"
+        setsid -f foot mpv --profile=music "$1"
         ;;
 
     *.mp4|*.mkv|*.webm|*.avi|*.mpg)

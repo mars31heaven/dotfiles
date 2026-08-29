@@ -4,16 +4,12 @@ for file in \
     "$HOME/.config/shell/aliasrc" \
     "$HOME/.config/shell/shortcutrc" \
     "$HOME/.config/shell/functionrc" \
+    "$HOME/.config/shell/laptop" \
+    "$HOME/.config/shell/pc" \
     "$HOME/.config/shell/private"
 do
     [ -f "$file" ] && source "$file"
 done
-
-
-# ── Prompt ────────────────────────────────────────────────────
-
-autoload -U colors && colors
-PS1=' [%F{yellow}%m%f] %F{red}%~%f $ '
 
 
 # ── History ───────────────────────────────────────────────────
