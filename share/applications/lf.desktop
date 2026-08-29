@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=lf
+Comment=Launches lf file manager in a terminal
+Terminal=false
+Exec=foot -e lf %u
+Icon=utilities-terminal
+Categories=System;FileTools;FileManager;
+MimeType=inode/directory;
