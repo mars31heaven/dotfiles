@@ -1,0 +1,63 @@
+:root {
+    /* Custom Color Palette Variables */
+    --bg-main: #313131;
+    --bg-dark: #101010;
+    --fg-main: #e1e1db;
+    --fg-muted: #d8cfd8;
+    --accent: #de7484;
+    --green: #a8b89a;
+    --yellow: #c8b875;
+    --blue: #8fa7c7;
+    --cyan: #8fb7b5;
+    --urgent: #db3d3f;
+    --gray: #555555;
+
+    /* Tridactyl UI Remapping */
+    --tridactyl-bg: var(--bg-main);
+    --tridactyl-fg: var(--fg-main);
+
+    /* Command Line and Statusbar */
+    --tridactyl-cmdline-bg: var(--bg-dark);
+    --tridactyl-cmdline-fg: var(--fg-main);
+    --tridactyl-statusline-bg: var(--bg-dark);
+    --tridactyl-statusline-fg: var(--fg-muted);
+
+    /* Typography & Global Scaling Fixes */
+    --tridactyl-font-family: monospace;
+    --tridactyl-font-size: 19px !important;
+}
+
+/* --- Link Hints (F / F) --- */
+.TridactylHint {
+    background-color: var(--yellow) !important;
+    border: 1px solid var(--bg-dark) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold !important;
+    font-family: monospace !important;
+    padding: 1px 3px !important;
+    border-radius: 2px !important;
+}
+
+/* --- Completions Menu Selection --- */
+.TridactylSelected {
+    background-color: var(--accent) !important;
+    color: var(--bg-dark) !important;
+}
+
+/* --- Urgent / Error Messages --- */
+.TridactylErrorMessage {
+    background-color: var(--urgent) !important;
+    color: var(--fg-main) !important;
+}
+
+/* --- Mode Indicators (e.g., -- INPUT -- / -- COMMAND --) --- */
+#tridactyl-statusline .mode {
+    color: var(--cyan);
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+/* --- Container Formatting & Layout Adjustment --- */
+#tridactyl-statusline {
+    padding: 6px 10px !important; /* Adds proportional padding to match the larger font */
+}

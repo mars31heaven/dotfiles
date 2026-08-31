@@ -1,0 +1,26 @@
+# --- Qutebrowser Profile ---
+# Navigation
+bind J tabnext
+bind K tabprev
+bind H back
+bind L forward
+
+# Page Control
+bind r reload
+bind R reloadhard
+bind d tabclose
+bind u undo
+
+# Hinting (Clicking Links)
+bind f hint
+bind F hint -b
+
+# URL Opening
+bind o fillcmdline open
+bind O current_url open
+bind t fillcmdline tabopen
+bind T current_url tabopen
+
+# Interface
+set statusbar enabled
+clourscheme custom
