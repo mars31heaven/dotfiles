@@ -24,6 +24,9 @@ c.confirm_quit = ['never']
 # Use ZZ (defined below) when you explicitly want to save the session.
 c.auto_save.session = False
 
+# Close the window when last tab is closed
+c.tabs.last_close = 'close'
+
 
 # ╔══════════════════════════════════════════════════════════════════════════╗
 # ║ START / NEW TABS                                                         ║

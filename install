@@ -113,7 +113,6 @@ sudo pacman -S --needed \
     bluez \
     bluez-utils \
     brightnessctl \
-    cava \
     chafa \
     cliphist \
     cups \
@@ -212,6 +211,7 @@ sudo pacman -S --needed \
     wf-recorder \
     wget \
     wireplumber \
+    wlopm \
     wlsunset \
     wmenu \
     woff2-font-awesome \
@@ -565,6 +565,18 @@ touch "$HOME/.cache/zsh/history"
 info "Changing user's shell to Zsh"
 
 chsh -s /bin/zsh mrcl
+
+# ============================================================
+# lf as xdg default file manager
+# ============================================================
+
+info "Setting up lf as xdg default file manager"
+
+if [ -d "$DOTFILES/share/applications" ]; then
+    ln -s "$DOTFILES/share/applications" "$HOME/.local/share/"
+fi
+
+xdg-mime default lf.desktop inode/directory
 
 # ============================================================
 # LAPTOP POWER MANAGEMENT
