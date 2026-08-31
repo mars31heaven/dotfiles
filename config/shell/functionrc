@@ -29,6 +29,31 @@ fcd() {
     cd -- "$dir"
 }
 
+album1() {
+    local dir
+    dir=$(find . -mindepth 1 -maxdepth 1 -type d | shuf -n 1) || return
+
+    printf '▶ %s\n' "$dir"
+
+    find "$dir" -maxdepth 1 -type f \
+        \( -iname '*.mp3' -o -iname '*.flac' -o -iname '*.ogg' -o -iname '*.m4a' \) \
+        -print0 |
+        sort -z |
+        xargs -0 mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"
+}
+
+album2() {
+    local dir
+    dir=$(find . -mindepth 2 -maxdepth 2 -type d | shuf -n 1) || return
+
+    printf '▶ %s\n' "$dir"
+
+    find "$dir" -maxdepth 1 -type f \
+        \( -iname '*.mp3' -o -iname '*.flac' -o -iname '*.ogg' -o -iname '*.m4a' \) \
+        -print0 |
+        sort -z |
+        xargs -0 mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"
+}
 
 # ── Personal shortcuts ───────────────────────────────────────
 

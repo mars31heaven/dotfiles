@@ -101,10 +101,5 @@ alias \
     bup="rfkill unblock bluetooth" \
     bdown="rfkill block bluetooth"
 
-# SSHFS
-alias \
-    pcm="sshfs mrcl@192.168.15.7:/ /media/pc" \
-    pc="cd /media/pc && ls"
-
 # Media player
 alias mm='mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"'

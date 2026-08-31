@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+source /home/mrcl/.config/zsh/.zshrc
+
+lfcd "$1"
+
+exec zsh
