@@ -1,0 +1,31 @@
+[key-bindings]
+
+# Vim-style navigation + arrows
+next=Down Control+n Control+j
+prev=Up Control+p Control+k
+
+# Ctrl+k is normally "delete everything after cursor".
+# Free it for Vim-style navigation.
+delete-line-forward=none
+
+[main]
+font=monospace:size=11
+terminal=foot
+width=50
+lines=12
+horizontal-pad=20
+vertical-pad=12
+inner-pad=8
+
+[colors]
+background=101010ee
+text=d8cfd8ff
+match=de7484ff
+selection=313131ff
+selection-text=e1e1dbff
+selection-match=de7484ff
+border=313131ff
+
+[border]
+width=1
+radius=0

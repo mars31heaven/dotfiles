@@ -1,0 +1,44 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 24,
+    "spacing": 0,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/window"
+    ],
+
+    "modules-right": [
+        "clock",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}",
+        "on-click": "none"
+    },
+
+    "sway/window": {
+        "format": "{}",
+        "max-length": 80,
+        "rewrite": {
+            "": ""
+        },
+        "tooltip": false
+    },
+
+    "clock": {
+        "format": "{:%Y-%m-%d %H:%M}",
+        "format-alt": "{:%Y-%m-%d}",
+        "tooltip": false,
+        "on-click": "none"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 6
+    }
+}
