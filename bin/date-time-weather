@@ -1,0 +1,18 @@
+#!/bin/bash
+# Print current time
+date "+%A, %B %d, %Y"
+echo ""
+
+date "+%H:%M"
+echo ""
+
+# Print calendar with today highlighted
+cal
+echo ""
+
+# Print weather summary (3 lines max for speed/compactness)
+curl -s "wttr.in?0Q"
+echo ""
+
+# Keep window open until a key is pressed
+read -n 1 -p "Press any key to close..."

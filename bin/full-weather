@@ -1,0 +1,5 @@
+#!/bin/bash
+curl -s "wttr.in"
+
+echo ""
+read -n 1 -s -r -p "Press any key to close..."

@@ -16,10 +16,8 @@
     background-color: var(--bg-dark) !important;
 }
 
-/* Modify Tab Shape: Make them longer, remove rounded corners */
+/* Remove tabs rounded corners */
 .tabbrowser-tab {
-    min-width: 180px !important;  /* Controls the long look of the tabs */
-    max-width: 250px !important;
     border-radius: 0px !important; /* Removes rounded edges */
     margin-inline-end: 0px !important;
 }
