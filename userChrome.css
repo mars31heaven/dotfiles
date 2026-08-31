@@ -1,0 +1,41 @@
+:root {
+    --bg-main: #313131;
+    --bg-dark: #101010;
+    --fg-main: #e1e1db;
+    --fg-muted: #d8cfd8;
+    --accent: #de7484;
+
+    /* Firefox Theme Remapping */
+    --lwt-accent-color: var(--bg-dark) !important;
+    --lwt-selected-tab-background-color: var(--bg-main) !important;
+    --toolbar-background-color: var(--bg-dark) !important;
+}
+
+/* Set background color of the whole tab bar area */
+#TabsToolbar {
+    background-color: var(--bg-dark) !important;
+}
+
+/* Modify Tab Shape: Make them longer, remove rounded corners */
+.tabbrowser-tab {
+    min-width: 180px !important;  /* Controls the long look of the tabs */
+    max-width: 250px !important;
+    border-radius: 0px !important; /* Removes rounded edges */
+    margin-inline-end: 0px !important;
+}
+
+/* Remove internal rounding for active tab background wrapper */
+.tab-background {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+/* Active tab styles */
+.tabbrowser-tab[selected="true"] .tab-background {
+    background-color: var(--bg-main) !important;
+    border-top: 2px solid var(--accent) !important; /* Distinct accent indicator line */
+}
+
+/* Tab Text Colors */
+.tabbrowser-tab { color: var(--fg-muted) !important; }
+.tabbrowser-tab[selected="true"] { color: var(--fg-main) !important; }
