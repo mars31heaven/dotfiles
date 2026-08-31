@@ -75,6 +75,7 @@ alias \
     gca="git commit -a" \
     gpu="git push" \
     ytdl="yt-dlp" \
+    yta="yt-dlp -x -f bestaudio --no-keep-video" \
     ncdu="ncdu --color off" \
     rs="rsync -rvP" \
     fd="fd --unrestricted" \
