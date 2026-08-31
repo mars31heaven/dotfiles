@@ -280,15 +280,11 @@ bindsym $mod+r mode "resize"
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 
-    bindsym $mod+f11 exec wlopm --off \*
-    bindsym $mod+shift+f11 exec wlopm --on \*
-
     bindsym $mod+c exec foot --title="Date / Time / Weather" -e ~/.dotfiles/bin/date-time-weather
     for_window [title="Date / Time / Weather"] floating enable, resize set 400px 500px, move position center
 
     bindsym $mod+Ctrl+c exec foot --title="Full Weather" -e ~/.dotfiles/bin/full-weather
     for_window [title="Full Weather"] floating enable, resize set 1200px 1000px, move position center
-
 
     # Windows borders
     default_border pixel 1

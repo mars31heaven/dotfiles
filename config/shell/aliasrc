@@ -107,5 +107,4 @@ alias \
     pc="cd /media/pc && ls"
 
 # Media player
-alias \
-    mm="mpv --profile=music"
+alias mm='mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"'

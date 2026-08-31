@@ -1,17 +1,22 @@
 #!/bin/sh
 
+# Show the menu with a single "Toggle Sunset" option
 choice=$(printf '%s\n' \
-    "Turn Off Screen" \
+    "Toggle Sunset" \
     "Suspend" \
     "Reboot" \
     "Poweroff" |
     fuzzel --dmenu --prompt="Power: ")
 
-# This line was missing:
+# Handle the selection
 case "$choice" in
-    "Turn Off Screen")
-        sleep 1
-        wlopm --off \*
+    "Toggle Sunset")
+        # Check if running: if yes, kill it; if no, start it
+        if pgrep -x wlsunset > /dev/null; then
+            pkill wlsunset
+        else
+            wlsunset -t 4000 -T 4200 > /dev/null 2>&1 &
+        fi
         ;;
     Suspend)
         systemctl suspend
