@@ -261,6 +261,7 @@ bindsym $mod+r mode "resize"
 
     # Other shorcuts
     bindsym $mod+Shift+w exec librewolf
+    bindsym $mod+Ctrl+w exec thunderbird
 
     bindsym $mod+F4 exec wlsunset -t 4000 -T 4200
     bindsym $mod+shift+F4 exec pkill wlsunset
@@ -268,9 +269,12 @@ bindsym $mod+r mode "resize"
     bindsym $mod+F12 exec itoggle
 
     bindsym $mod+Shift+Backspace exec fuzzpower
+
     bindsym $mod+p exec fuzzpass
 
     bindsym $mod+Shift+e exec foot nvim
+
+    bindsym $mod+Shift+f exec fsearch
 
     bindsym $mod+Home exec foot htop
 
