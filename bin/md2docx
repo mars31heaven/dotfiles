@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# ============================================================
+# Conversor Markdown -> Word (DOCX)
+# Requisitos:
+#   - pandoc
+#
+# Uso:
+#   ./md_to_docx.sh arquivo.md
+#   ./md_to_docx.sh arquivo.md arquivo.docx
+#
+# Exemplo:
+#   ./md_to_docx.sh processo-kit-wifi.md
+# ============================================================
+
+if ! command -v pandoc >/dev/null 2>&1; then
+    echo "Erro: Pandoc não está instalado."
+    echo
+    echo "Ubuntu/Debian:"
+    echo "  sudo apt install pandoc"
+    echo
+    exit 1
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Uso: $0 arquivo.md [arquivo.docx]"
+    exit 1
+fi
+
+INPUT="$1"
+
+if [[ ! -f "$INPUT" ]]; then
+    echo "Erro: arquivo não encontrado: $INPUT"
+    exit 1
+fi
+
+# Se o nome do DOCX não for informado,
+# usa o mesmo nome do Markdown.
+if [[ $# -ge 2 ]]; then
+    OUTPUT="$2"
+else
+    OUTPUT="${INPUT%.md}.docx"
+fi
+
+echo "Convertendo:"
+echo "  Entrada: $INPUT"
+echo "  Saída:   $OUTPUT"
+echo
+
+pandoc "$INPUT" \
+    --from=gfm \
+    --to=docx \
+    --standalone \
+    --toc \
+    --toc-depth=3 \
+    -o "$OUTPUT"
+
+echo
+echo "Conversão concluída."
+echo "Arquivo gerado: $OUTPUT"
