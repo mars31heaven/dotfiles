@@ -1,57 +1,69 @@
 #!/bin/sh
 
+FILE="$1"
+WIDTH="$2"
+
 handle() {
-    if [ -f "$1" ]; then
-        highlight "$1" -O ansi --force
-    elif [ -d "$1" ]; then
-        tree "$1" -La 1
+    if [ -d "$FILE" ]; then
+        tree -C -L 1 -F "$FILE"
+    elif [ -f "$FILE" ]; then
+        if command -v highlight >/dev/null 2>&1; then
+            highlight "$FILE" -O ansi --force
+        else
+            cat "$FILE"
+        fi
     fi
 }
 
-case "$1" in
-    *.mp3|*.flac|*.wav|*.ogg|*.opus|*.m4a|*.mp4|*.mkv|*.webm|*.avi|*.mpg)
-        mediainfo "$1"
+case "$FILE" in
+    *.mp3|*.flac|*.wav|*.ogg|*.opus|*.m4a|*.mp4|*.mkv|*.webm|*.avi|*.mpg|*.mov)
+        mediainfo "$FILE"
         ;;
-    *.png|*.gif|*.jpg|*.jpe|*.jpeg)
-        exiv2 "$1"
+    *.png|*.gif|*.jpg|*.jpe|*.jpeg|*.tiff|*.webp)
+        exiv2 "$FILE"
+        ;;
+    *.epub)
+        if command -v epub-info >/dev/null 2>&1; then
+            epub-info "$FILE"
+        elif command -v unzip >/dev/null 2>&1; then
+            echo "--- EPUB METADATA ---"
+            unzip -p "$FILE" "*content.opf" 2>/dev/null | grep -E '<dc:|title|creator|date' | sed -e 's/<[^>]*>//g' -e 's/^[ \t]*//'
+        else
+            echo "Install 'unzip' or 'epub-info' to preview epub metadata."
+        fi
         ;;
     *.md)
-        mdcat "$1"
+        if command -v mdcat >/dev/null 2>&1; then
+            mdcat --columns "$WIDTH" "$FILE"
+        elif command -v glow >/dev/null 2>&1; then
+            glow -s dark "$FILE"
+        else
+            cat "$FILE"
+        fi
         ;;
-    *.pdf)
-        pdftotext "$1" -
-        ;;
-    *.odt)
-        odt2txt "$1"
-        ;;
-    *.docx)
-        docx2txt "$1"
-        ;;
-    *.zip)
-        zipinfo "$1"
-        ;;
-    *.tar.xz)
-        tar -tf "$1"
-        ;;
-    *.tar.gz)
-        tar -ztvf "$1"
-        ;;
-    *.tar.bz2)
-        tar -jtvf "$1"
-        ;;
-    *.tar)
-        tar -tvf "$1"
-        ;;
-    *.rar)
-        unrar l "$1"
-        ;;
-    *.7z)
-        7z l "$1"
+    *.docx|*.xlsx|*.pptx|*.pdf|*.doc|*.xls)
+        if command -v batdoc >/dev/null 2>&1; then
+            batdoc --plain "$FILE" | head -n 100
+        else
+            echo "Install 'batdoc' to preview office documents and PDFs."
+        fi
         ;;
     *.html|*.htm)
-        w3m -dump "$1"
+        w3m -dump "$FILE"
+        ;;
+    *.zip)
+        zipinfo "$FILE"
+        ;;
+    *.tar|*.tar.*|*.tgz|*.txz|*.tbz2)
+        tar -tf "$FILE"
+        ;;
+    *.rar)
+        unrar l "$FILE"
+        ;;
+    *.7z)
+        7z l "$FILE"
         ;;
     *)
-        handle "$1"
+        handle "$FILE"
         ;;
 esac

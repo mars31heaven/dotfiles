@@ -118,7 +118,6 @@ sudo pacman -S --needed \
     cliphist \
     cups \
     cups-pk-helper \
-    docx2txt \
     efibootmgr \
     exiv2 \
     expac \
@@ -143,6 +142,7 @@ sudo pacman -S --needed \
     lf \
     libjpeg-turbo
     libpulse \
+    libreoffice-still \
     libretro-core-info \
     libretro-genesis-plus-gx \
     libretro-mgba \
@@ -275,6 +275,7 @@ fi
 info "Installing packages from the AUR"
 
 yay -S --needed \
+    batdoc-bin \
     duckstation-qt-bin \
     fsearch \
     google-chrome \

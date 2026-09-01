@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Open files in applications baseds on file extension
-
 [ -n "$1" ] || exit 1
 
 case "$1" in
@@ -9,20 +7,28 @@ case "$1" in
         setsid -f foot mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock" "$1"
         ;;
 
-    *.mp4|*.mkv|*.webm|*.avi|*.mpg)
+    *.mp4|*.mkv|*.webm|*.avi|*.mpg|*.mov)
         umpv "$1" >/dev/null 2>&1
         ;;
 
-    *.png|*.gif|*.jpg|*.jpeg|*.jpe)
-        exec swayimg "$1"
+    *.png|*.gif|*.jpg|*.jpeg|*.jpe|*.webp|*.tiff)
+        setsid -f swayimg "$1" >/dev/null 2>&1
         ;;
 
-    *.pdf|*.cbr|*.epub)
-        exec zathura "$1"
+    *.pdf|*.cbr|*.cbz|*.epub)
+        setsid -f zathura "$1" >/dev/null 2>&1
         ;;
 
-    http*|www*|*.html)
+    http*|www*|*.html|*.htm)
         setsid -f "$BROWSER" "$1" >/dev/null 2>&1
+        ;;
+
+    *.docx|*.doc|*.odt)
+        setsid -f lowriter "$1" >/dev/null 2>&1
+        ;;
+
+    *.xlsx|*.xls|*.ods|*.csv)
+        setsid -f localc "$1" >/dev/null 2>&1
         ;;
 
     *.torrent)
@@ -33,3 +39,4 @@ case "$1" in
         exec "$EDITOR" "$1"
         ;;
 esac
+
