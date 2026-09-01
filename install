@@ -141,6 +141,7 @@ sudo pacman -S --needed \
     keepassxc \
     kew \
     lf \
+    libjpeg-turbo
     libpulse \
     libretro-core-info \
     libretro-genesis-plus-gx \
@@ -162,6 +163,7 @@ sudo pacman -S --needed \
     network-manager-applet \
     networkmanager \
     nicotine+ \
+    nmap \
     noto-fonts \
     noto-fonts-cjk \
     noto-fonts-emoji \

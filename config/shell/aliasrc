@@ -86,7 +86,8 @@ alias \
     tarnow="tar -acf" \
     untar="tar -xvf" \
     wget="wget -c" \
-    hw="hwinfo --short"
+    hw="hwinfo --short" \
+    printdraft="lp -o Draft"
 
 # Power management
 alias \
