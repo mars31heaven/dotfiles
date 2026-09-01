@@ -116,6 +116,14 @@ swayimg.viewer.on_key("Shift+Delete", function()
     end
 end)
 
+-- Show next and previous images directly
+swayimg.viewer.on_key("space", function()
+    swayimg.viewer.switch_image("next")
+end)
+
+swayimg.viewer.on_key("Backspace", function()
+    swayimg.viewer.switch_image("prev")
+end)
 
 --------------------------------------------------------------------------------
 -- Gallery
