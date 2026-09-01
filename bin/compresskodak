@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TARGET_DIR="comprimidos"
+mkdir -p "$TARGET_DIR"
+
+shopt -s nocaseglob
+for img in *.jpg *.jpeg; do
+    [ -e "$img" ] || continue
+
+    filename="${img%.*}"
+    ext="${img##*.}"
+
+    magick "$img" \
+        -resize 50% \
+        -sampling-factor 1:1:1 \
+        -quality 98 \
+        "$TARGET_DIR/${filename}_resized.${ext}"
+done
