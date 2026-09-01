@@ -105,6 +105,7 @@ info "Installing packages from the official repositories"
 
 sudo pacman -S --needed \
     7zip \
+    autotiling \
     base \
     base-devel \
     bat \

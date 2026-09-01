@@ -286,7 +286,7 @@ bindsym $mod+r mode "resize"
     default_floating_border pixel 1
 
     client.focused          #e1e1db #e1e1db #313131 #e1e1db #e1e1db
-    client.focused_inactive #d8cfd8 #d8cfd8 #313131 #d8cfd8 #d8cfd8
+    client.focused_inactive #555555 #555555 #555555 #555555 #555555
     client.unfocused        #555555 #555555 #313131 #555555 #555555
     client.urgent           #db3d2f #db3d3f #313131 #db3d3f #db3d3f
 
@@ -311,10 +311,11 @@ bindsym $mod+r mode "resize"
     for_window [title="mpv"] inhibit_idle open
 
     # Autostart
+    exec_always autotiling --limit 2
+
     exec batsignal -b -w 25 -c 20 -d 15 -D "notify-send -u critical 'Battery critically low' 'Suspending now'; systemctl suspend" -f 90 -p
 
     exec wl-paste --type text --watch cliphist store
-    exec wl-paste --type image --watch cliphist store
 
     exec_always swaybg -i /home/mrcl/.local/share/wallpapers/mar.jpg -m fill
 
