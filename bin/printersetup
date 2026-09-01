@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PRINTER_NAME="Epson_L3250"
+MAC_TARGET="64:C6:D2:48:99:D9"
+
+SUBNET=$(ip route | grep default | awk '{print $3}' | sed 's/\.[0-9]*$/\.0\/24/')
+
+if [ -z "$SUBNET" ]; then
+    exit 1
+fi
+
+PRINTER_IP=$(sudo nmap -sn "$SUBNET" | grep -B 2 -i "$MAC_TARGET" | head -n 1 | awk '{print $NF}' | tr -d '()')
+
+if [ -z "$PRINTER_IP" ]; then
+    exit 1
+fi
+
+sudo lpadmin -p "$PRINTER_NAME" -E -v "ipp://$PRINTER_IP/ipp/print" -m everywhere
+sudo lpadmin -d "$PRINTER_NAME"
