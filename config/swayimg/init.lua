@@ -118,11 +118,11 @@ end)
 
 -- Show next and previous images directly
 swayimg.viewer.on_key("space", function()
-    swayimg.viewer.switch_image("next")
+    swayimg.viewer.open("next")
 end)
 
 swayimg.viewer.on_key("Backspace", function()
-    swayimg.viewer.switch_image("prev")
+    swayimg.viewer.open("prev")
 end)
 
 --------------------------------------------------------------------------------
@@ -211,4 +211,34 @@ end)
 
 -- Delete deliberately does nothing.
 swayimg.gallery.on_key("Delete", function()
+end)
+
+-- Lossless rotation 90 degrees counter-clockwise (Left)
+swayimg.viewer.on_key("[", function()
+    local img = swayimg.viewer.get_image()
+    if img and img.path then
+        local cmd
+        if string.match(img.path:lower(), "%.jpe?g$") then
+            cmd = string.format("jpegtran -rotate 270 -copy all %q > %q.tmp && mv %q.tmp %q", img.path, img.path, img.path, img.path)
+        else
+            cmd = string.format("magick %q -rotate 270 %q", img.path, img.path)
+        end
+        os.execute(cmd)
+        swayimg.viewer.reload()
+    end
+end)
+
+-- Lossless rotation 90 degrees clockwise (Right)
+swayimg.viewer.on_key("]", function()
+    local img = swayimg.viewer.get_image()
+    if img and img.path then
+        local cmd
+        if string.match(img.path:lower(), "%.jpe?g$") then
+            cmd = string.format("jpegtran -rotate 90 -copy all %q > %q.tmp && mv %q.tmp %q", img.path, img.path, img.path, img.path)
+        else
+            cmd = string.format("magick %q -rotate 90 %q", img.path, img.path)
+        end
+        os.execute(cmd)
+        swayimg.viewer.reload()
+    end
 end)

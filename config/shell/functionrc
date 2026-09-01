@@ -55,6 +55,19 @@ album2() {
         xargs -0 mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"
 }
 
+rotate() {
+    local deg="$1"
+    local file="$2"
+
+    [[ -f "$file" ]] || return 1
+
+    jpegtran -rotate "$deg" -copy all "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+}
+
+if [ -n "$BASH_VERSION" ]; then
+    export -f rotate
+fi
+
 # ── Personal shortcuts ───────────────────────────────────────
 
 bindkey -s '^p' 'pulsemixer\n'
