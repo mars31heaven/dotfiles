@@ -289,3 +289,5 @@ config.bind(
     ',M',
     'hint links spawn umpv {hint-url}'
 )
+
+config.bind('your-key-here', 'mode-leave', mode='passthrough')
