@@ -70,7 +70,6 @@ fi
 
 # ── Personal shortcuts ───────────────────────────────────────
 
-bindkey -s '^p' 'pulsemixer\n'
 bindkey -s '^o' 'lfcd\n'
 bindkey -s '^a' 'bc -lq\n'
 bindkey -s '^f' 'fcd\n'
