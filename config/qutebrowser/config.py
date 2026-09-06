@@ -281,12 +281,12 @@ config.bind(
 
 # Play videos with mpv.
 config.bind(
-    ',m',
+    ',v',
     'spawn umpv {url}'
 )
 
 config.bind(
-    ',M',
+    ',V',
     'hint links spawn umpv {hint-url}'
 )
 
