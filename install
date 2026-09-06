@@ -1,14 +1,16 @@
 #!/bin/bash
 
 # ============================================================
-# Arch Linux + Sway
+# Arch Linux / Artix Linux + Sway
 # install
 #
-# Base system installation for Archinstall or minimal Arch.
+# Base environment installation for Arch Linux or Artix Linux.
 #
 # The script can be used for both laptops and desktop PCs.
-# Laptop-specific power management is enabled only when the
-# laptop installation is selected.
+# Machine-specific configuration is selected automatically.
+#
+# Arch Linux uses systemd.
+# Artix Linux uses runit.
 #
 # Run as the normal user:
 #
@@ -48,7 +50,7 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 if ! command -v pacman >/dev/null 2>&1; then
-    error "This does not appear to be an Arch Linux system."
+    error "This does not appear to be an Arch-based system."
     exit 1
 fi
 
@@ -62,8 +64,63 @@ if [ ! -d "$DOTFILES" ]; then
 fi
 
 # ------------------------------------------------------------
-# Installation target
+# Detect init system
 # ------------------------------------------------------------
+
+if [ -d /run/runit/service ]; then
+    INIT="runit"
+elif [ "$(ps -p 1 -o comm=)" = "systemd" ]; then
+    INIT="systemd"
+else
+    error "Could not determine the init system."
+    error "This installer supports systemd and runit."
+    exit 1
+fi
+
+# ------------------------------------------------------------
+# Detect distribution
+# ------------------------------------------------------------
+
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+else
+    error "Could not determine the operating system."
+    exit 1
+fi
+
+case "$ID" in
+    arch)
+        DISTRO="arch"
+        ;;
+    artix)
+        DISTRO="artix"
+        ;;
+    *)
+        error "Unsupported distribution: $ID"
+        error "This installer supports Arch Linux and Artix Linux."
+        exit 1
+        ;;
+esac
+
+# ------------------------------------------------------------
+# Verify the expected init system for the distribution
+# ------------------------------------------------------------
+
+if [ "$DISTRO" = "arch" ] && [ "$INIT" != "systemd" ]; then
+    error "Arch Linux was detected without systemd."
+    exit 1
+fi
+
+if [ "$DISTRO" = "artix" ] && [ "$INIT" != "runit" ]; then
+    error "Artix Linux was detected without runit."
+    exit 1
+fi
+
+info "Detected $DISTRO with $INIT"
+
+# ============================================================
+# INSTALLATION TARGET
+# ============================================================
 
 printf '\n'
 printf '%s\n' "Select installation type:"
@@ -77,10 +134,12 @@ while true; do
     case "$INSTALL_TYPE" in
         1)
             LAPTOP=true
+            MACHINE="laptop"
             break
             ;;
         2)
             LAPTOP=false
+            MACHINE="pc"
             break
             ;;
         *)
@@ -88,6 +147,24 @@ while true; do
             ;;
     esac
 done
+
+# ------------------------------------------------------------
+# Detect CPU architecture/vendor
+# ------------------------------------------------------------
+
+CPU_VENDOR="$(lscpu | awk -F: '/Vendor ID:/ {gsub(/^[ \t]+/, "", $2); print $2}')"
+
+if [ "$LAPTOP" = true ] && [ "$CPU_VENDOR" != "GenuineIntel" ]; then
+    error "The laptop installation is expected to use an Intel CPU."
+    error "Detected CPU vendor: $CPU_VENDOR"
+    exit 1
+fi
+
+if [ "$LAPTOP" = false ] && [ "$CPU_VENDOR" != "AuthenticAMD" ]; then
+    error "The desktop PC installation is expected to use an AMD CPU."
+    error "Detected CPU vendor: $CPU_VENDOR"
+    exit 1
+fi
 
 # ============================================================
 # OFFICIAL REPOSITORIES
@@ -101,6 +178,10 @@ info "Installing packages from the official repositories"
 # These packages are installed on both laptops and desktop PCs.
 # --needed prevents packages that are already installed from
 # being unnecessarily reinstalled.
+#
+# ly is intentionally not included. It is installed by
+# archinstall when a graphical desktop is selected, but it is
+# not part of this environment.
 # ------------------------------------------------------------
 
 sudo pacman -S --needed \
@@ -140,7 +221,7 @@ sudo pacman -S --needed \
     keepassxc \
     kew \
     lf \
-    libjpeg-turbo
+    libjpeg-turbo \
     libpulse \
     libreoffice-still \
     libretro-core-info \
@@ -150,7 +231,6 @@ sudo pacman -S --needed \
     libretro-snes9x \
     librewolf \
     libva-utils \
-    ly \
     mako \
     man-db \
     mediainfo \
@@ -160,8 +240,6 @@ sudo pacman -S --needed \
     mpv-mpris \
     ncdu \
     neovim \
-    network-manager-applet \
-    networkmanager \
     nicotine+ \
     nmap \
     noto-fonts \
@@ -232,14 +310,66 @@ sudo pacman -S --needed \
     zsh-syntax-highlighting
 
 # ------------------------------------------------------------
-# Laptop-only packages
+# Arch Linux networking
 #
-# These packages are not installed on desktop PCs.
+# Arch uses NetworkManager in the current environment.
 # ------------------------------------------------------------
 
-if [ "$LAPTOP" = true ]; then
+if [ "$DISTRO" = "arch" ]; then
 
-    info "Installing laptop power-management packages"
+    info "Installing Arch Linux networking packages"
+
+    sudo pacman -S --needed \
+        network-manager-applet \
+        networkmanager
+
+fi
+
+# ------------------------------------------------------------
+# Artix Linux networking
+#
+# The Artix laptop uses iwd and dhcpcd instead of NetworkManager.
+#
+# Service activation is intentionally not handled here.
+# The required runit services are configured manually as part
+# of the Artix base installation.
+# ------------------------------------------------------------
+
+if [ "$DISTRO" = "artix" ] && [ "$LAPTOP" = true ]; then
+
+    info "Installing Artix Linux laptop networking packages"
+
+    sudo pacman -S --needed \
+        iwd \
+        dhcpcd
+
+fi
+
+# ------------------------------------------------------------
+# CPU-specific packages
+# ------------------------------------------------------------
+
+if [ "$CPU_VENDOR" = "GenuineIntel" ]; then
+
+    info "Installing Intel-specific packages"
+
+    sudo pacman -S --needed \
+        intel-ucode
+
+fi
+
+# ------------------------------------------------------------
+# Laptop-only packages
+#
+# These are used by the Arch laptop installation.
+#
+# Artix intentionally does not install a battery-management
+# stack at this stage.
+# ------------------------------------------------------------
+
+if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
+
+    info "Installing Arch laptop power-management packages"
 
     sudo pacman -S --needed \
         batsignal \
@@ -253,94 +383,124 @@ fi
 
 # ============================================================
 # AUR
+#
+# Arch Linux only.
+# Artix does not use the Arch AUR workflow here.
 # ============================================================
 
-info "Installing AUR helper"
+if [ "$DISTRO" = "arch" ]; then
 
-if ! command -v yay >/dev/null 2>&1; then
-    tmpdir="$(mktemp -d)"
+    info "Installing AUR helper"
 
-    git clone \
-        https://aur.archlinux.org/yay-bin.git \
-        "$tmpdir/yay-bin"
+    if ! command -v yay >/dev/null 2>&1; then
+        tmpdir="$(mktemp -d)"
 
-    (
-        cd "$tmpdir/yay-bin"
-        makepkg -si --noconfirm
-    )
+        git clone \
+            https://aur.archlinux.org/yay-bin.git \
+            "$tmpdir/yay-bin"
 
-    rm -rf "$tmpdir"
+        (
+            cd "$tmpdir/yay-bin"
+            makepkg -si --noconfirm
+        )
+
+        rm -rf "$tmpdir"
+    fi
+
+    info "Installing packages from the AUR"
+
+    yay -S --needed \
+        batdoc-bin \
+        duckstation-qt-bin \
+        fsearch \
+        google-chrome \
+        htop-vim \
+        mdcat \
+        nvimpager \
+        otf-romande \
+        pass-import \
+        pmount \
+        puddletag \
+        sixpair \
+        task-spooler \
+        timr-bin \
+        ttf-romande \
+        wayclip \
+        ytcui \
+        zapzap
+
 fi
-
-info "Installing packages from the AUR"
-
-yay -S --needed \
-    batdoc-bin \
-    duckstation-qt-bin \
-    fsearch \
-    google-chrome \
-    htop-vim \
-    mdcat \
-    nvimpager \
-    otf-romande \
-    pass-import \
-    pmount \
-    puddletag \
-    sixpair \
-    task-spooler \
-    timr-bin \
-    ttf-romande \
-    wayclip \
-    yay-bin \
-    ytcui \
-    zapzap
 
 # ============================================================
 # SERVICES
+#
+# System services are configured automatically only on Arch.
+#
+# Artix service activation is intentionally left manual. The
+# Artix base installation already provides runit, and the
+# required *-runit packages and service links can be configured
+# separately without complicating the common environment
+# installer.
 # ============================================================
 
-info "Enabling common services"
+if [ "$DISTRO" = "arch" ]; then
 
-sudo systemctl enable --now NetworkManager.service
-sudo systemctl enable --now bluetooth.service
-sudo systemctl enable --now cups.service
+    info "Enabling Arch system services"
 
-# UFW is installed and enabled, but its service does not need
-# to remain running as a conventional daemon.
-sudo systemctl enable ufw.service
+    sudo systemctl enable --now NetworkManager.service
+    sudo systemctl enable --now bluetooth.service
+    sudo systemctl enable --now cups.service
 
-# Open ports for KDE Connect to work
+    # UFW is installed and enabled, but its service does not need
+    # to remain running as a conventional daemon.
+    sudo systemctl enable ufw.service
+
+fi
+
+# ============================================================
+# UFW
+# ============================================================
+
+info "Configuring UFW"
+
+# Open ports for KDE Connect to work.
 sudo ufw allow 1714:1764/udp
 sudo ufw allow 1714:1764/tcp
 
-# Allow SSH
+# Allow SSH.
 sudo ufw allow ssh
 
-sudo ufw reload
-
-# Turn off UFW logging
+# Turn off UFW logging.
 sudo ufw logging off
+
+# Enable UFW.
+sudo ufw --force enable
+
+# Reload the rules.
+sudo ufw reload
 
 # ============================================================
 # SYSTEMD-JOURNALD
 #
-# Keep the journal in volatile storage and limit its size.
-# This avoids persistent journal writes while retaining a
-# useful journal during the current boot.
+# This section exists only on Arch/systemd.
 # ============================================================
 
-info "Configuring systemd-journald"
+if [ "$INIT" = "systemd" ]; then
 
-sudo mkdir -p /etc/systemd/journald.conf.d
+    info "Configuring systemd-journald"
 
-sudo tee /etc/systemd/journald.conf.d/99-reduce-journal-writes.conf >/dev/null <<'EOF'
+    sudo mkdir -p /etc/systemd/journald.conf.d
+
+    sudo tee /etc/systemd/journald.conf.d/99-reduce-journal-writes.conf >/dev/null <<'EOF'
 [Journal]
 Storage=volatile
 SystemMaxUse=50M
 ForwardToSyslog=no
 EOF
 
-sudo systemctl restart systemd-journald
+    sudo systemctl restart systemd-journald
+
+fi
 
 # ============================================================
 # SUDOERS
@@ -350,21 +510,20 @@ sudo systemctl restart systemd-journald
 
 info "Configuring sudoers"
 
+PACMAN_PATH="$(command -v pacman)"
+REBOOT_PATH="$(command -v reboot)"
+POWEROFF_PATH="$(command -v poweroff)"
+NVIM_PATH="$(command -v nvim)"
+MOUNT_PATH="$(command -v mount)"
+UMOUNT_PATH="$(command -v umount)"
+
 sudo tee /etc/sudoers.d/passwordless-commands >/dev/null <<EOF
-$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/reboot, /usr/bin/poweroff, /usr/bin/nvim, /usr/bin/mount/, /usr/bin/umount
+$USER ALL=(ALL) NOPASSWD: $PACMAN_PATH, $REBOOT_PATH, $POWEROFF_PATH, $NVIM_PATH, $MOUNT_PATH, $UMOUNT_PATH
 EOF
 
 sudo chmod 440 /etc/sudoers.d/passwordless-commands
 
 sudo visudo -cf /etc/sudoers.d/passwordless-commands
-
-# ============================================================
-# UFW
-# ============================================================
-
-info "Configuring UFW"
-
-sudo ufw --force enable
 
 # ============================================================
 # DOTFILES
@@ -376,11 +535,6 @@ cd "$DOTFILES"
 
 # ------------------------------------------------------------
 # Create configuration directories
-#
-# Most configuration directories are represented directly by
-# symlinks to the repository. The exceptions are applications
-# that create private state inside their configuration
-# directory.
 # ------------------------------------------------------------
 
 mkdir -p "$HOME/.config"
@@ -406,18 +560,14 @@ for directory in \
     nvim \
     sway \
     swayimg \
+    tridactyl \
     waybar \
     zathura
 do
     rm -rf "$HOME/.config/$directory"
 done
 
-# mpv and qutebrowser are handled separately because
-# their configuration directories may contain private state.
-# same with shell directory.
-
-# zsh needs to be symlinked as a hidden file.
-
+# Applications that may contain local/private state.
 mkdir -p "$HOME/.config/mpv"
 mkdir -p "$HOME/.config/qutebrowser"
 mkdir -p "$HOME/.config/shell"
@@ -431,12 +581,6 @@ info "Linking configuration directories"
 
 ln -s "$DOTFILES/config/fontconfig" \
     "$HOME/.config/fontconfig"
-
-ln -s "$DOTFILES/config/foot" \
-    "$HOME/.config/foot"
-
-ln -s "$DOTFILES/config/fuzzel" \
-    "$HOME/.config/fuzzel"
 
 ln -s "$DOTFILES/config/git" \
     "$HOME/.config/git"
@@ -456,20 +600,45 @@ ln -s "$DOTFILES/config/mako" \
 ln -s "$DOTFILES/config/nvim" \
     "$HOME/.config/nvim"
 
-ln -s "$DOTFILES/config/sway" \
-    "$HOME/.config/sway"
-
 ln -s "$DOTFILES/config/swayimg" \
     "$HOME/.config/swayimg"
 
-ln -s "$DOTFILES/config/waybar" \
-    "$HOME/.config/waybar"
+ln -s "$DOTFILES/config/tridactyl" \
+    "$HOME/.config/tridactyl"
 
 ln -s "$DOTFILES/config/zathura" \
     "$HOME/.config/zathura"
 
-ln -s "$DOTFILES/config/zsh" \
-    "$HOME/.config/zsh"
+# ------------------------------------------------------------
+# Machine-specific configuration
+#
+# The repository contains:
+#
+#     config/foot/foot.ini.laptop
+#     config/foot/foot.ini.pc
+#
+# and equivalent machine-specific files for Sway, Fuzzel and
+# Waybar.
+# ------------------------------------------------------------
+
+info "Linking machine-specific configuration"
+
+ln -sf "$DOTFILES/config/foot/foot.ini.$MACHINE" \
+    "$HOME/.config/foot/foot.ini"
+
+ln -sf "$DOTFILES/config/fuzzel/fuzzel.ini.$MACHINE" \
+    "$HOME/.config/fuzzel/fuzzel.ini"
+
+mkdir -p "$HOME/.config/sway"
+
+ln -sf "$DOTFILES/config/sway/config.$MACHINE" \
+    "$HOME/.config/sway/config"
+
+ln -sf "$DOTFILES/config/waybar/config.jsonc.$MACHINE" \
+    "$HOME/.config/waybar/config.jsonc"
+
+ln -sf "$DOTFILES/config/waybar/style.css.$MACHINE" \
+    "$HOME/.config/waybar/style.css"
 
 # ------------------------------------------------------------
 # mpv
@@ -490,16 +659,15 @@ if [ -f "$DOTFILES/config/mpv/mpv.conf" ]; then
 fi
 
 if [ -d "$DOTFILES/config/mpv/scripts" ]; then
-    ln -sf "$DOTFILES/config/mpv/scripts" \
+    ln -sfn "$DOTFILES/config/mpv/scripts" \
         "$HOME/.config/mpv/scripts"
 fi
 
 # ------------------------------------------------------------
 # qutebrowser
 #
-# Only the version-controlled configuration is
-# linked. History, bookmarks and other private state remain
-# local to the machine.
+# Only the version-controlled configuration is linked.
+# History, bookmarks and other private state remain local.
 # ------------------------------------------------------------
 
 if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
@@ -508,11 +676,10 @@ if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
 fi
 
 # ------------------------------------------------------------
-# qutebrowser
+# Shell configuration
 #
-# Only the version-controlled configuration is
-# linked. History, bookmarks and other private state remain
-# local to the machine.
+# Machine-specific shell files are selected using the same
+# laptop/pc naming convention as the other configuration files.
 # ------------------------------------------------------------
 
 if [ -f "$DOTFILES/config/shell/aliasrc" ]; then
@@ -525,9 +692,14 @@ if [ -f "$DOTFILES/config/shell/functionrc" ]; then
         "$HOME/.config/shell/functionrc"
 fi
 
-if [ -f "$DOTFILES/config/shell/functionrc" ]; then
+if [ -f "$DOTFILES/config/shell/shortcutrc" ]; then
     ln -sf "$DOTFILES/config/shell/shortcutrc" \
         "$HOME/.config/shell/shortcutrc"
+fi
+
+if [ -f "$DOTFILES/config/shell/$MACHINE" ]; then
+    ln -sf "$DOTFILES/config/shell/$MACHINE" \
+        "$HOME/.config/shell/$MACHINE"
 fi
 
 # ------------------------------------------------------------
@@ -550,12 +722,25 @@ ln -sf "$DOTFILES/config/zsh/zshrc" \
 
 info "Installing wallpapers"
 
-
 mkdir -p "$HOME/.local/share"
 
 if [ -d "$DOTFILES/share/wallpapers" ]; then
-    ln -s "$DOTFILES/share/wallpapers" "$HOME/.local/share/"
+    ln -sfn "$DOTFILES/share/wallpapers" \
+        "$HOME/.local/share/wallpapers"
 fi
+
+# ============================================================
+# APPLICATION DESKTOP FILES
+# ============================================================
+
+info "Installing application desktop files"
+
+if [ -d "$DOTFILES/share/applications" ]; then
+    ln -sfn "$DOTFILES/share/applications" \
+        "$HOME/.local/share/applications"
+fi
+
+xdg-mime default lf.desktop inode/directory
 
 # ============================================================
 # ZSH
@@ -568,29 +753,16 @@ touch "$HOME/.cache/zsh/history"
 
 info "Changing user's shell to Zsh"
 
-chsh -s /bin/zsh mrcl
+chsh -s "$(command -v zsh)" "$USER"
 
 # ============================================================
-# lf as xdg default file manager
-# ============================================================
-
-info "Setting up lf as xdg default file manager"
-
-if [ -d "$DOTFILES/share/applications" ]; then
-    ln -s "$DOTFILES/share/applications" "$HOME/.local/share/"
-fi
-
-xdg-mime default lf.desktop inode/directory
-
-# ============================================================
-# LAPTOP POWER MANAGEMENT
+# ARCH LAPTOP POWER MANAGEMENT
 #
-# Everything below this point is laptop-specific.
-#
-# A desktop installation skips the entire section.
+# Artix laptop installations intentionally skip this entire
+# section for now.
 # ============================================================
 
-if [ "$LAPTOP" = true ]; then
+if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
 
     # --------------------------------------------------------
     # TLP
@@ -615,11 +787,8 @@ if [ "$LAPTOP" = true ]; then
     # --------------------------------------------------------
     # TLP USB exception
     #
-    # The current laptop configuration prevents USB autosuspend
-    # for the M-Audio Fast Track Pro (0763:2012).
-    #
-    # This is important because the interface is used for audio
-    # recording and should not be suspended by TLP.
+    # Prevent USB autosuspend for the M-Audio Fast Track Pro
+    # (0763:2012).
     # --------------------------------------------------------
 
     info "Configuring TLP USB exceptions"
@@ -630,7 +799,6 @@ if [ "$LAPTOP" = true ]; then
 USB_DENYLIST="0763:2012"
 EOF
 
-    # Apply the TLP configuration immediately.
     sudo tlp start
 
     # --------------------------------------------------------
@@ -648,9 +816,6 @@ EOF
     #
     # Powertop is installed for diagnostics and manual use,
     # but is intentionally NOT enabled as a service.
-    #
-    # The current laptop installation does not use automatic
-    # Powertop tuning at boot.
     # --------------------------------------------------------
 
     info "Leaving Powertop disabled"
@@ -664,16 +829,6 @@ EOF
     # enabled and running normally.
     #
     # Only the Bluetooth radio is blocked with rfkill.
-    # This does not disable or stop the Bluetooth systemd
-    # service.
-    #
-    # Manual control:
-    #
-    #     bup     -> unblock Bluetooth
-    #     bdown   -> block Bluetooth
-    #
-    # The actual bup/bdown commands are provided by the user's
-    # shell configuration.
     # --------------------------------------------------------
 
     info "Configuring laptop Bluetooth radio blocking"
@@ -696,16 +851,52 @@ EOF
     sudo systemctl daemon-reload
     sudo systemctl enable bluetooth-block.service
 
-else
+fi
 
-    # --------------------------------------------------------
-    # Desktop PC
-    #
-    # No laptop-specific power-management configuration is
-    # applied.
-    # --------------------------------------------------------
+# ============================================================
+# ARTIX LAPTOP
+#
+# No battery-management services are installed or configured.
+#
+# System services are intentionally left to the user's manual
+# runit setup.
+# ============================================================
+
+if [ "$LAPTOP" = true ] && [ "$DISTRO" = "artix" ]; then
+
+    info "Artix laptop selected"
+
+    printf '%s\n' "Battery-management services are intentionally not configured."
+    printf '%s\n' "Artix system services are intentionally left for manual runit setup."
+
+fi
+
+# ============================================================
+# DESKTOP PC
+# ============================================================
+
+if [ "$LAPTOP" = false ]; then
 
     info "Desktop installation selected"
+
+fi
+
+# ============================================================
+# PC-SPECIFIC UDEV RULE
+#
+# Keep the wireless mouse awake on the AMD desktop PC.
+# ============================================================
+
+if [ "$LAPTOP" = false ]; then
+
+    info "Configuring PC wireless mouse power management"
+
+    sudo tee /etc/udev/rules.d/99-yichip-mouse.rules >/dev/null <<'EOF'
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="3151", ATTR{idProduct}=="3020", ATTR{power/control}="on"
+EOF
+
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 
 fi
 
@@ -717,26 +908,34 @@ info "Refreshing font cache"
 
 fc-cache -f
 
-info "Reloading systemd"
-
-sudo systemctl daemon-reload
-
 # ------------------------------------------------------------
-# Ensure common services are running
+# Systemd finalization
 # ------------------------------------------------------------
 
-sudo systemctl restart NetworkManager.service
-sudo systemctl restart bluetooth.service
-sudo systemctl restart cups.service
+if [ "$INIT" = "systemd" ]; then
 
-# ------------------------------------------------------------
-# Apply laptop Bluetooth radio blocking immediately.
-#
-# bluetooth.service itself remains enabled and running.
-# ------------------------------------------------------------
+    info "Reloading systemd"
 
-if [ "$LAPTOP" = true ]; then
-    sudo systemctl start bluetooth-block.service
+    sudo systemctl daemon-reload
+
+    # --------------------------------------------------------
+    # Ensure common services are running.
+    # --------------------------------------------------------
+
+    sudo systemctl restart NetworkManager.service
+    sudo systemctl restart bluetooth.service
+    sudo systemctl restart cups.service
+
+    # --------------------------------------------------------
+    # Apply laptop Bluetooth radio blocking immediately.
+    #
+    # bluetooth.service itself remains enabled and running.
+    # --------------------------------------------------------
+
+    if [ "$LAPTOP" = true ]; then
+        sudo systemctl start bluetooth-block.service
+    fi
+
 fi
 
 # ============================================================
@@ -746,17 +945,31 @@ fi
 success "Installation completed."
 
 printf '\n'
-printf '%s\n' "Next steps:"
-printf '%s\n' "  1. Log out and back into Sway."
-printf '%s\n' "  2. Check services with: systemctl --failed"
-printf '%s\n' "  3. Check Bluetooth with: rfkill list"
-printf '%s\n' "  4. Check sudoers with: sudo visudo -c"
-printf '%s\n' "  5. Check journald with: systemd-analyze cat-config systemd/journald.conf"
+printf '%s\n' "System: $DISTRO"
+printf '%s\n' "Init: $INIT"
+printf '%s\n' "Machine: $MACHINE"
+printf '%s\n' "CPU vendor: $CPU_VENDOR"
 
-if [ "$LAPTOP" = true ]; then
-    printf '%s\n' "  6. Check TLP with: sudo tlp-stat -s"
-    printf '%s\n' "  7. Check TLP configuration with: sudo tlp-stat -c"
-    printf '%s\n' "  8. Check Powertop manually with: sudo powertop"
+printf '\n'
+printf '%s\n' "Next steps:"
+
+if [ "$DISTRO" = "arch" ]; then
+    printf '%s\n' "  1. Log out and back into Sway."
+    printf '%s\n' "  2. Check services with: systemctl --failed"
+    printf '%s\n' "  3. Check Bluetooth with: rfkill list"
+    printf '%s\n' "  4. Check sudoers with: sudo visudo -c"
+    printf '%s\n' "  5. Check journald with: systemd-analyze cat-config systemd/journald.conf"
+
+    if [ "$LAPTOP" = true ]; then
+        printf '%s\n' "  6. Check TLP with: sudo tlp-stat -s"
+        printf '%s\n' "  7. Check TLP configuration with: sudo tlp-stat -c"
+        printf '%s\n' "  8. Check Powertop manually with: sudo powertop"
+    fi
+else
+    printf '%s\n' "  1. Configure required runit services manually."
+    printf '%s\n' "  2. Log out and back into Sway."
+    printf '%s\n' "  3. Check Bluetooth with: rfkill list"
+    printf '%s\n' "  4. Check sudoers with: sudo visudo -c"
 fi
 
 printf '\n'
