@@ -377,3 +377,29 @@ vim.cmd("filetype plugin indent on")
 vim.cmd("syntax enable")
 
 vim.cmd("vnoremap . :normal .<CR>")
+
+-----------------------------------------------------------
+-- Vimwiki
+-----------------------------------------------------------
+
+vim.g.vimwiki_list = {
+    {
+        path = "~/Documents/notes/",
+        syntax = "markdown",
+        ext = ".md",
+    },
+}
+
+vim.g.vimwiki_global_ext = 0
+
+-- Apply mappings specifically to Vimwiki and Markdown files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "vimwiki", "markdown" },
+    callback = function()
+        local opts = { buffer = true, silent = true }
+
+        -- <leader>x to toggle standard checkbox
+        vim.keymap.set("n", "<leader>x", "<Plug>VimwikiToggleListItem", opts)
+        vim.keymap.set("v", "<leader>x", "<Plug>VimwikiToggleListItem", opts)
+    end,
+})
