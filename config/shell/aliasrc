@@ -101,6 +101,3 @@ alias \
     wdown="nmcli radio wifi off" \
     bup="rfkill unblock bluetooth" \
     bdown="rfkill block bluetooth"
-
-# Media player
-alias mm='mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"'

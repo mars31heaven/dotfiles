@@ -32,27 +32,23 @@ fcd() {
 album1() {
     local dir
     dir=$(find . -mindepth 1 -maxdepth 1 -type d | shuf -n 1) || return
-
     printf '▶ %s\n' "$dir"
-
     find "$dir" -maxdepth 1 -type f \
         \( -iname '*.mp3' -o -iname '*.flac' -o -iname '*.ogg' -o -iname '*.m4a' \) \
         -print0 |
         sort -z |
-        xargs -0 mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"
+        xargs -0 bash -c 'exec mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music-$$.sock" "$@"' _
 }
 
-album2() {
+album1() {
     local dir
     dir=$(find . -mindepth 2 -maxdepth 2 -type d | shuf -n 1) || return
-
     printf '▶ %s\n' "$dir"
-
     find "$dir" -maxdepth 1 -type f \
         \( -iname '*.mp3' -o -iname '*.flac' -o -iname '*.ogg' -o -iname '*.m4a' \) \
         -print0 |
         sort -z |
-        xargs -0 mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music.sock"
+        xargs -0 bash -c 'exec mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music-$$.sock" "$@"' _
 }
 
 rotate() {
@@ -67,6 +63,16 @@ rotate() {
 if [ -n "$BASH_VERSION" ]; then
     export -f rotate
 fi
+
+mm() {
+    ( exec mpv --profile=music --input-ipc-server="${XDG_RUNTIME_DIR:-/tmp}/mpv-music-$BASHPID.sock" "$@" )
+}
+
+ra() {
+    mpc clear
+    mpc findadd album "$(mpc list album | shuf -n 1)"
+    mpc play
+}
 
 # ── Personal shortcuts ───────────────────────────────────────
 

@@ -278,6 +278,8 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+Home exec foot htop
 
+    bindsym $mod+m exec foot rmpc
+
     bindsym $mod+Shift+m exec foot lf
 
     bindsym $mod+Shift+v exec foot pulsemixer
