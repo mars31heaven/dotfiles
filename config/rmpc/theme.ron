@@ -14,7 +14,7 @@
         inactive_style: (fg: "#d8cfd8", bg: "#313131"),
     ),
     progress_bar: (
-        symbols: ["=", ">", " "],
+        symbols: ["━", "━", "─"],
         track_style: (fg: "#101010"),
         elapsed_style: (fg: "#a8b89a"),
         thumb_style: (fg: "#de7484"),
