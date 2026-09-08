@@ -1,0 +1,12 @@
+#!/bin/sh
+
+find ~/.config -type l -exec sh -c '
+  for link; do
+    target=$(readlink -f "$link")
+    case "$target" in
+      "$HOME/.dotfiles"*|"$/home/$USER/.dotfiles"*)
+        printf "%s -> %s\n" "$link" "$target"
+        ;;
+    esac
+  done
+' sh {} +

@@ -41,6 +41,41 @@ error() {
 }
 
 # ------------------------------------------------------------
+# Runit service helpers (Artix)
+#
+# Runit service *directory* names do not always match the
+# package name (e.g. bluez-runit provides "bluetoothd", not
+# "bluez"), so the service name is resolved from the package's
+# own file list instead of being hardcoded.
+# ------------------------------------------------------------
+
+runit_service_name() {
+    local pkg="$1"
+
+    pacman -Qlq "$pkg" 2>/dev/null \
+        | grep -E '^/etc/runit/sv/[^/]+/$' \
+        | head -n1 \
+        | sed -E 's#^/etc/runit/sv/([^/]+)/$#\1#'
+}
+
+enable_runit_service() {
+    local pkg="$1"
+    local svc
+
+    svc="$(runit_service_name "$pkg")"
+
+    if [ -z "$svc" ]; then
+        error "Could not determine the runit service provided by $pkg"
+        return 1
+    fi
+
+    if [ ! -e "/run/runit/service/$svc" ]; then
+        info "Enabling runit service: $svc"
+        sudo ln -s "/etc/runit/sv/$svc" "/run/runit/service/$svc"
+    fi
+}
+
+# ------------------------------------------------------------
 # Checks
 # ------------------------------------------------------------
 
@@ -117,6 +152,45 @@ if [ "$DISTRO" = "artix" ] && [ "$INIT" != "runit" ]; then
 fi
 
 info "Detected $DISTRO with $INIT"
+
+# ============================================================
+# ARCH REPOSITORIES ON ARTIX
+#
+# Artix does not have direct access to Arch's package
+# repositories by default. Every package installed later in
+# this script is expected to be available on both distributions,
+# so the Arch "extra" and "multilib" repositories are enabled
+# here before any packages are installed.
+#
+# See: https://wiki.artixlinux.org/Main/Repositories
+# ============================================================
+
+if [ "$DISTRO" = "artix" ]; then
+
+    if ! grep -q '^\[extra\]' /etc/pacman.conf; then
+
+        info "Enabling Arch Linux repositories on Artix"
+
+        sudo pacman -S --needed artix-archlinux-support
+
+        sudo pacman-key --populate archlinux
+
+        sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
+
+[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist-arch
+EOF
+
+        info "Synchronizing package databases"
+
+        sudo pacman -Syu
+
+    fi
+
+fi
 
 # ============================================================
 # INSTALLATION TARGET
@@ -219,7 +293,6 @@ sudo pacman -S --needed \
     jq \
     kdeconnect \
     keepassxc \
-    kew \
     lf \
     libjpeg-turbo \
     libpulse \
@@ -310,38 +383,37 @@ sudo pacman -S --needed \
     zsh-syntax-highlighting
 
 # ------------------------------------------------------------
-# Arch Linux networking
+# Networking
 #
-# Arch uses NetworkManager in the current environment.
+# dhcpcd + iwd are used on every machine and every distribution.
+# NetworkManager is intentionally not installed.
 # ------------------------------------------------------------
 
-if [ "$DISTRO" = "arch" ]; then
+info "Installing networking packages"
 
-    info "Installing Arch Linux networking packages"
+sudo pacman -S --needed \
+    dhcpcd \
+    iwd
+
+# ------------------------------------------------------------
+# Artix runit service packages
+#
+# Arch's systemd units are already provided by the packages
+# above and by bluez/cups/ufw in the common package list.
+# Artix additionally needs the *-runit packages that ship the
+# corresponding runit service definitions.
+# ------------------------------------------------------------
+
+if [ "$DISTRO" = "artix" ]; then
+
+    info "Installing Artix runit service packages"
 
     sudo pacman -S --needed \
-        network-manager-applet \
-        networkmanager
-
-fi
-
-# ------------------------------------------------------------
-# Artix Linux networking
-#
-# The Artix laptop uses iwd and dhcpcd instead of NetworkManager.
-#
-# Service activation is intentionally not handled here.
-# The required runit services are configured manually as part
-# of the Artix base installation.
-# ------------------------------------------------------------
-
-if [ "$DISTRO" = "artix" ] && [ "$LAPTOP" = true ]; then
-
-    info "Installing Artix Linux laptop networking packages"
-
-    sudo pacman -S --needed \
-        iwd \
-        dhcpcd
+        dhcpcd-runit \
+        iwd-runit \
+        bluez-runit \
+        cups-runit \
+        ufw-runit
 
 fi
 
@@ -355,6 +427,13 @@ if [ "$CPU_VENDOR" = "GenuineIntel" ]; then
 
     sudo pacman -S --needed \
         intel-ucode
+
+elif [ "$CPU_VENDOR" = "AuthenticAMD" ]; then
+
+    info "Installing AMD-specific packages"
+
+    sudo pacman -S --needed \
+        amd-ucode
 
 fi
 
@@ -384,76 +463,82 @@ fi
 # ============================================================
 # AUR
 #
-# Arch Linux only.
-# Artix does not use the Arch AUR workflow here.
+# Used on both Arch and Artix. On Artix this relies on the
+# Arch repositories enabled earlier in the script.
 # ============================================================
 
-if [ "$DISTRO" = "arch" ]; then
+info "Installing AUR helper"
 
-    info "Installing AUR helper"
+if ! command -v yay >/dev/null 2>&1; then
+    tmpdir="$(mktemp -d)"
 
-    if ! command -v yay >/dev/null 2>&1; then
-        tmpdir="$(mktemp -d)"
+    git clone \
+        https://aur.archlinux.org/yay-bin.git \
+        "$tmpdir/yay-bin"
 
-        git clone \
-            https://aur.archlinux.org/yay-bin.git \
-            "$tmpdir/yay-bin"
+    (
+        cd "$tmpdir/yay-bin"
+        makepkg -si --noconfirm
+    )
 
-        (
-            cd "$tmpdir/yay-bin"
-            makepkg -si --noconfirm
-        )
-
-        rm -rf "$tmpdir"
-    fi
-
-    info "Installing packages from the AUR"
-
-    yay -S --needed \
-        batdoc-bin \
-        duckstation-qt-bin \
-        fsearch \
-        google-chrome \
-        htop-vim \
-        mdcat \
-        nvimpager \
-        otf-romande \
-        pass-import \
-        pmount \
-        puddletag \
-        sixpair \
-        task-spooler \
-        timr-bin \
-        ttf-romande \
-        wayclip \
-        ytcui \
-        zapzap
-
+    rm -rf "$tmpdir"
 fi
+
+info "Installing packages from the AUR"
+
+yay -S --needed \
+    batdoc-bin \
+    duckstation-qt-bin \
+    fsearch \
+    google-chrome \
+    htop-vim \
+    mdcat \
+    nvimpager \
+    otf-romande \
+    pass-import \
+    pmount \
+    puddletag \
+    sixpair \
+    task-spooler \
+    timr-bin \
+    ttf-romande \
+    wayclip \
+    ytcui \
+    zapzap
 
 # ============================================================
 # SERVICES
 #
-# System services are configured automatically only on Arch.
+# Arch uses systemd units. Artix uses the *-runit packages
+# installed earlier; their service names are resolved
+# dynamically since they don't always match the package name
+# (e.g. bluez-runit -> bluetoothd).
 #
-# Artix service activation is intentionally left manual. The
-# Artix base installation already provides runit, and the
-# required *-runit packages and service links can be configured
-# separately without complicating the common environment
-# installer.
+# elogind-runit (seat management, required for Sway under
+# runit) is expected to already be enabled as part of a manual
+# Artix base install, so it is not touched here.
 # ============================================================
 
-if [ "$DISTRO" = "arch" ]; then
+if [ "$INIT" = "systemd" ]; then
 
     info "Enabling Arch system services"
 
-    sudo systemctl enable --now NetworkManager.service
+    sudo systemctl enable --now dhcpcd.service
+    sudo systemctl enable --now iwd.service
     sudo systemctl enable --now bluetooth.service
     sudo systemctl enable --now cups.service
 
     # UFW is installed and enabled, but its service does not need
     # to remain running as a conventional daemon.
     sudo systemctl enable ufw.service
+
+elif [ "$INIT" = "runit" ]; then
+
+    info "Enabling Artix runit services"
+
+    for pkg in dhcpcd-runit iwd-runit bluez-runit cups-runit ufw-runit; do
+        enable_runit_service "$pkg"
+    done
 
 fi
 
@@ -557,7 +642,9 @@ for directory in \
     gtk-3.0 \
     lf \
     mako \
+    mpd \
     nvim \
+    rmpc \
     sway \
     swayimg \
     tridactyl \
@@ -597,8 +684,14 @@ ln -s "$DOTFILES/config/lf" \
 ln -s "$DOTFILES/config/mako" \
     "$HOME/.config/mako"
 
+ln -s "$DOTFILES/config/mpd" \
+    "$HOME/.config/mpd"
+
 ln -s "$DOTFILES/config/nvim" \
     "$HOME/.config/nvim"
+
+ln -s "$DOTFILES/config/rmpc" \
+    "$HOME/.config/rmpc"
 
 ln -s "$DOTFILES/config/swayimg" \
     "$HOME/.config/swayimg"
@@ -673,6 +766,12 @@ fi
 if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
     ln -sf "$DOTFILES/config/qutebrowser/config.py" \
         "$HOME/.config/qutebrowser/config.py"
+fi
+
+if [ -d "$DOTFILES/config/qutebrowser/greasemonkey" ]; then
+    rm -rf "$HOME/.config/qutebrowser/greasemonkey"
+    ln -sfn "$DOTFILES/config/qutebrowser/greasemonkey" \
+        "$HOME/.config/qutebrowser/greasemonkey"
 fi
 
 # ------------------------------------------------------------
@@ -856,18 +955,17 @@ fi
 # ============================================================
 # ARTIX LAPTOP
 #
-# No battery-management services are installed or configured.
-#
-# System services are intentionally left to the user's manual
-# runit setup.
+# No battery/power-management stack (TLP, thermald, etc.) is
+# installed here. This is a deliberate choice, not an
+# unfinished section: battery life on this hardware has
+# consistently been better without it.
 # ============================================================
 
 if [ "$LAPTOP" = true ] && [ "$DISTRO" = "artix" ]; then
 
     info "Artix laptop selected"
 
-    printf '%s\n' "Battery-management services are intentionally not configured."
-    printf '%s\n' "Artix system services are intentionally left for manual runit setup."
+    printf '%s\n' "Power-management services are intentionally not installed."
 
 fi
 
@@ -922,7 +1020,8 @@ if [ "$INIT" = "systemd" ]; then
     # Ensure common services are running.
     # --------------------------------------------------------
 
-    sudo systemctl restart NetworkManager.service
+    sudo systemctl restart dhcpcd.service
+    sudo systemctl restart iwd.service
     sudo systemctl restart bluetooth.service
     sudo systemctl restart cups.service
 
@@ -935,6 +1034,24 @@ if [ "$INIT" = "systemd" ]; then
     if [ "$LAPTOP" = true ]; then
         sudo systemctl start bluetooth-block.service
     fi
+
+fi
+
+# ------------------------------------------------------------
+# Runit finalization
+# ------------------------------------------------------------
+
+if [ "$INIT" = "runit" ]; then
+
+    info "Restarting Artix runit services"
+
+    for pkg in dhcpcd-runit iwd-runit bluez-runit cups-runit ufw-runit; do
+        svc="$(runit_service_name "$pkg")"
+
+        if [ -n "$svc" ] && [ -e "/run/runit/service/$svc" ]; then
+            sudo sv restart "$svc" 2>/dev/null || true
+        fi
+    done
 
 fi
 
@@ -966,8 +1083,8 @@ if [ "$DISTRO" = "arch" ]; then
         printf '%s\n' "  8. Check Powertop manually with: sudo powertop"
     fi
 else
-    printf '%s\n' "  1. Configure required runit services manually."
-    printf '%s\n' "  2. Log out and back into Sway."
+    printf '%s\n' "  1. Log out and back into Sway."
+    printf '%s\n' "  2. Check runit services with: sv status /run/runit/service/*"
     printf '%s\n' "  3. Check Bluetooth with: rfkill list"
     printf '%s\n' "  4. Check sudoers with: sudo visudo -c"
 fi
