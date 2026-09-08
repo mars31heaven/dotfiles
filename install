@@ -154,6 +154,19 @@ fi
 info "Detected $DISTRO with $INIT"
 
 # ============================================================
+# PACMAN
+#
+# Configure pacman before installing any software.
+# ============================================================
+
+info "Configuring pacman"
+
+sudo sed -i \
+    -e 's/^[[:space:]]*#\?[[:space:]]*Color[[:space:]]*$/Color/' \
+    -e 's/^[[:space:]]*#\?[[:space:]]*ParallelDownloads[[:space:]]*=.*$/ParallelDownloads = 10/' \
+    /etc/pacman.conf
+
+# ============================================================
 # ARCH REPOSITORIES ON ARTIX
 #
 # Artix does not have direct access to Arch's package
@@ -461,6 +474,23 @@ if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
 fi
 
 # ============================================================
+# DESKTOP PC MUSIC
+#
+# MPD and rmpc are used only on the desktop PC.
+# The laptop uses mpv for music playback.
+# ============================================================
+
+if [ "$LAPTOP" = false ]; then
+
+    info "Installing desktop music software"
+
+    sudo pacman -S --needed \
+        mpd \
+        rmpc
+
+fi
+
+# ============================================================
 # AUR
 #
 # Used on both Arch and Artix. On Artix this relies on the
@@ -595,15 +625,20 @@ fi
 
 info "Configuring sudoers"
 
+for cmd in pacman reboot poweroff nvim; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        error "Required command not found: $cmd"
+        error "Cannot configure passwordless sudoers without it."
+        exit 1
+    fi
+done
+
 PACMAN_PATH="$(command -v pacman)"
 REBOOT_PATH="$(command -v reboot)"
 POWEROFF_PATH="$(command -v poweroff)"
 NVIM_PATH="$(command -v nvim)"
-MOUNT_PATH="$(command -v mount)"
-UMOUNT_PATH="$(command -v umount)"
-
 sudo tee /etc/sudoers.d/passwordless-commands >/dev/null <<EOF
-$USER ALL=(ALL) NOPASSWD: $PACMAN_PATH, $REBOOT_PATH, $POWEROFF_PATH, $NVIM_PATH, $MOUNT_PATH, $UMOUNT_PATH
+$USER ALL=(ALL) NOPASSWD: $PACMAN_PATH, $REBOOT_PATH, $POWEROFF_PATH, $NVIM_PATH
 EOF
 
 sudo chmod 440 /etc/sudoers.d/passwordless-commands
@@ -642,12 +677,9 @@ for directory in \
     gtk-3.0 \
     lf \
     mako \
-    mpd \
     nvim \
-    rmpc \
     sway \
     swayimg \
-    tridactyl \
     waybar \
     zathura
 do
@@ -684,23 +716,32 @@ ln -s "$DOTFILES/config/lf" \
 ln -s "$DOTFILES/config/mako" \
     "$HOME/.config/mako"
 
-ln -s "$DOTFILES/config/mpd" \
-    "$HOME/.config/mpd"
-
 ln -s "$DOTFILES/config/nvim" \
     "$HOME/.config/nvim"
-
-ln -s "$DOTFILES/config/rmpc" \
-    "$HOME/.config/rmpc"
 
 ln -s "$DOTFILES/config/swayimg" \
     "$HOME/.config/swayimg"
 
-ln -s "$DOTFILES/config/tridactyl" \
-    "$HOME/.config/tridactyl"
-
 ln -s "$DOTFILES/config/zathura" \
     "$HOME/.config/zathura"
+
+# ------------------------------------------------------------
+# Desktop PC music configuration
+# ------------------------------------------------------------
+
+if [ "$LAPTOP" = false ]; then
+
+    info "Linking MPD and rmpc configuration"
+
+    rm -rf "$HOME/.config/mpd" "$HOME/.config/rmpc"
+
+    ln -s "$DOTFILES/config/mpd" \
+        "$HOME/.config/mpd"
+
+    ln -s "$DOTFILES/config/rmpc" \
+        "$HOME/.config/rmpc"
+
+fi
 
 # ------------------------------------------------------------
 # Machine-specific configuration
@@ -716,8 +757,12 @@ ln -s "$DOTFILES/config/zathura" \
 
 info "Linking machine-specific configuration"
 
+mkdir -p "$HOME/.config/foot"
+
 ln -sf "$DOTFILES/config/foot/foot.ini.$MACHINE" \
     "$HOME/.config/foot/foot.ini"
+
+mkdir -p "$HOME/.config/fuzzel"
 
 ln -sf "$DOTFILES/config/fuzzel/fuzzel.ini.$MACHINE" \
     "$HOME/.config/fuzzel/fuzzel.ini"
@@ -726,6 +771,8 @@ mkdir -p "$HOME/.config/sway"
 
 ln -sf "$DOTFILES/config/sway/config.$MACHINE" \
     "$HOME/.config/sway/config"
+
+mkdir -p "$HOME/.config/waybar"
 
 ln -sf "$DOTFILES/config/waybar/config.jsonc.$MACHINE" \
     "$HOME/.config/waybar/config.jsonc"
@@ -816,12 +863,62 @@ ln -sf "$DOTFILES/config/zsh/zshrc" \
     "$HOME/.config/zsh/.zshrc"
 
 # ============================================================
+# VIMWIKI
+#
+# Vimwiki is installed as a native Neovim package because the
+# Neovim configuration does not use a plugin manager.
+# ============================================================
+
+info "Installing Vimwiki"
+
+VIMWIKI_DIR="$HOME/.local/share/nvim/site/pack/plugins/start/vimwiki"
+
+if [ ! -d "$VIMWIKI_DIR/.git" ]; then
+    mkdir -p "$(dirname "$VIMWIKI_DIR")"
+    rm -rf "$VIMWIKI_DIR"
+    git clone https://github.com/vimwiki/vimwiki.git "$VIMWIKI_DIR"
+fi
+
+# ============================================================
 # WALLPAPERS
 # ============================================================
 
 info "Installing wallpapers"
 
 mkdir -p "$HOME/.local/share"
+
+# ------------------------------------------------------------
+# Password-store and GnuPG directories
+#
+# The directories are intentionally empty. Offline files can be
+# copied into them later.
+# ------------------------------------------------------------
+
+mkdir -p "$HOME/.local/share/password-store"
+mkdir -p "$HOME/.local/share/gnupg"
+
+chmod 700 "$HOME/.local/share/password-store"
+chmod 700 "$HOME/.local/share/gnupg"
+
+# ------------------------------------------------------------
+# Battery notification sound
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/share/sound-notifications/batterylow.opus" ]; then
+    mkdir -p "$HOME/.local/share/sound-notifications"
+    ln -sfn "$DOTFILES/share/sound-notifications/batterylow.opus" \
+        "$HOME/.local/share/sound-notifications/batterylow.opus"
+fi
+
+# ------------------------------------------------------------
+# Desktop PC MPD state
+# ------------------------------------------------------------
+
+if [ "$LAPTOP" = false ]; then
+    mkdir -p "$HOME/.local/cache"
+    touch "$HOME/.local/cache/librefm.journal"
+    mkdir -p "$HOME/.local/share/mpdscribble"
+fi
 
 if [ -d "$DOTFILES/share/wallpapers" ]; then
     ln -sfn "$DOTFILES/share/wallpapers" \
