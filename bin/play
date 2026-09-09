@@ -1,0 +1,45 @@
+#!/bin/sh
+# Ensure fuzzel is installed
+if ! command -v fuzzel >/dev/null 2>&1; then
+    echo "Error: fuzzel is required."
+    exit 1
+fi
+
+STEAM_DIR="$HOME/.local/share/Steam/steamapps"
+
+if [ ! -d "$STEAM_DIR" ]; then
+    exit 1
+fi
+
+# IF NO ARGUMENT: Launch interactive Fuzzel window (Filtering out runtimes)
+if [ -z "$1" ]; then
+    selection=$(awk -F '"' '
+        /"appid"/ {id=$4}
+        /"name"/ {name=$4}
+        ENDFILE {
+            # Only print if it is a real game and not a compatibility runtime
+            if(id && name && name !~ /Steam Linux Runtime/) {
+                print name " [" id "]"
+            }
+            id=""; name=""
+        }
+    ' "$STEAM_DIR"/appmanifest_*.acf 2>/dev/null | fuzzel --dmenu --prompt="Launch Game: " --lines=10 --width=40)
+
+    # Exit cleanly if user closes Fuzzel without picking
+    [ -z "$selection" ] && exit 0
+
+    # Extract AppID from brackets
+    appid=$(echo "$selection" | grep -o '\[[0-9]*\]' | tr -d '[]')
+else
+    # IF ARGUMENT PROVIDED: Treat it as the direct AppID
+    appid="$1"
+fi
+
+# Initialize Steam quietly in the background if it isn't running
+if ! pgrep -x "steam" > /dev/null; then
+    steam -silent -nocefscandbox -noshaders > /dev/null 2>&1 &
+    sleep 2.5
+fi
+
+# Launch game via URL protocol and decouple
+steam steam://rungameid/"$appid" > /dev/null 2>&1 &
