@@ -1,4 +1,5 @@
 #!/bin/bash
 
 file=$(ls | fzf)
-curl -F "file=@$file" 0x0.st | kitty +kitten clipboard
+
+curl -F "file=@$file" 0x0.st | wl-copy
