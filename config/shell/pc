@@ -2,3 +2,10 @@
 
 autoload -U colors && colors
 PS1=' [%F{117}%m%f] %F{213}%~%f $ '
+
+# Power management
+alias \
+    sus="systemctl suspend" \
+    rbt="systemctl reboot" \
+    pwr="systemctl poweroff"
+

@@ -7,6 +7,6 @@ else
     swayidle -w \
         timeout 300 'swaymsg "output * power off"' \
         resume 'swaymsg "output * power on"' \
-        timeout 600 'systemctl suspend' &
+        timeout 600 'loginctl suspend' &
     notify-send "Idle management enabled"
 fi

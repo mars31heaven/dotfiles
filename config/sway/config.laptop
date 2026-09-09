@@ -307,7 +307,7 @@ bindsym $mod+r mode "resize"
     exec swayidle -w \
     timeout 200 'swaymsg "output * power off"' \
     resume 'swaymsg "output * power on"' \
-    timeout 600 'systemctl suspend'
+    timeout 600 'loginctl suspend'
 
     for_window [app_id="reaper"] inhibit_idle open
     for_window [app_id="duckstation-qt"] inhibit_idle open
@@ -321,7 +321,7 @@ bindsym $mod+r mode "resize"
 
     exec_always autotiling --limit 2
 
-    exec batsignal -b -w 25 -c 20 -d 15 -D "notify-send -u critical 'Battery critically low' 'Suspending now'; systemctl suspend" -f 90 -p
+    exec batsignal -b -w 25 -c 20 -d 15 -D "notify-send -u critical 'Battery critically low' 'Suspending now'; loginctl suspend" -f 90 -p
 
     exec wl-paste --type text --watch cliphist store
 
@@ -330,4 +330,5 @@ bindsym $mod+r mode "resize"
     exec mako
     exec waybar
 
+    exec brightnessctl s 8%
     exec wlsunset -t 4000 -T 4200

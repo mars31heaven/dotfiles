@@ -2,3 +2,16 @@
 
 autoload -U colors && colors
 PS1=' [%F{208}%m%f] %F{213}%~%f $ '
+
+# Power management
+alias \
+    sus="loginctl suspend" \
+    rbt="loginctl reboot" \
+    pwr="loginctl poweroff"
+
+# Radio
+alias \
+    bup="sudo sv up bluetoothd" \
+    bdown="sudo sv down bluetoothd" \
+    wup="sudo sv up iwd" \
+    wdown="sudo sv down iwd"
