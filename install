@@ -720,7 +720,6 @@ for directory in \
     nvim \
     sway \
     swayimg \
-    tridactyl \
     waybar \
     zathura
 do
@@ -763,9 +762,6 @@ ln -s "$DOTFILES/config/nvim" \
 
 ln -s "$DOTFILES/config/swayimg" \
     "$HOME/.config/swayimg"
-
-ln -s "$DOTFILES/config/tridactyl" \
-    "$HOME/.config/tridactyl"
 
 ln -s "$DOTFILES/config/zathura" \
     "$HOME/.config/zathura"
