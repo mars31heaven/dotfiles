@@ -101,7 +101,9 @@ local state = {
     duration = 0,
     started_at = nil,
     scrobble_triggered = false,
-    last_position = nil,
+    last_position = nil,      -- raw file position, used only for repeat/loop detection
+    accumulated_time = 0,     -- real elapsed seconds actually spent playing (not paused) -
+                               -- this, not file position, is what's checked against the threshold
 }
 
 local last_flush_attempt = 0
@@ -279,8 +281,7 @@ end
 check_and_trigger = function()
     if not state.artist or state.scrobble_triggered then return end
     if state.duration < opts.min_track_duration then return end
-    local pos = mp.get_property_number("time-pos", 0)
-    if pos >= scrobble_threshold(state.duration) then
+    if state.accumulated_time >= scrobble_threshold(state.duration) then
         trigger_scrobble()
     end
 end
@@ -293,6 +294,7 @@ local function start_new_play(artist, title, album, duration)
     state.started_at = os.time()
     state.scrobble_triggered = false
     state.last_position = nil
+    state.accumulated_time = 0
 end
 
 local function maybe_flush_queue()
@@ -366,6 +368,9 @@ local function on_tick()
     local pos = mp.get_property_number("time-pos")
     if pos == nil then return end
 
+    -- Repeat/loop detection: a backward jump to near the start after being
+    -- well into the track. Based on raw position only - not affected by
+    -- the accumulated-time fix below.
     if state.last_position
         and pos < opts.repeat_reset_threshold
         and state.last_position > opts.repeat_min_prior_position
@@ -375,6 +380,16 @@ local function on_tick()
         msg.info("librefm-scrobbler: repeat play detected: " .. state.artist .. " - " .. state.title)
     end
     state.last_position = pos
+
+    -- Accumulate real listening time: only while actually playing (not
+    -- paused), and independent of where time-pos itself is/jumps to.
+    -- This is what's checked against the scrobble threshold, so skimming
+    -- or scrubbing through a track (which moves time-pos a lot without
+    -- you actually having listened) can't trigger a scrobble on its own.
+    local paused = mp.get_property_native("pause", true)
+    if not paused then
+        state.accumulated_time = state.accumulated_time + opts.tick_interval
+    end
 
     check_and_trigger()
 end
