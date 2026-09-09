@@ -1,0 +1,41 @@
+# ~/.config/mpv/script-opts/librefm-scrobbler.conf
+#
+# Config file for librefm-scrobbler.lua. Format is plain key=value, one per
+# line - no section headers, no quotes needed around values.
+#
+# This file is matched by name to the identifier used in the script's
+# options.read_options(opts, "librefm-scrobbler") call, so it MUST be
+# named exactly librefm-scrobbler.conf and live in ~/.config/mpv/script-opts/
+#
+# Keep this file private, since it holds your password in plain text:
+#   chmod 600 ~/.config/mpv/script-opts/librefm-scrobbler.conf
+
+# --- Required ---
+username=YOUR_USERNAME
+password=YOUR_PASSWORD
+
+# --- Optional: where things get written ---
+# Point log_file at the same file mpdscribble uses if you want one shared,
+# unified scrobble history in mpdscribble's own plain-text format.
+log_file=~/.local/share/mpdscribble/log
+cache_file=~/.cache/librefm-scrobbler/queue.json
+
+# --- Optional: scrobble timing rules ---
+# Scrobble once this fraction of the track has played...
+scrobble_fraction=0.8
+# ...or after this many seconds, whichever comes first.
+scrobble_max_seconds=240
+# Tracks shorter than this are never scrobbled.
+min_track_duration=30
+
+# --- Optional: offline retry behaviour ---
+# Don't retry a failed offline-queue submission more often than this (seconds).
+retry_interval_seconds=60
+# How often to check playback position (seconds).
+tick_interval=2
+
+# --- Optional: repeat/loop detection ---
+# Position must drop below this to count as "back near the start" (seconds).
+repeat_reset_threshold=3
+# ...and must have been at least this far into the track beforehand (seconds).
+repeat_min_prior_position=10

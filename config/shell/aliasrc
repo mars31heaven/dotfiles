@@ -87,4 +87,5 @@ alias \
     untar="tar -xvf" \
     wget="wget -c" \
     hw="hwinfo --short" \
-    printdraft="lp -o Draft"
+    printdraft="lp -o Draft" \
+    mm="mpv --profile=music"
