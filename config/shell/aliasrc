@@ -88,4 +88,5 @@ alias \
     wget="wget -c" \
     hw="hwinfo --short" \
     printdraft="lp -o Draft" \
-    mm="mpv --profile=music"
+    mm="mpv --profile=music" \
+    filterflac="fd -e flac -x echo "{//}" | sort -u"
