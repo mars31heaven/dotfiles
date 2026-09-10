@@ -7,6 +7,9 @@ set scrolloff 10
 set relativenumber
 set incsearch
 
+set selectfmt "\033[7;38;2;255;255;255m"
+set cutfmt "\033[7;31m"
+
 
 # ── Basic operations ─────────────────────────────────────────
 
