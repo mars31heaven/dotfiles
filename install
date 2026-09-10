@@ -1140,25 +1140,6 @@ if [ "$LAPTOP" = false ]; then
 fi
 
 # ============================================================
-# PC-SPECIFIC UDEV RULE
-#
-# Keep the wireless mouse awake on the AMD desktop PC.
-# ============================================================
-
-if [ "$LAPTOP" = false ]; then
-
-    info "Configuring PC wireless mouse power management"
-
-    sudo tee /etc/udev/rules.d/99-yichip-mouse.rules >/dev/null <<'EOF'
-ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="3151", ATTR{idProduct}=="3020", ATTR{power/control}="on"
-EOF
-
-    sudo udevadm control --reload-rules
-    sudo udevadm trigger
-
-fi
-
-# ============================================================
 # FINALIZATION
 # ============================================================
 
