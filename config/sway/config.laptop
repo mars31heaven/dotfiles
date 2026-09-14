@@ -328,6 +328,8 @@ bindsym $mod+r mode "resize"
     exec_always swaybg -i /home/mrcl/.local/share/wallpapers/mar.jpg -m fill
 
     exec mako
+    exec dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus
+
     exec waybar
 
     exec brightnessctl s 8%

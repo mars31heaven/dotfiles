@@ -19,12 +19,12 @@ case "$choice" in
         fi
         ;;
     Suspend)
-        systemctl suspend
+        loginctl suspend
         ;;
     Reboot)
-        systemctl reboot
+        loginctl reboot
         ;;
     Poweroff)
-        systemctl poweroff
+        loginctl poweroff
         ;;
 esac

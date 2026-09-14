@@ -8,13 +8,14 @@ margin=10
 width=320
 height=100
 default-timeout=5000
-layer=overlay
 
 [urgency=high]
 default-timeout=10000
 border-color=#de7484
+layer=overlay
 
 [urgency=critical]
 default-timeout=0
 border-color=#db3d3f
+layer=overlay
 on-notify=exec mpv --no-video --really-quiet "/home/mrcl/.local/share/sound-notifications/batterylow.opus"
