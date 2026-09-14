@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Função que processa uma única pasta
+process_folder() {
+    local folder="$1"
+    
+    # Entra na pasta usando aspas para suportar espaços/caracteres especiais
+    cd "$folder" || return
+
+    # 1. Procura imagem (cover ou front) com extensões jpg, jpeg ou png
+    # O "grep -i" garante que pegue "Front.PNG", "front.jpg", "COVER.jpeg", etc.
+    img=$(find . -maxdepth 1 -type f | grep -iE '/(cover|front|folder)\.(jpg|jpeg|png)$' | head -n 1)
+
+    if [ -n "$img" ]; then
+        echo "📂 Pasta: $folder"
+        echo "  🎨 Processando imagem: $(basename "$img")"
+
+        # 2. Converte/Redimensiona para cover.jpg (Baseline JPEG, sRGB, 600x600)
+        # O ImageMagick cuida da conversão de PNG para JPG automaticamente aqui
+        magick "$img" -resize 600x600^ -gravity center -extent 600x600 -colorspace sRGB "cover_final.jpg"
+
+        # Se a imagem original não era "cover.jpg", remove a original para limpar a pasta
+        # (Isso apaga o front.jpg ou cover.png antigo após gerar o novo)
+        if [[ "$(basename "$img")" != "cover.jpg" ]]; then
+            rm -f "$img"
+        fi
+        mv "cover_final.jpg" "cover.jpg"
+
+        # 3. Faz o embed nos áudios
+        shopt -s nullglob
+        for audio in *.{mp3,flac,m4a}; do
+            # Pula arquivos temporários
+            [[ "$audio" == tmp_* ]] && continue
+
+            echo "  🎵 Embutindo em: $audio"
+            
+            # -nostdin: Evita que o ffmpeg tente ler o teclado e dê erro de "Enter command"
+            ffmpeg -y -loglevel error -nostdin -i "$audio" -i "cover.jpg" \
+                -map 0:a -map 1:v \
+                -c copy \
+                -disposition:v:0 attached_pic \
+                -id3v2_version 3 \
+                -metadata:s:v title="Album cover" \
+                -metadata:s:v comment="Cover (Front)" \
+                "tmp_$audio" && \
+            mv "tmp_$audio" "$audio"
+        done
+        shopt -u nullglob
+        echo "  ✅ Concluído!"
+    fi
+}
+
+# 4. Loop robusto para lidar com nomes de pastas complexos
+# O "-print0" junto com "read -d ''" é o único jeito 100% seguro de lidar com espaços/aspas
+find . -type d -print0 | while IFS= read -r -d '' dir; do
+    # Armazena o diretório atual para poder voltar depois
+    current_dir=$(pwd)
+    process_folder "$dir"
+    cd "$current_dir" || exit
+done
+
+echo "🎉 Processo global finalizado!"

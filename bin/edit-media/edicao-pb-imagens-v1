@@ -1,0 +1,85 @@
+#!/bin/bash
+
+INPUT="*.jpg"
+BASE_DIR="resultados_pb"
+
+mkdir -p "$BASE_DIR"
+
+# Controle leve de paralelismo (ajuste se quiser)
+JOBS=4
+
+# =====================================
+# 1. pb_lofi (ajustado)
+# =====================================
+(
+mkdir -p "$BASE_DIR/pb_lofi"
+magick mogrify -path "$BASE_DIR/pb_lofi" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 10%,92% \
+  -sigmoidal-contrast 4,55% \
+  -brightness-contrast 5x8 \
+  -attenuate 0.25 +noise Gaussian \
+  -statistic median 1x1 \
+  -ordered-dither o4x4 \
+  $INPUT
+) &
+
+# =====================================
+# 2. pb_lofi_detalhado
+# =====================================
+(
+mkdir -p "$BASE_DIR/pb_lofi_detalhado"
+magick mogrify -path "$BASE_DIR/pb_lofi_detalhado" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 10%,92% \
+  -sigmoidal-contrast 4,55% \
+  -brightness-contrast 5x8 \
+  -statistic median 1x1 \
+  -attenuate 0.25 +noise Gaussian \
+  -ordered-dither o4x4 \
+  $INPUT
+) &
+
+# =====================================
+# 3. pb_noite_profundo
+# =====================================
+(
+mkdir -p "$BASE_DIR/pb_noite_profundo"
+magick mogrify -path "$BASE_DIR/pb_noite_profundo" -format jpg \
+  -colorspace RGB -colorspace Gray \
+  -level 8%,88% \
+  -sigmoidal-contrast 6,45% \
+  -gamma 0.9 \
+  -attenuate 0.2 +noise Gaussian \
+  $INPUT
+) &
+
+# =====================================
+# 4. pb_lofi_sombras_ruido
+# =====================================
+(
+mkdir -p "$BASE_DIR/pb_lofi_sombras_ruido"
+
+for img in $INPUT; do
+  magick "$img" \
+    -colorspace RGB -colorspace Gray \
+    -level 10%,92% \
+    -sigmoidal-contrast 4,55% \
+    -brightness-contrast 5x8 \
+    \
+    \( +clone -level 0%,60% -negate -blur 0x2 \) \
+    -write mpr:mask +delete \
+    \
+    \( +clone -attenuate 0.35 +noise Gaussian \) \
+    mpr:mask -compose CopyOpacity -composite \
+    \
+    -compose Over -composite \
+    \
+    -ordered-dither o4x4 \
+    "$BASE_DIR/pb_lofi_sombras_ruido/$(basename "$img")"
+done
+) &
+# Aguarda todos finalizarem
+wait
+
+echo "Efeitos PB aplicados."

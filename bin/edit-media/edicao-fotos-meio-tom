@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir -p resultado
+magick mogrify -format png -path ./resultado -colorspace gray -contrast-stretch 1x1% -ordered-dither o8x8 *.*
+echo "Processo concluído! As fotos estão na pasta 'resultado'."
