@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if pidof syncthing; then
-	killall -9 syncthing
-else
-	syncthing --no-browser
-fi

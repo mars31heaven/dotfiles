@@ -267,7 +267,7 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+F12 exec itoggle
 
-    bindsym $mod+Shift+Backspace exec fuzzpower
+    bindsym $mod+Shift+Backspace exec fuzzpower-laptop
     bindsym $mod+p exec fuzzpass
 
     bindsym $mod+Shift+e exec foot nvim

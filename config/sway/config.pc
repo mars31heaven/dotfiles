@@ -268,7 +268,7 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+F12 exec itoggle
 
-    bindsym $mod+Shift+Backspace exec fuzzpower
+    bindsym $mod+Shift+Backspace exec fuzzpower-pc
 
     bindsym $mod+p exec fuzzpass
 
