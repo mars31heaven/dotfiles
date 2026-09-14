@@ -31,6 +31,7 @@ export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export GOPATH="$XDG_DATA_HOME/go"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export PIPEWIRE_LATENCY="128/48000"
 
 
 # ── Zsh ──────────────────────────────────────────────────────
