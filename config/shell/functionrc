@@ -42,10 +42,14 @@ if [ -n "$BASH_VERSION" ]; then
     export -f rotate
 fi
 
-ra() {
+rac() {
     mpc clear
     mpc findadd album "$(mpc list album | shuf -n 1)"
     mpc play
+}
+
+rad() {
+    mpc findadd album "$(mpc list album | shuf -n 1)"
 }
 
 # ── Personal shortcuts ───────────────────────────────────────

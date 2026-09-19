@@ -326,6 +326,7 @@ sudo pacman -S --needed \
     foot \
     fuzzel \
     fzf \
+    gdu \
     git \
     grim \
     gst-plugin-pipewire \
@@ -354,7 +355,6 @@ sudo pacman -S --needed \
     moreutils \
     mpv \
     mpv-mpris \
-    ncdu \
     neovim \
     nicotine+ \
     nmap \

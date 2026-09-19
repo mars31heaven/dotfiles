@@ -1,0 +1,114 @@
+#!/bin/bash
+
+export MPD_HOST="${MPD_HOST:-127.0.0.1}"
+current_root=$(pwd)
+
+# Resolve the absolute path of MPD's music root
+MPD_MUSIC_DIR=$(eval echo "~/Music")
+
+# 1. Gather 5 random directory tracks containing audio assets
+mapfile -t albums < <(find "$current_root" -type f \( -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4a" -o -iname "*.opus" \) -printf '%h\n' | sort -u | shuf -n 5)
+
+if [ ${#albums[@]} -eq 0 ]; then
+    echo "No audio folders located."
+    exit 1
+fi
+
+declare -A album_paths
+declare -A album_sizes
+declare -A album_meta
+
+# 2. Sequential Discovery Loop
+for i in "${!albums[@]}"; do
+    index=$((i+1))
+    dir="${albums[$i]}"
+
+    album_paths[$index]="$dir"
+    album_sizes[$index]=$(du -sh "$dir" | cut -f1)
+
+    # Metadata extraction
+    first_file=$(find "$dir" -type f \( -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4a" -o -iname "*.opus" \) | head -n 1)
+    meta_artist=$(ffprobe -v error -show_entries format_tags=artist -of default=noprint_wrappers=1:nokey=1 "$first_file" 2>/dev/null | head -n 1)
+    meta_album=$(ffprobe -v error -show_entries format_tags=album -of default=noprint_wrappers=1:nokey=1 "$first_file" 2>/dev/null | head -n 1)
+
+    if [ -n "$meta_artist" ] && [ -n "$meta_album" ]; then
+        album_meta[$index]="$meta_artist - $meta_album"
+    else
+        album_meta[$index]="$(basename "$dir")"
+    fi
+
+    echo "======================================================="
+    echo "ALBUM $index/5"
+    echo "Title: ${album_meta[$index]}"
+    echo "Path:  $dir"
+    echo "Size:  ${album_sizes[$index]}"
+    echo "-------------------------------------------------------"
+
+    # Isolate Art Rendering
+    cover=$(find "$dir" -maxdepth 1 -type f \( -iname "cover.jpg" -o -iname "cover.png" -o -iname "folder.jpg" -o -iname "front.jpg" \) | head -n 1)
+    if [ -n "$cover" ]; then
+        chafa --size=40x20 "$cover"
+        echo ""
+    else
+        echo "[No artwork found]"
+    fi
+    echo "-------------------------------------------------------"
+
+    # Sequential Preview Challenge (Accepts y or s)
+    printf "Listen to a 30s preview of this album? (y/n): "
+    read -r preview_choice
+    if [[ "$preview_choice" =~ ^[yYsS]$ ]]; then
+        echo "Playing preview... (Press 'q' to skip)"
+        mpv --shuffle --no-video --length=30 "$dir"/* 2>/dev/null
+    fi
+    echo ""
+done
+
+# 3. Final Summary Compilation Matrix
+echo "======================================================="
+echo "DISCOVERED SELECTIONS SUMMARY:"
+echo "======================================================="
+for index in {1..5}; do
+    if [ -n "${album_paths[$index]}" ]; then
+        printf "[%d] %-45s | %-6s\n" "$index" "${album_meta[$index]}" "${album_sizes[$index]}"
+        echo "    Path: ${album_paths[$index]}"
+        echo "-------------------------------------------------------"
+    fi
+done
+
+# 4. Translating path to MPD and playing
+printf "Select an album index (1-5) to play instantly in MPD, or Enter to exit: "
+read -r selection
+
+if [[ "$selection" =~ ^[1-5]$ ]] && [ -n "${album_paths[$selection]}" ]; then
+    selected_dir="${album_paths[$selection]}"
+    relative_mpd_dir=""
+
+    # Map the absolute hdd path to the corresponding symlink inside ~/Music
+    if [[ "$selected_dir" == "$MPD_MUSIC_DIR"* ]]; then
+        relative_mpd_dir="${selected_dir#$MPD_MUSIC_DIR/}"
+    else
+        while IFS= read -r link; do
+            target=$(readlink -f "$link")
+            if [[ "$selected_dir" == "$target"* ]]; then
+                suffix="${selected_dir#$target}"
+                relative_mpd_dir="$(basename "$link")$suffix"
+                break
+            fi
+        done < <(find "$MPD_MUSIC_DIR" -maxdepth 3 -type l)
+    fi
+
+    if [ -z "$relative_mpd_dir" ]; then
+        echo "Error: This directory is not linked inside your MPD music path ($MPD_MUSIC_DIR)."
+        exit 1
+    fi
+
+    echo "Clearing active queue and loading files..."
+    mpc clear > /dev/null
+
+    # Passing the translated relative directory to mpc allows it to process the album natively
+    mpc add "$relative_mpd_dir" > /dev/null 2>&1
+
+    mpc play 1 > /dev/null
+    echo "Now playing on MPD: ${album_meta[$selection]}"
+fi

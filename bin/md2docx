@@ -1,20 +1,79 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ============================================================
+# Conversão Markdown -> DOCX
+# Documentação de processos
+# ============================================================
+
 if ! command -v pandoc >/dev/null 2>&1; then
-  echo "Erro: Pandoc não está instalado."
-  exit 1
+    echo "Erro: Pandoc não está instalado."
+    exit 1
 fi
 
-INPUT="${1:-Atendimento_Assistencia_Tecnica_Chat_Voice.md}"
+INPUT="${1:-}"
+
+if [[ -z "$INPUT" ]]; then
+    echo "Uso:"
+    echo "  $0 arquivo.md [saida.docx]"
+    exit 1
+fi
+
+if [[ ! -f "$INPUT" ]]; then
+    echo "Erro: arquivo não encontrado: $INPUT"
+    exit 1
+fi
+
+if [[ "${INPUT##*.}" != "md" ]]; then
+    echo "Erro: o arquivo de entrada precisa ser .md"
+    exit 1
+fi
+
 OUTPUT="${2:-${INPUT%.md}.docx}"
 
-pandoc "$INPUT" \
-  --from=gfm \
-  --to=docx \
-  --standalone \
-  --toc \
-  --toc-depth=3 \
-  -o "$OUTPUT"
+# ------------------------------------------------------------
+# Template visual do Word
+# ------------------------------------------------------------
 
-echo "Gerado: $OUTPUT"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REFERENCE_DOC="$SCRIPT_DIR/template_processos.docx"
+
+# ------------------------------------------------------------
+# Opções do Pandoc
+# ------------------------------------------------------------
+
+PANDOC_ARGS=(
+    "$INPUT"
+    --from=gfm
+    --to=docx
+    --standalone
+
+    # Table of Contents
+    --toc
+    --toc-depth=3
+
+    # Metadados
+    --metadata=lang:pt-BR
+
+    # Arquivo final
+    -o "$OUTPUT"
+)
+
+# Se existir um template, utiliza-o.
+# Caso contrário, converte usando o estilo padrão do Pandoc.
+if [[ -f "$REFERENCE_DOC" ]]; then
+    PANDOC_ARGS+=(--reference-doc="$REFERENCE_DOC")
+else
+    echo "Aviso: template_processos.docx não encontrado."
+    echo "A conversão será feita utilizando o estilo padrão do Pandoc."
+    echo
+fi
+
+pandoc "${PANDOC_ARGS[@]}"
+
+echo "----------------------------------------"
+echo "Conversão concluída."
+echo "Entrada : $INPUT"
+echo "Saída   : $OUTPUT"
+echo "TOC     : habilitado"
+echo "----------------------------------------"

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+fd -t f -e flac -x ffmpeg -i "{}" -c:a libopus -b:a 160k "{.}.opus"
+fd -t f -e wav  -x ffmpeg -i "{}" -c:a libopus -b:a 160k "{.}.opus"
+
+fd -t f -e flac -x sh -c '[ -f "{.}.opus" ] && rm "{}"'
+fd -t f -e wav  -x sh -c '[ -f "{.}.opus" ] && rm "{}"'

@@ -58,17 +58,6 @@ swayimg.viewer.history = 1
 
 swayimg.viewer.set_window_background(0xff313131)
 
-swayimg.viewer.set_text("topleft", {
-    "File:\t{name}",
-    "Path:\t{path}",
-    "Size:\t{sizehr}",
-    "Image:\t{frame.width}x{frame.height}"
-})
-
-swayimg.viewer.set_text("topright", {
-    "{list.index}/{list.total}"
-})
-
 
 --------------------------------------------------------------------------------
 -- Viewer keybindings
@@ -140,15 +129,6 @@ swayimg.gallery.cache = 100
 swayimg.gallery.preload = false
 swayimg.gallery.embedded_thumb = true
 swayimg.gallery.pstore = false
-
-swayimg.gallery.set_text("topleft", {
-    "File:\t{name}",
-    "Path:\t{path}"
-})
-
-swayimg.gallery.set_text("topright", {
-    "{list.index}/{list.total}"
-})
 
 
 --------------------------------------------------------------------------------
