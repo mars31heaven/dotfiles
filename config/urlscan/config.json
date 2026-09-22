@@ -1,0 +1,84 @@
+{
+    "palettes": {
+        "default": [
+            [
+                "header",
+                "white",
+                "black",
+                "bold"
+            ],
+            [
+                "footer",
+                "white",
+                "black",
+                "bold"
+            ],
+            [
+                "search",
+                "black",
+                "brown",
+                "standout"
+            ],
+            [
+                "msgtext",
+                "white",
+                "default"
+            ],
+            [
+                "msgtext:ellipses",
+                "dark gray",
+                "default"
+            ],
+            [
+                "urlref:number:braces",
+                "dark gray",
+                "default"
+            ],
+            [
+                "urlref:number",
+                "dark blue",
+                "default",
+                "bold"
+            ],
+            [
+                "urlref:url",
+                "white",
+                "default"
+            ],
+            [
+                "url:sel",
+                "black",
+                "dark red",
+                "bold"
+            ]
+        ]
+    },
+    "keys": {
+        "/": "search_key",
+        "0": "digits",
+        "1": "digits",
+        "2": "digits",
+        "3": "digits",
+        "4": "digits",
+        "5": "digits",
+        "6": "digits",
+        "7": "digits",
+        "8": "digits",
+        "9": "digits",
+        "y": "clipboard",
+        "c": "context",
+        "ctrl l": "clear_screen",
+        "f1": "help_menu",
+        "G": "bottom",
+        "g": "top",
+        "j": "down",
+        "k": "up",
+        "h": "quit",
+        "l": "link_handler",
+        "q": "quit",
+        "R": "reverse",
+        "S": "all_shorten",
+        "s": "shorten",
+        "u": "all_escape"
+    }
+}

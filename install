@@ -356,6 +356,7 @@ sudo pacman -S --needed \
     mpv \
     mpv-mpris \
     neovim \
+    newsboat \
     nicotine+ \
     nmap \
     noto-fonts \
@@ -403,6 +404,7 @@ sudo pacman -S --needed \
     ufw \
     unrar \
     unzip \
+    urlscan \
     w3m \
     waybar \
     wf-recorder \
@@ -728,7 +730,8 @@ done
 
 # Applications that may contain local/private state.
 mkdir -p "$HOME/.config/mpd"
-mkdir -p "$HOME/.config/mpv"
+mkdir -p "$HOME/.config/mpv/script-opts"
+mkdir -p "$HOME/.config/newsboat"
 mkdir -p "$HOME/.config/qutebrowser"
 mkdir -p "$HOME/.config/shell"
 mkdir -p "$HOME/.config/zsh"
@@ -762,6 +765,9 @@ ln -s "$DOTFILES/config/nvim" \
 
 ln -s "$DOTFILES/config/swayimg" \
     "$HOME/.config/swayimg"
+
+ln -s "$DOTFILES/config/urlscan" \
+    "$HOME/.config/urlscan"
 
 ln -s "$DOTFILES/config/zathura" \
     "$HOME/.config/zathura"
@@ -831,9 +837,30 @@ if [ -f "$DOTFILES/config/mpv/mpv.conf" ]; then
         "$HOME/.config/mpv/mpv.conf"
 fi
 
-if [ -d "$DOTFILES/config/mpv/scripts" ]; then
-    ln -sfn "$DOTFILES/config/mpv/scripts" \
-        "$HOME/.config/mpv/scripts"
+if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
+    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
+        "$HOME/.config/mpv/librefm-scrobbler.lua"
+fi
+
+if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
+    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
+        "$HOME/.config/mpv/librefm-scrobbler.lua"
+fi
+
+if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
+    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
+        "$HOME/.config/mpv/librefm-scrobbler.lua"
+fi
+
+# ------------------------------------------------------------
+# newsboat
+#
+# Only configuration file is linked
+# ------------------------------------------------------------
+
+if [ -f "$DOTFILES/config/newsboat/config" ]; then
+    ln -sf "$DOTFILES/config/newsboat/config" \
+        "$HOME/.config/newsboat/config"
 fi
 
 # ------------------------------------------------------------

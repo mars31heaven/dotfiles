@@ -1,0 +1,64 @@
+# vim: filetype=conf
+
+auto-reload yes
+reload-threads 20
+reload-time 1200
+refresh-on-startup yes
+datetime-format "%b %e %y"
+save-path ~/.local/share/newsboat/saved/
+
+browser "qutebrowser"
+external-url-viewer "urlscan -d -r 'qutebrowser {}'"
+
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+bind-key j down
+bind-key k up
+bind-key g home
+bind-key G end
+bind-key ^D pagedown
+bind-key ^U pageup
+
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+
+bind-key h quit
+bind-key l open
+
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key B bookmark
+bind-key r reload
+bind-key R reload-all
+bind-key ^B show-urls
+
+macro v set browser "setsid -f mpv" ; open-in-browser ; set browser "qutebrowser"
+macro y set browser "echo %u | wl-copy" ; open-in-browser ; set browser "qutebrowser"
+
+color info              white  black  bold
+color listfocus         black  color1 bold
+color listfocus_unread  black  color1 bold
+color listnormal        white  default
+color listnormal_unread color4 default
+color article           white  default
+search-highlight-colors black  color3 bold
+
+highlight all "---.*---" color3
+highlight feedlist ".*(0/0))" color8
+
+highlight article "^Feed:.*" default default
+highlight article "^Title:.*" color1 default bold
+highlight article "^Author:.*" color6 default
+highlight article "(^Link:.*|^Date:.*)" color7 default
+highlight article "https?://[^ ]+" color4 default
+
+highlight article "\\[[0-9][0-9]*\\]" color1 default bold
+highlight article "\\[image\\ [0-9]+\\]" color2 default bold
+highlight article ":.*\\(link\\)$" color4 default
+highlight article ":.*\\(image\\)$" color4 default
