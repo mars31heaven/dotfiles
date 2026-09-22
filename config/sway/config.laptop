@@ -278,7 +278,7 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+Shift+g exec play
 
-    bindsym $mod+Shift+v exec foot pulsemixer
+    bindsym $mod+Shift+v exec foot wiremix
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 

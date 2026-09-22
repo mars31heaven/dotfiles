@@ -374,7 +374,6 @@ sudo pacman -S --needed \
     pipewire-alsa \
     pipewire-jack \
     pipewire-pulse \
-    pulsemixer \
     python-adblock \
     python-pykeepass \
     qutebrowser \
@@ -409,6 +408,7 @@ sudo pacman -S --needed \
     waybar \
     wf-recorder \
     wget \
+    wiremix \
     wireplumber \
     wlopm \
     wlsunset \
@@ -568,7 +568,6 @@ AUR_PACKAGES="
     task-spooler
     timr-bin
     wayclip
-    ytcui
     zapzap
 "
 
