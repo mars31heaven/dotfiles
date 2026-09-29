@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ARTIST=$(mpc list artist | fuzzel --dmenu --prompt="Select Artist: ")
+[[ -z "$ARTIST" ]] && exit 0
+
+ALBUM=$(mpc list album artist "$ARTIST" | fuzzel --dmenu --prompt="Select Album: ")
+[[ -z "$ALBUM" ]] && exit 0
+
+mpc clear
+mpc find artist "$ARTIST" album "$ALBUM" | mpc add
+mpc play

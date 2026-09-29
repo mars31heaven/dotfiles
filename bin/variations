@@ -1,0 +1,20 @@
+#!/bin/bash
+
+OUTPUT_DIR="./analog_outputs"
+mkdir -p "$OUTPUT_DIR"
+
+for img in *.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+    [ -e "$img" ] || continue
+
+    base=$(basename "$img" | cut -f 1 -d '.')
+    echo "Processing $img..."
+
+    magick "$img" -colorspace gray -bias 50% -black-threshold 2% -white-threshold 98% -gamma 1.4 -sigmoidal-contrast 3.5,40% \( +clone +level-colors GREY50 -attenuate 1.2 +noise Gaussian -colorspace Gray -blur 0x0.3 \) -compose SoftLight -composite "$OUTPUT_DIR/${base}_soft_analog.jpg"
+
+    magick "$img" -colorspace gray -adaptive-sharpen 0x4 -linear-stretch 10%x10% \( +clone -attenuate 3 +noise Gaussian \) -compose Overlay -composite "$OUTPUT_DIR/${base}_grainy_copier.jpg"
+
+    magick "$img" -colorspace gray -bias 50% -level 5%,92%,1.2 -sigmoidal-contrast 4.8,45% \( +clone +level-colors GREY50 -attenuate 1.5 +noise Gaussian -colorspace Gray -blur 0x0.3 \) -compose Overlay -composite "$OUTPUT_DIR/${base}_strong_analog.jpg"
+
+    magick "$img" -modulate 110,45,100 -level 3%,95%,1.2 -sigmoidal-contrast 4.0,42% \( +clone +level-colors GREY50 -attenuate 1.4 +noise Gaussian -blur 0x0.2 \) -compose SoftLight -composite "$OUTPUT_DIR/${base}_color_analog.jpg"
+
+done
