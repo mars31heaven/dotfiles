@@ -272,6 +272,8 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+Shift+e exec foot nvim
 
+    bindsym $mod+Shift+r exec fuzzrec
+
     bindsym $mod+Home exec foot htop
 
     bindsym $mod+Shift+m exec foot lf

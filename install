@@ -314,6 +314,7 @@ sudo pacman -S --needed \
     brightnessctl \
     chafa \
     cliphist \
+    cropgui \
     cups \
     cups-pk-helper \
     efibootmgr \

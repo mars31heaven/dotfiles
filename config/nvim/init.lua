@@ -60,7 +60,7 @@ vim.opt.swapfile = false
 -----------------------------------------------------------
 
 local bg = "#313131"
-local fg = "#E1E1DB"
+local fg = "#e1e1db"
 local muted = "#d8cfd8"
 local accent = "#de7484"
 local urgent = "#db3d3f"
@@ -183,32 +183,24 @@ map("n", "<leader>b", "<cmd>ls<CR>", {
 })
 
 -----------------------------------------------------------
--- Splits
+-- Splits & Tmux Tiling Bridge
 -----------------------------------------------------------
 
-map("n", "<leader>n", "<cmd>new<CR>", {
-    desc = "Horizontal split",
-})
+local function smart_navigate(direction)
+    local initial_win = vim.api.nvim_get_current_win()
+    vim.cmd("wincmd " .. direction)
 
-map("n", "<leader>v", "<cmd>vnew<CR>", {
-    desc = "Vertical split",
-})
+    -- If window focus did not change inside Neovim, tell tmux to jump tiles instead
+    if initial_win == vim.api.nvim_get_current_win() then
+        local tmux_directions = { h = "L", j = "D", k = "U", l = "R" }
+        vim.fn.system("tmux select-pane -" .. tmux_directions[direction])
+    end
+end
 
-map("n", "<C-h>", "<C-w>h", {
-    desc = "Move left",
-})
-
-map("n", "<C-j>", "<C-w>j", {
-    desc = "Move down",
-})
-
-map("n", "<C-k>", "<C-w>k", {
-    desc = "Move up",
-})
-
-map("n", "<C-l>", "<C-w>l", {
-    desc = "Move right",
-})
+map("n", "<C-h>", function() smart_navigate("h") end, { desc = "Move Left / Outer Tmux Pane" })
+map("n", "<C-j>", function() smart_navigate("j") end, { desc = "Move Down / Outer Tmux Pane" })
+map("n", "<C-k>", function() smart_navigate("k") end, { desc = "Move Up / Outer Tmux Pane" })
+map("n", "<C-l>", function() smart_navigate("l") end, { desc = "Move Right / Outer Tmux Pane" })
 
 map("n", "<C-Left>", "<cmd>vertical resize -2<CR>")
 map("n", "<C-Right>", "<cmd>vertical resize +2<CR>")

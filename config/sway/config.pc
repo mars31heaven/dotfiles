@@ -64,8 +64,8 @@ set $browser qutebrowser
 #
 # Basics:
 #
-    # Start a terminal
-    bindsym $mod+Return exec $term
+    bindsym $mod+Return exec foot -e sh -c "tmux has-session -t workspace 2>/dev/null && tmux attach-session -d -t workspace || tmux new-session -s workspace"
+
 
     # Floating terminal
     for_window [app_id="foot-float"] floating enable
@@ -272,13 +272,19 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+p exec fuzzpass
 
+    bindsym $mod+Shift+p exec mpc toggle
+
     bindsym $mod+Shift+e exec foot nvim
+
+    bindsym $mod+Shift+r exec fuzzrec
 
     bindsym $mod+Shift+f exec fsearch
 
     bindsym $mod+Home exec foot htop
 
     bindsym $mod+m exec foot rmpc
+
+    bindsym $mod+Ctrl+m exec fuzzmpd
 
     bindsym $mod+Shift+m exec foot lf
 
@@ -328,3 +334,5 @@ bindsym $mod+r mode "resize"
     exec waybar
 
     exec wlsunset -t 4000 -T 4200
+
+    exec foot -e tmux new-session -A -s workspace
