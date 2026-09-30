@@ -1,14 +1,30 @@
 # vim: filetype=conf
 
+# =============================================================================
+# General behavior
+# =============================================================================
+
 auto-reload yes
 reload-threads 20
 reload-time 1200
 refresh-on-startup yes
+
 datetime-format "%b %e %y"
 save-path ~/.local/share/newsboat/saved/
 
+# =============================================================================
+# External programs
+# =============================================================================
+
+# Open original article URLs in qutebrowser.
 browser "qutebrowser"
+
+# Open URL selections from show-urls in qutebrowser.
 external-url-viewer "urlscan -d -r 'qutebrowser {}'"
+
+# =============================================================================
+# Navigation
+# =============================================================================
 
 unbind-key j
 unbind-key k
@@ -22,13 +38,20 @@ bind-key G end
 bind-key ^D pagedown
 bind-key ^U pageup
 
+# Article list navigation.
 bind-key j next articlelist
 bind-key k prev articlelist
 bind-key J next-feed articlelist
 bind-key K prev-feed articlelist
 
+# h goes back or quits the current view.
+# l opens the feed/article content stored in Newsboat.
 bind-key h quit
 bind-key l open
+
+# =============================================================================
+# Article actions
+# =============================================================================
 
 bind-key a toggle-article-read
 bind-key n next-unread
@@ -38,27 +61,47 @@ bind-key r reload
 bind-key R reload-all
 bind-key ^B show-urls
 
+# Open a selected media URL in mpv.
 macro v set browser "setsid -f mpv" ; open-in-browser ; set browser "qutebrowser"
+
+# Copy the selected article URL to the Wayland clipboard.
 macro y set browser "echo %u | wl-copy" ; open-in-browser ; set browser "qutebrowser"
 
-color info              white  black  bold
-color listfocus         black  color1 bold
-color listfocus_unread  black  color1 bold
-color listnormal        white  default
-color listnormal_unread color4 default
-color article           white  default
-search-highlight-colors black  color3 bold
+# =============================================================================
+# Theme
+# =============================================================================
 
-highlight all "---.*---" color3
+color info white black bold
+
+color listnormal white default
+color listnormal_unread color1 default bold
+
+color listfocus black color1 bold
+color listfocus_unread black color1 bold
+
+color article white default
+
+search-highlight-colors black color1 bold
+
+# =============================================================================
+# Feed list highlighting
+# =============================================================================
+
+highlight all "---.*---" color8
 highlight feedlist ".*(0/0))" color8
 
-highlight article "^Feed:.*" default default
-highlight article "^Title:.*" color1 default bold
-highlight article "^Author:.*" color6 default
-highlight article "(^Link:.*|^Date:.*)" color7 default
-highlight article "https?://[^ ]+" color4 default
+# =============================================================================
+# Article reader highlighting
+# =============================================================================
 
-highlight article "\\[[0-9][0-9]*\\]" color1 default bold
-highlight article "\\[image\\ [0-9]+\\]" color2 default bold
-highlight article ":.*\\(link\\)$" color4 default
-highlight article ":.*\\(image\\)$" color4 default
+highlight article "^Feed:.*" color8
+highlight article "^Title:.*" color1
+highlight article "^Author:.*" color8
+highlight article "(^Link:.*|^Date:.*)" color8
+
+highlight article "https?://[^ ]+" white
+
+highlight article "\\[[0-9][0-9]*\\]" color1
+highlight article "\\[image\\ [0-9]+\\]" color8
+highlight article ":.*\\(link\\)$" color8
+highlight article ":.*\\(image\\)$" color8
