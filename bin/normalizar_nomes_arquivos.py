@@ -31,6 +31,9 @@ REPLACEMENTS = {
     "├╢": "ô",
     "├║": "ú",
 
+    # Caractere cirílico usado indevidamente no lugar de Ó.
+    "У": "Ó",
+
     # Cedilha e combinações residuais.
     "├з": "ç",
     "├╡": "õ",
@@ -54,39 +57,60 @@ CORRUPTION_MARKERS = (
     "ÔÇ",
     "Â",
     "�",
+    "У",
 )
 
 
-def normalize_filename(file_name: str) -> str:
+def normalize_name(name: str, is_file: bool) -> str:
     """
-    Corrige sequências comuns de codificação corrompida,
-    preservando extensão e demais caracteres válidos.
+    Corrige sequências comuns de codificação corrompida.
+
+    Para arquivos, preserva a extensão.
+    Para diretórios, normaliza o nome completo.
     """
-    corrected_name = file_name
+    corrected_name = name
 
     for corrupted, correct in REPLACEMENTS.items():
         corrected_name = corrected_name.replace(corrupted, correct)
 
-    # Ajustes leves de espaçamento.
+    # Remove espaços repetidos e espaços no início/fim.
     corrected_name = " ".join(corrected_name.split())
 
-    # Mantém espaço antes da extensão fora da normalização.
+    if not is_file:
+        return corrected_name.strip()
+
     suffix = Path(corrected_name).suffix
     stem = Path(corrected_name).stem.strip()
 
     return f"{stem}{suffix}"
 
 
-def appears_corrupted(file_name: str) -> bool:
+def appears_corrupted(name: str) -> bool:
     """
     Identifica se o nome contém indicadores típicos de corrupção.
     """
-    return any(marker in file_name for marker in CORRUPTION_MARKERS)
+    return any(marker in name for marker in CORRUPTION_MARKERS)
+
+
+def get_entries_recursively(folder: Path) -> list[Path]:
+    """
+    Retorna todos os arquivos e diretórios abaixo da pasta principal.
+
+    A ordenação por profundidade, da maior para a menor, garante que
+    arquivos e subdiretórios sejam processados antes de seus diretórios-pai.
+    """
+    entries = list(folder.rglob("*"))
+
+    return sorted(
+        entries,
+        key=lambda path: (len(path.parts), path.name.lower()),
+        reverse=True,
+    )
 
 
 def process_folder(folder: Path, apply_changes: bool) -> None:
     """
-    Exibe diagnóstico e, quando solicitado, renomeia os arquivos.
+    Exibe diagnóstico e, quando solicitado, renomeia arquivos e diretórios.
     """
     if not folder.exists():
         print(f"Pasta não encontrada: {folder}")
@@ -96,36 +120,40 @@ def process_folder(folder: Path, apply_changes: bool) -> None:
         print(f"O caminho informado não é uma pasta: {folder}")
         return
 
-    files = sorted(
-        [file_path for file_path in folder.iterdir() if file_path.is_file()],
-        key=lambda item: item.name.lower(),
-    )
+    entries = get_entries_recursively(folder)
+
+    files = [path for path in entries if path.is_file()]
+    directories = [path for path in entries if path.is_dir()]
 
     print("=" * 72)
-    print("NORMALIZAÇÃO DE NOMES DE ARQUIVOS")
+    print("NORMALIZAÇÃO RECURSIVA DE NOMES")
     print("=" * 72)
     print(f"Pasta analisada: {folder}")
     print(f"Arquivos encontrados: {len(files)}")
+    print(f"Diretórios encontrados: {len(directories)}")
     print()
 
-    candidates = []
+    candidates: list[tuple[Path, str]] = []
 
-    for file_path in files:
-        current_name = file_path.name
+    for path in entries:
+        current_name = path.name
 
         if not appears_corrupted(current_name):
             continue
 
-        corrected_name = normalize_filename(current_name)
+        corrected_name = normalize_name(
+            name=current_name,
+            is_file=path.is_file(),
+        )
 
-        if corrected_name != current_name:
-            candidates.append((file_path, corrected_name))
+        if corrected_name and corrected_name != current_name:
+            candidates.append((path, corrected_name))
 
     if not candidates:
         print("Nenhum nome com codificação corrompida foi identificado.")
         return
 
-    print(f"Arquivos identificados para correção: {len(candidates)}")
+    print(f"Itens identificados para correção: {len(candidates)}")
     print()
 
     renamed_count = 0
@@ -135,11 +163,15 @@ def process_folder(folder: Path, apply_changes: bool) -> None:
     for current_path, corrected_name in candidates:
         target_path = current_path.with_name(corrected_name)
 
+        item_type = "DIRETÓRIO" if current_path.is_dir() else "ARQUIVO"
+
+        print(f"TIPO: {item_type}")
         print(f"ATUAL: {current_path.name}")
         print(f"NORMALIZADO: {corrected_name}")
+        print(f"LOCAL: {current_path.parent}")
 
         if target_path.exists() and target_path != current_path:
-            print("STATUS: IGNORADO — já existe um arquivo com o nome normalizado.")
+            print("STATUS: IGNORADO — já existe um item com o nome normalizado.")
             print()
             skipped_count += 1
             continue
@@ -170,7 +202,7 @@ def process_folder(folder: Path, apply_changes: bool) -> None:
     else:
         print("RESULTADO DA PRÉVIA")
         print(
-            "Nenhum arquivo foi alterado. "
+            "Nenhum item foi alterado. "
             "Execute novamente com --apply para confirmar a renomeação."
         )
 
@@ -180,14 +212,14 @@ def process_folder(folder: Path, apply_changes: bool) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Normaliza nomes de arquivos com caracteres corrompidos "
-            "por problemas de codificação."
+            "Normaliza recursivamente nomes de arquivos e diretórios "
+            "com caracteres corrompidos por problemas de codificação."
         )
     )
 
     parser.add_argument(
         "folder",
-        help="Caminho da pasta que contém os arquivos a normalizar.",
+        help="Caminho da pasta principal a normalizar recursivamente.",
     )
 
     parser.add_argument(
