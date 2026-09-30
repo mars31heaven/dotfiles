@@ -31,6 +31,10 @@ case "$1" in
         setsid -f localc "$1" >/dev/null 2>&1
         ;;
 
+    *.pptx)
+        setsid -f loimpress "$1" >/dev/null 2>&1
+        ;;
+
     *.torrent)
         setsid -f qbittorrent "$1" >/dev/null 2>&1
         ;;
