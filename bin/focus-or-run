@@ -1,0 +1,14 @@
+#!/bin/sh
+# focus-or-run APP_ID COMMAND...
+#
+# Focus a Sway window with APP_ID if it exists. Otherwise, run COMMAND.
+
+app_id=$1
+shift
+
+if swaymsg -t get_tree 2>/dev/null |
+    grep -q "\"app_id\": *\"$app_id\""; then
+    exec swaymsg "[app_id=\"$app_id\"] focus" >/dev/null
+fi
+
+exec "$@"

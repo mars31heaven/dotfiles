@@ -1,0 +1,15 @@
+#!/bin/sh
+# Attach to the persistent "workspace" tmux session.
+
+SESSION=workspace
+
+if tmux has-session -t "=$SESSION" 2>/dev/null; then
+    exec tmux attach-session -t "=$SESSION"
+fi
+
+exec tmux new-session -s "$SESSION" -n nvim -c "$HOME" nvim \; \
+    split-window -v -c "$HOME" zsh \; \
+    select-pane -t "$SESSION:nvim.1" \; \
+    new-window -d -n lf -c "$HOME" 'zsh -ic "lfcd; exec zsh -i"' \; \
+    new-window -d -n wiki -c "$HOME" 'nvim +VimwikiIndex' \; \
+    select-window -t "$SESSION:nvim"
