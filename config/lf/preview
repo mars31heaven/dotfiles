@@ -5,12 +5,20 @@ WIDTH="$2"
 
 handle() {
     if [ -d "$FILE" ]; then
-        tree -C -L 1 -F "$FILE"
+        if command -v eza >/dev/null 2>&1; then
+            eza --all --group-directories-first --color=always "$FILE"
+        elif command -v tree >/dev/null 2>&1; then
+            tree -C -L 1 -F "$FILE"
+        else
+            ls -la "$FILE"
+        fi
     elif [ -f "$FILE" ]; then
-        if command -v highlight >/dev/null 2>&1; then
+        if command -v bat >/dev/null 2>&1; then
+            bat --color=always --style=numbers --wrap=never "$FILE"
+        elif command -v highlight >/dev/null 2>&1; then
             highlight "$FILE" -O ansi --force
         else
-            cat "$FILE"
+            sed -n '1,300p' "$FILE"
         fi
     fi
 }
