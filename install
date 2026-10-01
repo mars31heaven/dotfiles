@@ -396,6 +396,7 @@ sudo pacman -S --needed \
     swaylock \
     syncthing \
     system-config-printer \
+    tmux \
     torbrowser-launcher \
     tree \
     ttf-dejavu \
@@ -407,6 +408,7 @@ sudo pacman -S --needed \
     urlscan \
     w3m \
     waybar \
+    wdisplays \
     wf-recorder \
     wget \
     wiremix \
@@ -422,6 +424,7 @@ sudo pacman -S --needed \
     zathura \
     zathura-pdf-mupdf \
     zip \
+    zoxide \
     zsh \
     zsh-autosuggestions \
     zsh-completions \
