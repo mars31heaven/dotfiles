@@ -14,6 +14,9 @@ set $menu fuzzel
 
 set $browser qutebrowser
 
+set $monitor_left HDMI-A-1
+set $monitor_right DP-1
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
@@ -60,12 +63,18 @@ set $browser qutebrowser
 # You can also configure each device individually.
 # Read `man 5 sway-input` for more information about this section.
 
+### Monitors
+
+    # Left monitor: LG 22BN550Y
+    output HDMI-A-1 mode 1920x1080@60Hz position 0 0 scale 1 transform normal
+
+    # Right monitor: LG E2011
+    output DP-1 mode 1600x900@60Hz position 1920 0 scale 1 transform normal
+
 ### Key bindings
 #
 # Basics:
 #
-    bindsym $mod+Return exec foot -e sh -c "tmux has-session -t workspace 2>/dev/null && tmux attach-session -d -t workspace || tmux new-session -s workspace"
-
 
     # Floating terminal
     for_window [app_id="foot-float"] floating enable
@@ -129,6 +138,9 @@ set $browser qutebrowser
     bindsym $mod+4 workspace number 4
     bindsym $mod+5 workspace number 5
     bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
@@ -136,22 +148,14 @@ set $browser qutebrowser
     bindsym $mod+Shift+4 move container to workspace number 4
     bindsym $mod+Shift+5 move container to workspace number 5
     bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 #
 # Layout stuff:
 #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+n splitv
-
-    # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
-    bindsym $mod+t layout tabbed
-    bindsym $mod+e layout toggle split
-
     # Make the current focus fullscreen
     bindsym $mod+f fullscreen
 
@@ -255,9 +259,12 @@ bindsym $mod+r mode "resize"
     bindsym $mod+Shift+o move container to workspace next
 
     # Multi monitor settings
-    bindsym $mod+F1 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 disable' && wlsunset -t 4000 -T 4200
-    bindsym $mod+F2 exec swaymsg 'output eDP-1 disable; output HDMI-A-2 enable' && pkill wlsunset
-    bindsym $mod+F3 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 enable' && pkill wlsunset
+    bindsym $mod+Ctrl+h focus output $monitor_left
+    bindsym $mod+Ctrl+l focus output $monitor_right
+
+    # Move focused window and follow it.
+    bindsym $mod+Ctrl+Shift+h move container to output $monitor_left; focus output $monitor_left
+    bindsym $mod+Ctrl+Shift+l move container to output $monitor_right; focus output $monitor_right
 
     # Other shorcuts
     bindsym $mod+Shift+w exec librewolf
@@ -274,21 +281,11 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+Shift+p exec mpc toggle
 
-    bindsym $mod+Shift+e exec foot nvim
-
     bindsym $mod+Shift+r exec fuzzrec
 
     bindsym $mod+Shift+f exec fsearch
 
-    bindsym $mod+Home exec foot htop
-
-    bindsym $mod+m exec foot rmpc
-
     bindsym $mod+Ctrl+m exec fuzzmpd
-
-    bindsym $mod+Shift+m exec foot lf
-
-    bindsym $mod+Shift+v exec foot wiremix
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 
@@ -335,4 +332,30 @@ bindsym $mod+r mode "resize"
 
     exec wlsunset -t 4000 -T 4200
 
-    exec foot -e tmux new-session -A -s workspace
+# Persistent terminal workspace
+
+    set $bin ~/.dotfiles/bin
+
+# Workspace assignments.
+    assign [app_id="foot-tmux"]          workspace number 1
+    assign [app_id="qutebrowser"]        workspace number 2
+    assign [app_id="com.rtosta.zapzap"]  workspace number 3
+    assign [class="REAPER"]              workspace number 4
+    assign [app_id="rmpc"]               workspace number 5
+
+# Return to the current persistent tmux window and pane.
+    bindsym $mod+Return exec $bin/tmux-go focus
+
+# Jump to specific tmux windows, creating them if missing.
+    bindsym $mod+Shift+e exec $bin/tmux-go nvim nvim
+    bindsym $mod+Shift+n exec $bin/tmux-go news
+    bindsym $mod+Shift+m exec $bin/tmux-go lf lf
+    bindsym $mod+Home exec $bin/tmux-go htop htop
+    bindsym $mod+Shift+v exec $bin/tmux-go wiremix wiremix
+
+# rmpc remains outside tmux for better foot image rendering.
+    bindsym $mod+m exec $bin/focus-or-run rmpc foot --app-id=rmpc rmpc
+
+# Create the persistent tmux terminal and standalone rmpc window at login.
+    exec foot --app-id=foot-tmux -e $bin/tmux-attach
+    exec foot --app-id=rmpc rmpc
