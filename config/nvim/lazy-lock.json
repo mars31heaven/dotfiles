@@ -1,0 +1,7 @@
+{
+  "fzf-lua": { "branch": "main", "commit": "ec1b98d3f5f44a1cff1f2c3832af2f09c3d806ca" },
+  "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
+  "oil-copy.nvim": { "branch": "main", "commit": "672bb46d236c1ed7785fbb356999fda3e636b2e5" },
+  "oil.nvim": { "branch": "master", "commit": "b73018b75affd13fa38e2fc94ef753b465f770d7" },
+  "vimwiki": { "branch": "dev", "commit": "a54a3002e229c4b43d69ced170ff77663a5b2c40" }
+}

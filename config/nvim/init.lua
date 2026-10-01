@@ -7,6 +7,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.opt.shortmess:append("I")
+
+local aug = vim.api.nvim_create_augroup("user", { clear = true })
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -142,6 +146,8 @@ vim.opt.statusline = table.concat({
     "%f",
     " %m",
     "%=",
+    "%{fnamemodify(getcwd(), ':~')}",
+    "  ",
     "%y",
     "  ",
     "%l:%c",
@@ -157,6 +163,11 @@ local map = vim.keymap.set
 -- Save / quit
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Save" })
 map("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit" })
+
+-- Keep familiar Vim muscle memory, but do not quit Neovim.
+map("n", "ZZ", "<cmd>update<CR>", {
+    desc = "Save if modified",
+})
 
 -- Replace all
 map("n", "<leader>S", ":%s//g<Left><Left>", { desc = "Replace all" })
@@ -178,20 +189,25 @@ map("n", "<leader>[", "<cmd>bprevious<CR>", {
     desc = "Previous buffer",
 })
 
-map("n", "<leader>b", "<cmd>ls<CR>", {
-    desc = "List buffers",
-})
-
 -----------------------------------------------------------
 -- Splits & Tmux Tiling Bridge
 -----------------------------------------------------------
+
+-- Create Neovim splits.
+map("n", "<leader>v", "<cmd>vsplit<CR>", {
+    desc = "Vertical split",
+})
+
+map("n", "<leader>-", "<cmd>split<CR>", {
+    desc = "Horizontal split",
+})
 
 local function smart_navigate(direction)
     local initial_win = vim.api.nvim_get_current_win()
     vim.cmd("wincmd " .. direction)
 
     -- If window focus did not change inside Neovim, tell tmux to jump tiles instead
-    if initial_win == vim.api.nvim_get_current_win() then
+    if initial_win == vim.api.nvim_get_current_win() and vim.env.TMUX then
         local tmux_directions = { h = "L", j = "D", k = "U", l = "R" }
         vim.fn.system("tmux select-pane -" .. tmux_directions[direction])
     end
@@ -228,23 +244,11 @@ map("n", "<leader>d", "<cmd>tabclose<CR>", {
 })
 
 -----------------------------------------------------------
--- File explorer
------------------------------------------------------------
-
-map("n", "<leader>e", "<cmd>Explore<CR>", {
-    desc = "File explorer",
-})
-
------------------------------------------------------------
 -- Search
 -----------------------------------------------------------
 
 map("n", "<leader>h", "<cmd>nohlsearch<CR>", {
     desc = "Clear search",
-})
-
-map("n", "<leader>s", "<cmd>vimgrep /<C-r><C-w>/gj **/*<CR>", {
-    desc = "Search word",
 })
 
 -----------------------------------------------------------
@@ -279,14 +283,7 @@ local function insert_datetime()
 end
 
 map("n", "<F5>", insert_datetime)
-map("i", "<F5>", function()
-    vim.api.nvim_put(
-        { os.date("%Y-%m-%d %H:%M") },
-        "c",
-        true,
-        true
-    )
-end)
+map("i", "<F5>", insert_datetime)
 
 -----------------------------------------------------------
 -- Better blank lines
@@ -305,6 +302,7 @@ map("n", "OO", "m`O<Esc>``", {
 -----------------------------------------------------------
 
 vim.api.nvim_create_autocmd("BufReadPost", {
+    group = aug,
     callback = function()
         local mark = vim.api.nvim_buf_get_mark(0, '"')
         local line_count = vim.api.nvim_buf_line_count(0)
@@ -317,6 +315,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- Remove automatic comment continuation.
 vim.api.nvim_create_autocmd("FileType", {
+    group = aug,
     callback = function()
         vim.opt_local.formatoptions:remove({
             "c",
@@ -328,6 +327,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Remove trailing whitespace on save.
 vim.api.nvim_create_autocmd("BufWritePre", {
+    group = aug,
     callback = function()
         local view = vim.fn.winsaveview()
 
@@ -341,6 +341,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -----------------------------------------------------------
 
 vim.api.nvim_create_autocmd("FileType", {
+    group = aug,
     pattern = {
         "markdown",
         "text",
@@ -376,7 +377,7 @@ vim.cmd("vnoremap . :normal .<CR>")
 
 vim.g.vimwiki_list = {
     {
-        path = "~/Documents/notes/",
+        path = "~/Documents/Vimwiki/",
         syntax = "markdown",
         ext = ".md",
     },
@@ -386,6 +387,7 @@ vim.g.vimwiki_global_ext = 0
 
 -- Apply mappings specifically to Vimwiki and Markdown files
 vim.api.nvim_create_autocmd("FileType", {
+    group = aug,
     pattern = { "vimwiki", "markdown" },
     callback = function()
         local opts = { buffer = true, silent = true }
@@ -395,3 +397,10 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("v", "<leader>x", "<Plug>VimwikiToggleListItem", opts)
     end,
 })
+
+-----------------------------------------------------------
+-- Plugins & navigation (lua/plugins.lua, lua/nav.lua)
+-----------------------------------------------------------
+
+require("plugins")
+require("nav")
