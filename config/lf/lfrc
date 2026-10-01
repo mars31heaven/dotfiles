@@ -1,8 +1,11 @@
 # ── Appearance ───────────────────────────────────────────────
 
+set shell bash
+
 set previewer "~/.config/lf/preview"
 set preview
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+
 set scrolloff 10
 set relativenumber
 set incsearch
@@ -14,14 +17,17 @@ set cutfmt "\033[7;31m"
 # ── Basic operations ─────────────────────────────────────────
 
 map . set hidden!
+
 map x cut
 map y copy
 map p paste
 map D delete
+
 map R reload
 map U unselect
 map v toggle
 map V invert
+
 map u half-up
 map d half-down
 
@@ -30,11 +36,90 @@ map A rename
 map B bulkrename
 
 map m push :mkdir<space>
+
+map N push :touch<space>
+
 map E push :!nvim<space>
+
+# Open selected file in Neovim. lf returns when Neovim closes.
+map e edit
+
+# Open using lf's configured opener.
+map o open
+
+# Open a shell in lf's current directory.
+map <enter> shell
+
+# New terminal window.
 map W $setsid -f "$TERMINAL" >/dev/null 2>&1
 
-map o open
-map <enter> shell
+
+# ── Fuzzy navigation ─────────────────────────────────────────
+
+# Find files from the current directory. The selected file opens in lf.
+#
+# Hidden and ignored files are included; .git is excluded.
+cmd fzf_file ${{
+    file=$(fd \
+        --type f \
+        --hidden \
+        --no-ignore \
+        --exclude .git \
+        . "$PWD" |
+        fzf \
+            --prompt="Files> " \
+            --preview='~/.config/lf/preview {} 100' \
+            --preview-window='right:55%:wrap')
+
+    [ -n "$file" ] || exit 0
+
+    dir=$(dirname "$file")
+    base=$(basename "$file")
+
+    # Bash-style quoting keeps paths with spaces safe.
+    printf -v quoted_dir '%q' "$dir"
+    printf -v quoted_base '%q' "$base"
+
+    lf -remote "send $id cd $quoted_dir"
+    lf -remote "send $id select $quoted_base"
+}}
+
+map f fzf_file
+
+
+# Fuzzy choose a directory below the current directory.
+cmd fzf_cd ${{
+    dir=$(fd \
+        --type d \
+        --hidden \
+        --no-ignore \
+        --exclude .git \
+        . "$PWD" |
+        fzf \
+            --prompt="Directories> " \
+            --preview='~/.config/lf/preview {} 100' \
+            --preview-window='right:55%:wrap')
+
+    [ -n "$dir" ] || exit 0
+
+    printf -v quoted_dir '%q' "$dir"
+    lf -remote "send $id cd $quoted_dir"
+}}
+
+map z fzf_cd
+
+
+# Fuzzy jump using zoxide's directory history.
+cmd zoxide_cd ${{
+    dir=$(zoxide query --interactive)
+
+    [ -n "$dir" ] || exit 0
+
+    printf -v quoted_dir '%q' "$dir"
+    lf -remote "send $id cd $quoted_dir"
+}}
+
+map Z zoxide_cd
 
 
 # ── Clipboard ────────────────────────────────────────────────
@@ -44,15 +129,19 @@ map <c-y> path_yank
 
 # ── Commands ─────────────────────────────────────────────────
 
+cmd edit $nvim "$f"
+
 cmd bulkrename $vidir
 
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
+cmd touch $touch "$@"
+
 cmd extract ${{
     case "$f" in
         *.zip)
-            for f in *.zip; do
-                unzip "$f" -d "${f%.zip}"
+            for archive in *.zip; do
+                unzip "$archive" -d "${archive%.zip}"
             done
             ;;
         *.7z)
@@ -71,15 +160,15 @@ cmd extract ${{
             tar -xvf "$f"
             ;;
         *.tgz)
-            tar zxvf "$f"
+            tar -xzvf "$f"
             ;;
         *.rar)
-            for f in *.rar; do
-                unrar x "$f"
+            for archive in *.rar; do
+                unrar x "$archive"
             done
             ;;
         *)
-            echo "Unsupported format"
+            echo "Unsupported archive format"
             ;;
     esac
 }}
