@@ -1,0 +1,18 @@
+#!/bin/bash
+
+find . -type f -name '*.[A-Z]*' -print0 | while IFS= read -r -d '' file; do
+    # Extract the directory path
+    dir=$(dirname "$file")
+    # Extract the filename without path
+    base=$(basename "$file")
+    # Separate the name and extension
+    ext="${base##*.}"
+    name="${base%.*}"
+    # Convert extension to lowercase
+    lowercase_ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+
+    # Rename the file if the extension actually changed
+    if [ "$ext" != "$lowercase_ext" ]; then
+        mv "$file" "$dir/$name.$lowercase_ext"
+    fi
+done
