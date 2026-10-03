@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.1
 // @description  Hides star ratings, average scores, and written reviews on Letterboxd
-// @author       You
+// @author       mars31heaven
 // @match        https://letterboxd.com/*
 // @match        https://*.letterboxd.com/*
 // @grant        none

@@ -7,8 +7,8 @@
     header_background_color: "#383838",
     modal_background_color: "#101010",
 
-    // Quiet structure. Borders should not compete with content.
-    borders_style: (fg: "#555555"),
+    // Used for both layout separators and the queue total at bottom right.
+    borders_style: (fg: "#b8b8b2"),
 
     // Secondary emphasis: search matches, labels and non-current highlights.
     highlight_style: (fg: "#d8cfd8"),

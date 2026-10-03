@@ -347,7 +347,6 @@ sudo pacman -S --needed \
     libretro-mgba \
     libretro-overlays \
     libretro-snes9x \
-    librewolf \
     libva-utils \
     mako \
     man-db \
@@ -571,6 +570,7 @@ AUR_PACKAGES="
     puddletag
     task-spooler
     timr-bin
+    waterfox-bin
     wayclip
     zapzap
 "

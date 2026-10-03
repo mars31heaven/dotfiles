@@ -71,8 +71,6 @@ kill_recording() {
     cleanup_pidfile
 }
 
-# --- FIX 1: Fixed the wf-recorder arguments syntax ---
-# --- FIX 2: Swapped to 15 FPS / CRF 28 for your "low size" requirement ---
 record_screen() {
     local audio_source="$1"
     local output="$2"

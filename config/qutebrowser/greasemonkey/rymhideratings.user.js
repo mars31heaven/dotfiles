@@ -2,8 +2,8 @@
 // @name         RateYourMusic - Hide All Scores & Ratings
 // @namespace    http://tampermonkey.net
 // @version      1.3
-// @description  Globally hides user scores, star breakdowns, and track ratings on RYM to prevent bias.
-// @author       You
+// @description  Globally hides user scores, star breakdowns, and track ratings on RYM.
+// @author       mars31heaven
 // @match        *://*.rateyourmusic.com/*
 // @run-at       document-end
 // ==/UserScript==

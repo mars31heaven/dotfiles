@@ -61,6 +61,11 @@ bind-key r reload
 bind-key R reload-all
 bind-key ^B show-urls
 
+# Open article in w3m.
+macro w set browser "w3m" ; open-in-browser ; set browser "qutebrowser"
+
+macro r set browser "rdrview %u | w3m -T text/html" ; open-in-browser ; set browser "qutebrowser"
+
 # Open a selected media URL in mpv.
 macro v set browser "setsid -f mpv" ; open-in-browser ; set browser "qutebrowser"
 

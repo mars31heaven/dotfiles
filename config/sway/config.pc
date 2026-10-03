@@ -267,7 +267,7 @@ bindsym $mod+r mode "resize"
     bindsym $mod+Ctrl+Shift+l move container to output $monitor_right; focus output $monitor_right
 
     # Other shorcuts
-    bindsym $mod+Shift+w exec librewolf
+    bindsym $mod+Shift+w exec waterfox
     bindsym $mod+Ctrl+w exec thunderbird
 
     bindsym $mod+F4 exec wlsunset -t 4000 -T 4200
