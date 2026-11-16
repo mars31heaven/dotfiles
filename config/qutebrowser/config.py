@@ -282,12 +282,12 @@ config.bind(
 # Play videos with mpv.
 config.bind(
     ',v',
-    'spawn umpv {url}'
+    'spawn mpv --ytdl-format="bestvideo[height<=?1080]+bestaudio/best" {url}'
 )
 
 config.bind(
     ',V',
-    'hint links spawn umpv {hint-url}'
+    'hint links spawn mpv --ytdl-format="bestvideo[height<=?1080]+bestaudio/best" {hint-url}'
 )
 
 config.bind('your-key-here', 'mode-leave', mode='passthrough')
