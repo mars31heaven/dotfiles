@@ -1,15 +1,52 @@
-#!/bin/sh
-# Attach to the persistent "workspace" tmux session.
+#!/usr/bin/env sh
+#
+# Persistent tmux workspace:
+#
+#   1. shell — starts rain, then becomes an interactive zsh shell
+#   2. lf
+#   3. nvim
+#   4. wiki
+#
 
-SESSION=workspace
+SESSION="workspace"
 
-if tmux has-session -t "=$SESSION" 2>/dev/null; then
-    exec tmux attach-session -t "=$SESSION"
+# Attach directly if the workspace already exists.
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    exec tmux attach-session -t "$SESSION"
 fi
 
-exec tmux new-session -s "$SESSION" -n nvim -c "$HOME" nvim \; \
-    split-window -v -c "$HOME" zsh \; \
-    select-pane -t "$SESSION:nvim.1" \; \
-    new-window -d -n lf -c "$HOME" 'zsh -ic "lfcd; exec zsh -i"' \; \
-    new-window -d -n wiki -c "$HOME" 'nvim +VimwikiIndex' \; \
-    select-window -t "$SESSION:nvim"
+# Window 1: rain runs first.
+#
+# When rain exits, for example with q, exec replaces it with a normal,
+# interactive Zsh shell in the same pane.
+tmux new-session -d \
+    -s "$SESSION" \
+    -n "shell" \
+    -c "$HOME" \
+    'rain; exec zsh -i'
+
+# Window 2: lf.
+tmux new-window \
+    -t "$SESSION:" \
+    -n "lf" \
+    -c "$HOME" \
+    zsh -ic 'lfcd; exec zsh -i'
+
+# Window 3: Neovim.
+tmux new-window \
+    -t "$SESSION:" \
+    -n "nvim" \
+    -c "$HOME" \
+    nvim
+
+# Window 4: Vimwiki.
+tmux new-window \
+    -t "$SESSION:" \
+    -n "wiki" \
+    -c "$HOME" \
+    'nvim +VimwikiIndex'
+
+# Begin in window 1.
+tmux select-window -t "$SESSION:shell"
+
+exec tmux attach-session -t "$SESSION"

@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # Root commands
 for command in mount umount reboot poweroff shutdown pacman rsm; do
     alias "$command"="sudo $command"
@@ -89,4 +87,41 @@ alias \
     hw="hwinfo --short" \
     printdraft="lp -o Draft" \
     mm="mpv --profile=music" \
-    filterflac="fd -e flac -x echo "{//}" | sort -u"
+    findflac="fd -e flac -x echo "{//}" | sort -u" \
+    burncdr="cdrecord -v -sao speed=4 dev=/dev/sr0 -audio -pad *.wav" \
+    ae="audio_edit.py"
+
+# ── MPD / MPC ────────────────────────────────────────────────
+
+alias mp='mpc'
+
+# Playback
+alias mps='mpc status'
+alias mpn='mpc current'
+alias mpp='mpc toggle'
+alias mpnext='mpc next'
+alias mpprev='mpc prev'
+alias mpstop='mpc stop'
+
+# Queue
+alias mpq='mpc playlist'
+alias mpql='mpc playlist | nl -ba -w3 -s"  "'
+alias mpclear='mpc clear'
+
+# Current track information
+alias mpfile="mpc -f '%file%' current"
+alias mpinfo="mpc -f '%artist% — %album% — %title%\n%file%' current"
+
+# Playback modes
+alias mpr='mpc random'
+alias mprepeat='mpc repeat'
+alias mpconsume='mpc consume'
+alias mpsingle='mpc single'
+
+# Library and playlists
+alias mplists='mpc lsplaylists'
+alias mpstats='mpc stats'
+alias mpupdate='mpc update'
+
+# Full interactive manager
+alias mpf='mpc-fzf'

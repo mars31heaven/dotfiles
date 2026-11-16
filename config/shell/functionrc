@@ -2,7 +2,53 @@
 
 o() {
     local file
-    file=$(find . -type f -not -path '*/.git/*' | fzf --layout=reverse) || return
+    local preview_script
+    local fzf_preview_script
+
+    # Locate your existing lf preview script.
+    #
+    # This can be a symlink in ~/.dotfiles/bin, provided it is executable.
+    preview_script="$(command -v preview)" || {
+        print -u2 "Error: preview was not found in PATH."
+        return 1
+    }
+
+    fzf_preview_script="$(command -v fzf_preview)" || {
+        print -u2 "Error: fzf_preview was not found in PATH."
+        return 1
+    }
+
+    if [[ ! -x "$preview_script" ]]; then
+        print -u2 "Error: preview is not executable: $preview_script"
+        return 1
+    fi
+
+    if [[ ! -x "$fzf_preview_script" ]]; then
+        print -u2 "Error: fzf_preview is not executable: $fzf_preview_script"
+        return 1
+    fi
+
+    # fzf preview processes inherit exported variables.
+    export PREVIEW_SCRIPT="$preview_script"
+
+    file="$(
+        find "$PWD" \
+            -mindepth 1 \
+            \( -type d -name '.*' -prune \) -o \
+            \( -type f ! -name '.*' -print \) \
+            2>/dev/null |
+        fzf \
+            --layout=reverse \
+            --height='85%' \
+            --border \
+            --prompt='Open file> ' \
+            --header="From: $PWD | Hidden child files/directories excluded" \
+            --preview="$fzf_preview_script {} \$FZF_PREVIEW_COLUMNS" \
+            --preview-window='right:65%:wrap'
+    )" || return
+
+    [[ -n "$file" ]] || return
+
     open "$file"
 }
 
@@ -42,19 +88,315 @@ if [ -n "$BASH_VERSION" ]; then
     export -f rotate
 fi
 
-rac() {
+
+# ── MPD / MPC ────────────────────────────────────────────────
+
+# Load a saved playlist, replacing the current queue.
+#
+# Usage:
+#   mpload "Playlist Name"
+mpload() {
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpload \"Playlist Name\""
+        return 1
+    }
+
     mpc clear
-    mpc findadd album "$(mpc list album | shuf -n 1)"
+    mpc load "$1"
     mpc play
 }
 
-rad() {
-    mpc findadd album "$(mpc list album | shuf -n 1)"
+# Add a saved playlist to the end of the current queue.
+#
+# Usage:
+#   mpappend "Playlist Name"
+mpappend() {
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpappend \"Playlist Name\""
+        return 1
+    }
+
+    mpc load "$1"
 }
+
+# Save the current queue as an MPD playlist.
+#
+# Usage:
+#   mpsave "Playlist Name"
+mpsave() {
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpsave \"Playlist Name\""
+        return 1
+    }
+
+    mpc save "$1"
+}
+
+# Add the currently playing track to a saved playlist.
+#
+# Usage:
+#   mpaddcurrent "Playlist Name"
+mpaddcurrent() {
+    local track
+
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpaddcurrent \"Playlist Name\""
+        return 1
+    }
+
+    track=$(mpc -f '%file%' current)
+
+    [[ -n "$track" ]] || {
+        print -u2 "No current MPD track."
+        return 1
+    }
+
+    mpc playlistadd "$1" "$track"
+    print -r -- "Added current track to: $1"
+}
+
+# Select a saved playlist with fzf and add the current track.
+mpaddcurrentfzf() {
+    local track playlist
+
+    track=$(mpc -f '%file%' current)
+
+    [[ -n "$track" ]] || {
+        print -u2 "No current MPD track."
+        return 1
+    }
+
+    playlist=$(mpc lsplaylists | fzf \
+        --prompt='Add current track to > ' \
+        --height=60% \
+        --layout=reverse \
+        --border) || return
+
+    mpc playlistadd "$playlist" "$track"
+    print -r -- "Added current track to: $playlist"
+}
+
+# Search all tags.
+#
+# Usage:
+#   mpsearch "search text"
+mpsearch() {
+    mpc search any "$*"
+}
+
+# Show tracks matching an album name.
+#
+# Usage:
+#   mpalbum "Album Name"
+mpalbum() {
+    mpc -f '%artist% — %album% — %track% — %title%' find album "$*"
+}
+
+# Add a full album to the end of the current queue.
+#
+# Usage:
+#   mpaddalbum "Album Name"
+mpaddalbum() {
+    local track
+
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpaddalbum \"Album Name\""
+        return 1
+    }
+
+    while IFS= read -r track; do
+        [[ -n "$track" ]] && mpc add "$track"
+    done < <(mpc -f '%file%' find album "$*")
+}
+
+# Replace the queue with an album and start playback.
+#
+# Usage:
+#   mpplayalbum "Album Name"
+mpplayalbum() {
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpplayalbum \"Album Name\""
+        return 1
+    }
+
+    mpc clear
+    mpaddalbum "$*"
+    mpc play
+}
+
+# Add a random full album to the queue.
+rad() {
+    local album
+
+    album=$(mpc list album | sed '/^[[:space:]]*$/d' | shuf -n 1) || return
+    [[ -n "$album" ]] || return
+
+    mpaddalbum "$album"
+    print -r -- "Added random album: $album"
+}
+
+# Clear the queue, play a random full album.
+rac() {
+    local album
+
+    album=$(mpc list album | sed '/^[[:space:]]*$/d' | shuf -n 1) || return
+    [[ -n "$album" ]] || return
+
+    mpc clear
+    mpaddalbum "$album"
+    mpc play
+
+    print -r -- "Playing random album: $album"
+}
+
+# Add a selected number of random library tracks.
+#
+# Usage:
+#   mprand       # Adds 5 tracks
+#   mprand 20    # Adds 20 tracks
+mprand() {
+    local count="${1:-5}"
+    local track
+
+    while IFS= read -r track; do
+        [[ -n "$track" ]] && mpc add "$track"
+    done < <(
+        mpc listall |
+            grep -Ei '\.(flac|mp3|ogg|opus|m4a|aac|wav|aiff|alac)$' |
+            shuf -n "$count"
+    )
+}
+
+# Select a track using fzf and add it to the queue.
+mpadd() {
+    local track
+
+    track=$(
+        mpc listall |
+            grep -Ei '\.(flac|mp3|ogg|opus|m4a|aac|wav|aiff|alac)$' |
+            fzf \
+                --prompt='Add track > ' \
+                --height=70% \
+                --layout=reverse \
+                --border
+    ) || return
+
+    mpc add "$track"
+}
+
+# Select an album using fzf and add it to the queue.
+mpaddalbumfzf() {
+    local album
+
+    album=$(
+        mpc list album |
+            sed '/^[[:space:]]*$/d' |
+            sort -f |
+            fzf \
+                --prompt='Add album > ' \
+                --height=70% \
+                --layout=reverse \
+                --border \
+                --preview='mpc -f "%artist% — %track% — %title%" find album "{}" 2>/dev/null | head -n 30' \
+                --preview-window='right:55%:wrap'
+    ) || return
+
+    mpaddalbum "$album"
+}
+
+# Select an album using fzf, replace the queue, and start playback.
+mpplayalbumfzf() {
+    local album
+
+    album=$(
+        mpc list album |
+            sed '/^[[:space:]]*$/d' |
+            sort -f |
+            fzf \
+                --prompt='Play album > ' \
+                --height=70% \
+                --layout=reverse \
+                --border \
+                --preview='mpc -f "%artist% — %track% — %title%" find album "{}" 2>/dev/null | head -n 30' \
+                --preview-window='right:55%:wrap'
+    ) || return
+
+    mpplayalbum "$album"
+}
+
+# Insert a selected library track directly after the current track.
+# If no track is currently playing, append it normally.
+mpnextfzf() {
+    local track displayed_position queue_count current_position insert_position
+
+    track=$(
+        mpc listall |
+            grep -Ei '\.(flac|mp3|ogg|opus|m4a|aac|wav|aiff|alac)$' |
+            fzf \
+                --prompt='Queue next > ' \
+                --height=70% \
+                --layout=reverse \
+                --border
+    ) || return
+
+    displayed_position=$(
+        mpc status |
+            sed -nE 's/.*#([0-9]+)\/[0-9]+.*/\1/p' |
+            head -n 1
+    )
+
+    if [[ -z "$displayed_position" ]]; then
+        mpc add "$track"
+        print -r -- "No active track; added to queue end."
+        return
+    fi
+
+    current_position=$((displayed_position - 1))
+    insert_position=$((current_position + 1))
+    queue_count=$(mpc playlist | wc -l | tr -d ' ')
+
+    mpc add "$track"
+    mpc move "$queue_count" "$insert_position"
+
+    print -r -- "Queued next: $track"
+}
+
+# Display MPD database roots.
+# Helpful when library paths are organized by local drive or mount name.
+mproots() {
+    mpc listall |
+        awk -F/ 'NF > 1 { print $1 }' |
+        sort -fu
+}
+
+# Update one MPD library subdirectory.
+#
+# Usage:
+#   mpupdatepath "External Drive"
+#   mpupdatepath "Archive/Live"
+mpupdatepath() {
+    [[ -n "$1" ]] || {
+        print -u2 "Usage: mpupdatepath \"MPD relative path\""
+        return 1
+    }
+
+    mpc update "$*"
+}
+
 
 # ── Personal shortcuts ───────────────────────────────────────
 
-bindkey -s '^o' 'lfcd\n'
+# Open lf in the active shell and keep lf's final directory.
+lfcd_widget() {
+    zle -I
+    lfcd
+    zle reset-prompt
+}
+
+zle -N lfcd_widget
+bindkey -M emacs '^O' lfcd_widget
+bindkey -M viins '^O' lfcd_widget
+
 bindkey -s '^a' 'bc -lq\n'
 bindkey -s '^f' 'fcd\n'
 

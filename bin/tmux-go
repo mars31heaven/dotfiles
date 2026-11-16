@@ -1,35 +1,39 @@
-#!/bin/sh
-# Manage the persistent foot + tmux workspace.
+#!/usr/bin/env sh
+#
+# tmux-go
+#
+# Manage the persistent Foot + tmux workspace.
+#
+# Workspace windows:
+#
+#   shell  -> starts rain, then becomes zsh when rain exits
+#   lf
+#   nvim
+#   wiki
 #
 # Usage:
+#
 #   tmux-go focus
-#       Focus the persistent terminal without changing tmux state.
-#
-#   tmux-go new
-#       Create a new zsh tmux window in the active pane's directory.
-#
-#   tmux-go nvim
-#       Select the Neovim window, creating it if missing.
-#
-#   tmux-go wiki
-#       Select the Vimwiki window, creating it if missing.
-#
+#   tmux-go shell
 #   tmux-go lf
-#       Select lf, creating it through the lfcd zsh function if missing.
+#   tmux-go nvim
+#   tmux-go wiki
+#   tmux-go new
 #
-#   tmux-go news
-#       Select Newsboat, creating it if missing.
-#
-#   tmux-go NAME [COMMAND...]
-#       Select tmux window NAME. Create it with COMMAND if it is missing.
 
-SESSION=workspace
-APP_ID=foot-tmux
+SESSION="workspace"
+APP_ID="foot-tmux"
 BIN_DIR="$HOME/.dotfiles/bin"
 
 usage() {
-    printf '%s\n' "usage: ${0##*/} focus | new | NAME [COMMAND...]" >&2
+    printf '%s\n' \
+        "Usage: ${0##*/} focus | shell | lf | nvim | wiki | new" \
+        >&2
     exit 1
+}
+
+has_tmux_session() {
+    tmux has-session -t "$SESSION" 2>/dev/null
 }
 
 has_foot_window() {
@@ -44,11 +48,13 @@ focus_foot_window() {
 wait_for_tmux_session() {
     tries=0
 
-    until tmux has-session -t "=$SESSION" 2>/dev/null; do
+    until has_tmux_session; do
         tries=$((tries + 1))
 
         if [ "$tries" -gt 100 ]; then
-            printf '%s\n' "Timed out waiting for tmux session: $SESSION" >&2
+            printf '%s\n' \
+                "Timed out waiting for tmux session: $SESSION" \
+                >&2
             exit 1
         fi
 
@@ -56,95 +62,120 @@ wait_for_tmux_session() {
     done
 }
 
-[ "$#" -ge 1 ] || usage
+start_workspace_terminal() {
+    #
+    # Existing tmux session:
+    # Start a new Foot client attached to the existing workspace.
+    #
+    # No tmux session:
+    # Start tmux-attach, which creates the shell, lf, nvim, and wiki windows.
+    #
+    if has_tmux_session; then
+        foot \
+            --app-id="$APP_ID" \
+            -e tmux attach-session -t "$SESSION" &
+    else
+        foot \
+            --app-id="$APP_ID" \
+            -e "$BIN_DIR/tmux-attach" &
+
+        wait_for_tmux_session
+    fi
+}
+
+ensure_workspace_terminal() {
+    #
+    # Recovery behaviour:
+    #
+    # If the Foot tmux terminal was accidentally closed, but the persistent
+    # tmux session is still alive, this opens a new Foot terminal and
+    # reconnects it to the same session.
+    #
+    if ! has_foot_window; then
+        start_workspace_terminal
+    fi
+}
+
+select_or_create_shell() {
+    if ! tmux select-window -t "$SESSION:shell" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "shell" \
+            -c "$HOME" \
+            'rain; exec zsh -i'
+    fi
+}
+
+select_or_create_lf() {
+    if ! tmux select-window -t "$SESSION:lf" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "lf" \
+            -c "$HOME" \
+            zsh -ic 'lfcd; exec zsh -i'
+    fi
+}
+
+select_or_create_nvim() {
+    if ! tmux select-window -t "$SESSION:nvim" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "nvim" \
+            -c "$HOME" \
+            nvim
+    fi
+}
+
+select_or_create_wiki() {
+    if ! tmux select-window -t "$SESSION:wiki" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "wiki" \
+            -c "$HOME" \
+            'nvim +VimwikiIndex'
+    fi
+}
+
+new_shell_window() {
+    tmux new-window \
+        -t "$SESSION:" \
+        -c "#{pane_current_path}" \
+        zsh -i
+}
+
+[ "$#" -eq 1 ] || usage
 
 action=$1
-shift
 
-# Start the persistent terminal if it is not running.
-#
-# tmux-attach creates the workspace session on first launch.
-if ! tmux has-session -t "=$SESSION" 2>/dev/null; then
-    if ! has_foot_window; then
-        foot --app-id="$APP_ID" -e "$BIN_DIR/tmux-attach" &
-    fi
-
-    wait_for_tmux_session
-fi
+ensure_workspace_terminal
 
 case "$action" in
     focus)
-        # Keep the active tmux window and pane exactly as they are.
+        # Keep the active tmux window and pane unchanged.
         ;;
 
-    new)
-        # Create a normal shell window in the directory of the active pane.
-        tmux new-window \
-            -t "=$SESSION:" \
-            -c "#{pane_current_path}" \
-            zsh
-        ;;
-
-    nvim)
-        if ! tmux select-window -t "=$SESSION:=nvim" 2>/dev/null; then
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n nvim \
-                -c "$HOME" \
-                nvim
-        fi
-        ;;
-
-    wiki)
-        if ! tmux select-window -t "=$SESSION:=wiki" 2>/dev/null; then
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n wiki \
-                -c "$HOME" \
-                'nvim +VimwikiIndex'
-        fi
+    shell)
+        select_or_create_shell
         ;;
 
     lf)
-        if ! tmux select-window -t "=$SESSION:=lf" 2>/dev/null; then
-            # zsh -i loads ~/.zshrc, where lfcd is defined.
-            #
-            # When lf exits, lfcd changes the shell directory to lf's last
-            # directory. exec zsh -i keeps that shell open in the new path.
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n lf \
-                -c "$HOME" \
-                zsh -ic 'lfcd; exec zsh -i'
-        fi
+        select_or_create_lf
         ;;
 
-    news)
-        if ! tmux select-window -t "=$SESSION:=news" 2>/dev/null; then
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n news \
-                -c "$HOME" \
-                newsboat
-        fi
+    nvim)
+        select_or_create_nvim
+        ;;
+
+    wiki)
+        select_or_create_wiki
+        ;;
+
+    new)
+        new_shell_window
         ;;
 
     *)
-        if tmux select-window -t "=$SESSION:=$action" 2>/dev/null; then
-            :
-        elif [ "$#" -gt 0 ]; then
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n "$action" \
-                -c "#{pane_current_path}" \
-                "$@"
-        else
-            tmux new-window \
-                -t "=$SESSION:" \
-                -n "$action" \
-                -c "#{pane_current_path}" \
-                zsh
-        fi
+        usage
         ;;
 esac
 

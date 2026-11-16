@@ -1,7 +1,40 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-fd -t f -e flac -x ffmpeg -i "{}" -c:a libopus -b:a 160k "{.}.opus"
-fd -t f -e wav  -x ffmpeg -i "{}" -c:a libopus -b:a 160k "{.}.opus"
+set -u
 
-fd -t f -e flac -x sh -c '[ -f "{.}.opus" ] && rm "{}"'
-fd -t f -e wav  -x sh -c '[ -f "{.}.opus" ] && rm "{}"'
+BITRATE="192k"
+
+fd --type f --extension flac --extension wav --print0 |
+while IFS= read -r -d '' input; do
+    output="${input%.*}.opus"
+    temporary="${input%.*}.tmp.opus"
+
+    # Do not overwrite an existing Opus conversion.
+    if [[ -e "$output" ]]; then
+        printf 'SKIP: output already exists: %s\n' "$output"
+        continue
+    fi
+
+    printf 'CONVERTING: %s\n' "$input"
+
+    if ffmpeg \
+        -hide_banner \
+        -nostdin \
+        -i "$input" \
+        -map 0:a:0 \
+        -map_metadata 0 \
+        -c:a libopus \
+        -b:a "$BITRATE" \
+        -vbr on \
+        "$temporary"; then
+
+        mv -- "$temporary" "$output"
+
+        rm -- "$input"
+
+        printf 'DONE: %s\n' "$output"
+    else
+        printf 'FAILED: %s\n' "$input" >&2
+        rm -f -- "$temporary"
+    fi
+done

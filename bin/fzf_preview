@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# fzf_preview
+#
+# Wrapper used by fzf.
+# Uses the existing lf-compatible preview script defined in PREVIEW_SCRIPT.
+# Plays audio through mpv using its normal/system volume.
+
+FILE="$1"
+WIDTH="${2:-80}"
+
+[ -f "$FILE" ] || exit 0
+
+"$PREVIEW_SCRIPT" "$FILE" "$WIDTH"
+
+case "$FILE" in
+    *.mp3|*.MP3|*.flac|*.FLAC|*.wav|*.WAV|*.ogg|*.OGG|*.opus|*.OPUS|\
+    *.aiff|*.AIFF|*.aif|*.AIF|*.m4a|*.M4A|*.aac|*.AAC|*.wma|*.WMA)
+
+        command -v mpv >/dev/null 2>&1 || exit 0
+
+        # mpv uses its usual configuration and system output volume.
+        #
+        # fzf stops the active preview command when selection changes.
+        # mpv stays in the foreground so it ends with that preview process.
+        exec mpv \
+            --no-video \
+            --no-terminal \
+            --really-quiet \
+            --audio-display=no \
+            -- "$FILE" 2>/dev/null
+        ;;
+esac

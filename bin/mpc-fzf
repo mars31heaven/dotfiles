@@ -1,0 +1,603 @@
+#!/usr/bin/env bash
+#
+# mpc-fzf-manager
+#
+# Global MPD library, queue, and saved-playlist manager using mpc + fzf.
+#
+# Features:
+#   - Add individual tracks to the current queue
+#   - Add full albums to the current queue
+#   - Queue a track immediately after the currently playing track
+#   - Queue a full album immediately after the currently playing track
+#   - Add tracks or albums to existing saved playlists
+#   - Create playlists from tracks or albums
+#   - Add the currently playing track to an existing saved playlist
+#   - Create a new saved playlist containing the currently playing track
+#   - Browse, load, save, and edit saved MPD playlists
+#
+# Escape behaviour:
+#   - Esc inside a submenu returns to the previous menu.
+#   - Esc in the main menu exits the script.
+#
+# Requirements:
+#   mpc
+#   fzf
+#
+# Usage:
+#   mpc-fzf-manager
+#
+
+set -euo pipefail
+
+command -v mpc >/dev/null 2>&1 || {
+    echo "mpc-fzf-manager: mpc was not found in PATH." >&2
+    exit 1
+}
+
+command -v fzf >/dev/null 2>&1 || {
+    echo "mpc-fzf-manager: fzf was not found in PATH." >&2
+    exit 1
+}
+
+FZF_BASE=(
+    --height=70%
+    --layout=reverse
+    --border
+    --cycle
+)
+
+pause_message() {
+    printf '\n%s\n\n' "$1"
+    read -r -p "Press Enter to continue..." _
+}
+
+choose_track() {
+    mpc listall |
+        awk '
+            /\.(flac|mp3|ogg|opus|m4a|aac|wav|aiff|alac)$/i
+        ' |
+        fzf \
+            "${FZF_BASE[@]}" \
+            --prompt="Track > " \
+            --preview='printf "%s\n" "{}"' \
+            --preview-window=down:3:wrap
+}
+
+choose_album() {
+    #
+    # Uses MPD Album tags. If several artists use exactly the same album
+    # title, MPD may show one combined album-name entry.
+    #
+    mpc list Album |
+        sed '/^[[:space:]]*$/d' |
+        sort -f |
+        fzf \
+            "${FZF_BASE[@]}" \
+            --prompt="Album > " \
+            --preview='mpc -f "%artist% — %title%" find album "{}" 2>/dev/null | head -n 25' \
+            --preview-window=right:55%:wrap
+}
+
+choose_saved_playlist() {
+    mpc lsplaylists |
+        fzf \
+            "${FZF_BASE[@]}" \
+            --prompt="Saved playlist > "
+}
+
+current_track_file() {
+    #
+    # Returns the MPD-relative file path for the current playing track.
+    #
+    # Example:
+    #   Artist/Album/01 Track.flac
+    #
+    mpc -f '%file%' current
+}
+
+album_files() {
+    local album=$1
+
+    #
+    # %file% returns MPD-relative paths usable by:
+    #
+    #   mpc add
+    #   mpc playlistadd
+    #
+    mpc -f '%file%' find album "$album"
+}
+
+current_queue_count() {
+    mpc playlist | wc -l | tr -d ' '
+}
+
+current_position_zero_based() {
+    #
+    # Typical mpc status line:
+    #
+    #   [playing] #4/28   0:54/3:48 (23%)
+    #
+    # MPD positions are zero-based:
+    #
+    #   #4 displayed by mpc = MPD queue position 3
+    #
+    local displayed_position
+
+    displayed_position=$(
+        mpc status |
+            sed -nE 's/.*#([0-9]+)\/[0-9]+.*/\1/p' |
+            head -n 1
+    )
+
+    if [[ -z "$displayed_position" ]]; then
+        printf '%s\n' "-1"
+        return
+    fi
+
+    printf '%s\n' "$((displayed_position - 1))"
+}
+
+append_track() {
+    local track=$1
+
+    mpc add "$track"
+}
+
+append_album() {
+    local album=$1
+    local track
+    local added=0
+
+    while IFS= read -r track; do
+        [[ -z "$track" ]] && continue
+        mpc add "$track"
+        added=$((added + 1))
+    done < <(album_files "$album")
+
+    printf '%s\n' "$added"
+}
+
+queue_track_next() {
+    local track=$1
+    local queue_count_before
+    local current_position
+    local insertion_position
+    local added_position
+
+    current_position=$(current_position_zero_based)
+
+    if [[ "$current_position" -lt 0 ]]; then
+        mpc add "$track"
+
+        pause_message "No active track was detected.
+
+Added to the end of the current queue:
+
+$track"
+        return
+    fi
+
+    #
+    # Add at queue end, then move to directly after the playing track.
+    #
+    queue_count_before=$(current_queue_count)
+    added_position=$queue_count_before
+    insertion_position=$((current_position + 1))
+
+    mpc add "$track"
+    mpc move "$added_position" "$insertion_position"
+}
+
+queue_album_next() {
+    local album=$1
+    local current_position
+    local insertion_position
+    local queue_count_before
+    local added_position
+    local track
+    local index
+    local tracks=()
+
+    while IFS= read -r track; do
+        [[ -n "$track" ]] && tracks+=("$track")
+    done < <(album_files "$album")
+
+    if [[ ${#tracks[@]} -eq 0 ]]; then
+        pause_message "No tracks were found for this album:
+
+$album"
+        return
+    fi
+
+    current_position=$(current_position_zero_based)
+
+    if [[ "$current_position" -lt 0 ]]; then
+        for track in "${tracks[@]}"; do
+            mpc add "$track"
+        done
+
+        pause_message "No active track was detected.
+
+Added album to the end of the current queue:
+
+$album"
+        return
+    fi
+
+    #
+    # Add the album to the end first.
+    #
+    queue_count_before=$(current_queue_count)
+
+    for track in "${tracks[@]}"; do
+        mpc add "$track"
+    done
+
+    #
+    # Move each newly appended track to the insertion position.
+    #
+    # The source position stays the same because, after every move, the next
+    # album track becomes the first remaining item at the old queue end.
+    #
+    insertion_position=$((current_position + 1))
+    added_position=$queue_count_before
+
+    for ((index = 0; index < ${#tracks[@]}; index++)); do
+        mpc move "$added_position" "$((insertion_position + index))"
+    done
+}
+
+add_track_to_saved_playlist() {
+    local playlist=$1
+    local track=$2
+
+    mpc playlistadd "$playlist" "$track"
+}
+
+add_album_to_saved_playlist() {
+    local playlist=$1
+    local album=$2
+    local track
+    local added=0
+
+    while IFS= read -r track; do
+        [[ -z "$track" ]] && continue
+        mpc playlistadd "$playlist" "$track"
+        added=$((added + 1))
+    done < <(album_files "$album")
+
+    printf '%s\n' "$added"
+}
+
+add_current_track_to_saved_playlist() {
+    local playlist
+    local track
+
+    track=$(current_track_file)
+
+    if [[ -z "$track" ]]; then
+        pause_message "No current track was detected."
+        return
+    fi
+
+    playlist=$(choose_saved_playlist) || return
+    [[ -n "$playlist" ]] || return
+
+    mpc playlistadd "$playlist" "$track"
+
+    pause_message "Added current track to saved playlist:
+
+$playlist
+
+Track:
+$track"
+}
+
+create_playlist_and_add_current_track() {
+    local playlist
+    local track
+
+    track=$(current_track_file)
+
+    if [[ -z "$track" ]]; then
+        pause_message "No current track was detected."
+        return
+    fi
+
+    read -r -p "New playlist name: " playlist
+    [[ -n "$playlist" ]] || return
+
+    #
+    # MPD creates the saved playlist when playlistadd is called.
+    #
+    mpc playlistadd "$playlist" "$track"
+
+    pause_message "Created saved playlist:
+
+$playlist
+
+Added current track:
+$track"
+}
+
+queue_menu() {
+    local action
+    local track
+    local album
+    local added
+    local confirmation
+
+    while true; do
+        action=$(
+            printf '%s\n' \
+                "Add track to end of queue" \
+                "Add full album to end of queue" \
+                "Queue track after current track" \
+                "Queue full album after current track" \
+                "Show current queue" \
+                "Clear current queue" |
+                fzf \
+                    "${FZF_BASE[@]}" \
+                    --prompt="Current queue > "
+        ) || return
+
+        case "$action" in
+            "Add track to end of queue")
+                track=$(choose_track) || continue
+                append_track "$track"
+
+                pause_message "Added to the end of the current queue:
+
+$track"
+                ;;
+
+            "Add full album to end of queue")
+                album=$(choose_album) || continue
+                added=$(append_album "$album")
+
+                pause_message "Added $added track(s) to the end of the queue:
+
+$album"
+                ;;
+
+            "Queue track after current track")
+                track=$(choose_track) || continue
+                queue_track_next "$track"
+
+                pause_message "Queued immediately after the current track:
+
+$track"
+                ;;
+
+            "Queue full album after current track")
+                album=$(choose_album) || continue
+                queue_album_next "$album"
+
+                pause_message "Queued album immediately after the current track:
+
+$album"
+                ;;
+
+            "Show current queue")
+                mpc playlist |
+                    nl -ba -w3 -s'  ' |
+                    fzf \
+                        "${FZF_BASE[@]}" \
+                        --prompt="Current queue > " \
+                        --preview='printf "%s\n" "{}"' \
+                        --preview-window=down:3:wrap ||
+                    true
+                ;;
+
+            "Clear current queue")
+                read -r -p "Clear the current MPD queue? [y/N] " confirmation
+
+                if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+                    mpc clear
+                    pause_message "Current queue cleared."
+                fi
+                ;;
+        esac
+    done
+}
+
+saved_playlist_menu() {
+    local action
+    local playlist
+    local track
+    local album
+    local added
+    local selection
+    local playlist_position
+    local confirmation
+
+    while true; do
+        action=$(
+            printf '%s\n' \
+                "Add current track to saved playlist" \
+                "Create playlist and add current track" \
+                "Add track to saved playlist" \
+                "Add full album to saved playlist" \
+                "Create playlist and add track" \
+                "Create playlist and add full album" \
+                "Browse saved playlist" \
+                "Delete track from saved playlist" \
+                "Load saved playlist into queue" \
+                "Save current queue as playlist" |
+                fzf \
+                    "${FZF_BASE[@]}" \
+                    --prompt="Saved playlists > "
+        ) || return
+
+        case "$action" in
+            "Add current track to saved playlist")
+                add_current_track_to_saved_playlist
+                ;;
+
+            "Create playlist and add current track")
+                create_playlist_and_add_current_track
+                ;;
+
+            "Add track to saved playlist")
+                playlist=$(choose_saved_playlist) || continue
+                track=$(choose_track) || continue
+
+                add_track_to_saved_playlist "$playlist" "$track"
+
+                pause_message "Added track to saved playlist:
+
+$playlist
+
+Track:
+$track"
+                ;;
+
+            "Add full album to saved playlist")
+                playlist=$(choose_saved_playlist) || continue
+                album=$(choose_album) || continue
+                added=$(add_album_to_saved_playlist "$playlist" "$album")
+
+                pause_message "Added $added track(s) to saved playlist:
+
+$playlist
+
+Album:
+$album"
+                ;;
+
+            "Create playlist and add track")
+                read -r -p "New playlist name: " playlist
+                [[ -n "$playlist" ]] || continue
+
+                track=$(choose_track) || continue
+                add_track_to_saved_playlist "$playlist" "$track"
+
+                pause_message "Created saved playlist:
+
+$playlist
+
+Added:
+$track"
+                ;;
+
+            "Create playlist and add full album")
+                read -r -p "New playlist name: " playlist
+                [[ -n "$playlist" ]] || continue
+
+                album=$(choose_album) || continue
+                added=$(add_album_to_saved_playlist "$playlist" "$album")
+
+                pause_message "Created saved playlist:
+
+$playlist
+
+Added $added track(s) from:
+$album"
+                ;;
+
+            "Browse saved playlist")
+                playlist=$(choose_saved_playlist) || continue
+
+                mpc playlist "$playlist" |
+                    nl -ba -w3 -s'  ' |
+                    fzf \
+                        "${FZF_BASE[@]}" \
+                        --prompt="$playlist > " \
+                        --preview='printf "%s\n" "{}"' \
+                        --preview-window=down:3:wrap ||
+                    true
+                ;;
+
+            "Delete track from saved playlist")
+                playlist=$(choose_saved_playlist) || continue
+
+                selection=$(
+                    mpc playlist "$playlist" |
+                        nl -ba -w3 -s'  ' |
+                        fzf \
+                            "${FZF_BASE[@]}" \
+                            --prompt="Delete from $playlist > "
+                ) || continue
+
+                playlist_position=$(awk '{print $1 - 1}' <<< "$selection")
+
+                mpc playlistdelete "$playlist" "$playlist_position"
+
+                pause_message "Deleted selected entry from:
+
+$playlist"
+                ;;
+
+            "Load saved playlist into queue")
+                playlist=$(choose_saved_playlist) || continue
+
+                read -r -p "Replace current queue with '$playlist'? [y/N] " confirmation
+
+                if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+                    mpc clear
+                    mpc load "$playlist"
+
+                    pause_message "Loaded into current queue:
+
+$playlist"
+                fi
+                ;;
+
+            "Save current queue as playlist")
+                read -r -p "Saved playlist name: " playlist
+                [[ -n "$playlist" ]] || continue
+
+                mpc save "$playlist"
+
+                pause_message "Saved current queue as:
+
+$playlist"
+                ;;
+        esac
+    done
+}
+
+main() {
+    local action
+    local track
+
+    while true; do
+        action=$(
+            printf '%s\n' \
+                "Manage current queue" \
+                "Manage saved playlists" \
+                "Play a library track now" \
+                "Update MPD database" |
+                fzf \
+                    "${FZF_BASE[@]}" \
+                    --prompt="MPD manager > "
+        ) || exit 0
+
+        case "$action" in
+            "Manage current queue")
+                queue_menu
+                ;;
+
+            "Manage saved playlists")
+                saved_playlist_menu
+                ;;
+
+            "Play a library track now")
+                track=$(choose_track) || continue
+                mpc add "$track"
+                mpc play
+
+                pause_message "Added and started playback:
+
+$track"
+                ;;
+
+            "Update MPD database")
+                mpc update
+                pause_message "MPD database update started."
+                ;;
+        esac
+    done
+}
+
+main

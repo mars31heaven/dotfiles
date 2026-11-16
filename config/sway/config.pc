@@ -279,8 +279,6 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+p exec fuzzpass
 
-    bindsym $mod+Shift+p exec mpc toggle
-
     bindsym $mod+Shift+r exec fuzzrec
 
     bindsym $mod+Shift+f exec fsearch
@@ -332,26 +330,31 @@ bindsym $mod+r mode "resize"
 
     exec wlsunset -t 4000 -T 4200
 
+    exec python3 ~/.dotfiles/bin/smart_active.py
+
 # Persistent terminal workspace
 
     set $bin ~/.dotfiles/bin
 
 # Workspace assignments.
     assign [app_id="foot-tmux"]          workspace number 1
-    assign [app_id="qutebrowser"]        workspace number 2
-    assign [app_id="com.rtosta.zapzap"]  workspace number 3
-    assign [class="REAPER"]              workspace number 4
     assign [app_id="rmpc"]               workspace number 5
 
-# Return to the current persistent tmux window and pane.
+# Persistent Foot + tmux workspace.
+#
+# If Foot is closed accidentally, tmux-go opens a new Foot window and
+# attaches it to the existing persistent workspace tmux session.
+
+# Return to whichever tmux window and pane were last active.
     bindsym $mod+Return exec $bin/tmux-go focus
 
-# Jump to specific tmux windows, creating them if missing.
-    bindsym $mod+Shift+e exec $bin/tmux-go nvim nvim
-    bindsym $mod+Shift+n exec $bin/tmux-go news
-    bindsym $mod+Shift+m exec $bin/tmux-go lf lf
-    bindsym $mod+Home exec $bin/tmux-go htop htop
-    bindsym $mod+Shift+v exec $bin/tmux-go wiremix wiremix
+# Open dedicated tmux windows.
+    bindsym $mod+Shift+m exec $bin/tmux-go lf
+    bindsym $mod+Shift+e exec $bin/tmux-go nvim
+    bindsym $mod+Shift+n exec $bin/tmux-go wiki
+
+# Optional: open a fresh normal Zsh tmux window.
+    bindsym $mod+Shift+t exec $bin/tmux-go new
 
 # rmpc remains outside tmux for better foot image rendering.
     bindsym $mod+m exec $bin/focus-or-run rmpc foot --app-id=rmpc rmpc

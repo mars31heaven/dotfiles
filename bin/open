@@ -3,7 +3,7 @@
 [ -n "$1" ] || exit 1
 
 case "$1" in
-    *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.m3u|*.pls)
+    *.mp3|*.flac|*.wav|*.ogg|*.opus|*.aiff|*.m4a|*.aac|*.wma|*.m3u|*.pls)
         setsid -f foot bash -c 'exec mpv --profile=music "$1"' _ "$1"
     ;;
 

@@ -1,0 +1,1 @@
+/home/mrcl/.local/bin/audio_edit/audio_edit.py
