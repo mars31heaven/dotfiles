@@ -32,6 +32,7 @@ export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export GOPATH="$XDG_DATA_HOME/go"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export YDOTOOL_SOCKET="$XDG_RUNTIME_DIR/ydotool/.socket"
+export PYTHONPYCACHEPREFIX="$XDG_CACHE/pycache"
 
 
 # ── Zsh ──────────────────────────────────────────────────────
