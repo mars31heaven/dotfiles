@@ -3,7 +3,7 @@
 o() {
     local file
     local preview_script
-    local fzf_preview_script
+    local fzfpreview_script
 
     # Locate your existing lf preview script.
     #
@@ -13,8 +13,8 @@ o() {
         return 1
     }
 
-    fzf_preview_script="$(command -v fzf_preview)" || {
-        print -u2 "Error: fzf_preview was not found in PATH."
+    fzfpreview_script="$(command -v fzfpreview)" || {
+        print -u2 "Error: fzfpreview was not found in PATH."
         return 1
     }
 
@@ -23,8 +23,8 @@ o() {
         return 1
     fi
 
-    if [[ ! -x "$fzf_preview_script" ]]; then
-        print -u2 "Error: fzf_preview is not executable: $fzf_preview_script"
+    if [[ ! -x "$fzfpreview_script" ]]; then
+        print -u2 "Error: fzfpreview is not executable: $fzfpreview_script"
         return 1
     fi
 
@@ -43,7 +43,7 @@ o() {
             --border \
             --prompt='Open file> ' \
             --header="From: $PWD | Hidden child files/directories excluded" \
-            --preview="$fzf_preview_script {} \$FZF_PREVIEW_COLUMNS" \
+            --preview="$fzfpreview_script {} \$fzfpreview_COLUMNS" \
             --preview-window='right:65%:wrap'
     )" || return
 

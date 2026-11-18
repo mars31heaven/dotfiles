@@ -89,39 +89,20 @@ alias \
     mm="mpv --profile=music" \
     findflac="fd -e flac -x echo "{//}" | sort -u" \
     burncdr="cdrecord -v -sao speed=4 dev=/dev/sr0 -audio -pad *.wav" \
-    ae="audio_edit.py"
+    ae="audioedit"
 
-# ── MPD / MPC ────────────────────────────────────────────────
 
-alias mp='mpc'
+# albumlog
+alias \
+    al="albumlog" \
+    ald="albumlog add" \
+    als="albumlog stats" \
+    aw="albumlog wish" \
+    awd="albumlog wish add"
 
-# Playback
-alias mps='mpc status'
-alias mpn='mpc current'
-alias mpp='mpc toggle'
-alias mpnext='mpc next'
-alias mpprev='mpc prev'
-alias mpstop='mpc stop'
 
-# Queue
-alias mpq='mpc playlist'
-alias mpql='mpc playlist | nl -ba -w3 -s"  "'
-alias mpclear='mpc clear'
+# mpd / mpc
 
-# Current track information
-alias mpfile="mpc -f '%file%' current"
-alias mpinfo="mpc -f '%artist% — %album% — %title%\n%file%' current"
-
-# Playback modes
-alias mpr='mpc random'
-alias mprepeat='mpc repeat'
-alias mpconsume='mpc consume'
-alias mpsingle='mpc single'
-
-# Library and playlists
-alias mplists='mpc lsplaylists'
-alias mpstats='mpc stats'
-alias mpupdate='mpc update'
-
-# Full interactive manager
-alias mpf='mpc-fzf'
+alias \
+    mpfile="mpc -f '%file%' current" \
+    mpinfo="mpc -f '%artist% — %album% — %title%\n%file%' current"

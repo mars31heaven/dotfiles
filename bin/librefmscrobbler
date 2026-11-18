@@ -1,0 +1,373 @@
+#!/usr/bin/env python3
+"""Scrobble an album folder to Libre.fm and append it to the mpdscribble log."""
+
+import argparse
+import getpass
+import hashlib
+import os
+import shutil
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime
+
+try:
+    import mutagen
+except ImportError:
+    sys.exit("missing dependency: pip install mutagen")
+
+HANDSHAKE_URL = "https://turtle.libre.fm/"
+CONFIG = os.path.expanduser("~/.config/librefm/config")
+LOG = os.path.expanduser("~/.local/share/mpdscribble/log")
+LOG_TIME = "%Y-%m-%dT%H:%M:%S%z"
+KEYCHAIN_COMMANDS = [
+    ["security", "find-generic-password", "-s", "librefm-password-md5", "-w"],
+    ["secret-tool", "lookup", "service", "librefm-password-md5"],
+]
+CLIENT_ID, CLIENT_VER = "tst", "1.0"
+EXTENSIONS = {".mp3", ".flac", ".ogg", ".opus", ".m4a", ".mp4", ".aac",
+              ".wma", ".wav", ".aiff", ".ape", ".wv"}
+MIN_LENGTH = 30   # protocol: tracks under 30 s must not be scrobbled
+BATCH = 50        # protocol: max 50 tracks per submission
+
+HELP_EPILOG = """\
+setup (easiest):
+  pip install mutagen
+  librefm --setup
+
+  It asks for your username and password, then saves the username and the
+  MD5 hash of the password to ~/.config/librefm/config with mode 600.
+  The plain password is never stored.
+
+  Test the login at any time, without scrobbling anything:
+  librefm --check
+
+setup (manual):
+  Create ~/.config/librefm/config with these two lines:
+
+     user=your_username
+     password_md5=your_32_character_hash
+
+  Generate the hash (the leading space keeps it out of shell history):
+
+      printf '%s' 'your_password' | md5sum      Linux
+      md5 -qs 'your_password'                   macOS
+
+  Then run: chmod 600 ~/.config/librefm/config
+
+setup (keyring, optional):
+  Store the hash in the keyring. It is checked before the config file.
+
+     macOS:  security add-generic-password -a "$USER" -s librefm-password-md5 -w
+     Linux:  secret-tool store --label=librefm service librefm-password-md5
+
+  The variables LIBREFM_USER and LIBREFM_PASSWORD (plain text) also work.
+
+behavior:
+  The album is timed to end now: track 1 starts at (now - total duration)
+  and each track starts when the previous one ends. Tracks are submitted
+  to Libre.fm, then appended to the mpdscribble log:
+     ~/.local/share/mpdscribble/log
+
+  If the album would start before the last entry in the log, nothing is
+  scrobbled, so the log always stays in chronological order.
+
+examples:
+  librefm --setup                 save your login
+  librefm --check                 test your login, scrobbles nothing
+  librefm                         scrobble the current folder
+  librefm ~/Music/Artist/Album    scrobble that folder
+  librefm -d                      dry run, show what would be scrobbled
+  librefm -y                      skip the confirmation prompt
+"""
+
+
+def read_config():
+    values = {}
+    if not os.path.isfile(CONFIG):
+        return values
+    if os.stat(CONFIG).st_mode & 0o077:
+        print(f"warning: {CONFIG} is readable by others (run chmod 600)",
+              file=sys.stderr)
+    with open(CONFIG) as f:
+        for line in f:
+            if "=" in line and not line.lstrip().startswith("#"):
+                k, v = line.split("=", 1)
+                values[k.strip()] = v.strip()
+    return values
+
+
+def keychain_hash():
+    for cmd in KEYCHAIN_COMMANDS:
+        if shutil.which(cmd[0]):
+            try:
+                out = subprocess.run(
+                    cmd, capture_output=True, text=True, timeout=5
+                ).stdout.strip()
+            except subprocess.SubprocessError:
+                continue
+            if out:
+                return out
+    return None
+
+
+def md5(text):
+    return hashlib.md5(text.encode()).hexdigest()
+
+
+def get_credentials(cli_user):
+    cfg = read_config()
+    user = cli_user or os.environ.get("LIBREFM_USER") or cfg.get("user")
+    pw = os.environ.get("LIBREFM_PASSWORD")
+    pw_md5 = md5(pw) if pw else keychain_hash() or cfg.get("password_md5")
+    if not user or not pw_md5:
+        sys.exit("missing username or password (run: librefm --setup)")
+    return user, pw_md5.lower()
+
+
+def http(url, data=None):
+    body = urllib.parse.urlencode(data).encode() if data else None
+    req = urllib.request.Request(url, data=body,
+                                 headers={"User-Agent": "librefm-cli/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.read().decode().strip()
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace").strip()[:300]
+        host = urllib.parse.urlsplit(url).netloc
+        sys.exit(f"http error {e.code} from {host}: {detail}")
+    except (urllib.error.URLError, TimeoutError) as e:
+        sys.exit(f"network error: {e}")
+
+
+class Session:
+    def __init__(self, user, pw_md5):
+        self.user, self.pw_md5 = user, pw_md5
+        self.sid = self.sub_url = None
+        self.handshake()
+
+    def handshake(self):
+        ts = str(int(time.time()))
+        params = {"hs": "true", "p": "1.2", "c": CLIENT_ID, "v": CLIENT_VER,
+                  "u": self.user, "t": ts, "a": md5(self.pw_md5 + ts)}
+        lines = http(f"{HANDSHAKE_URL}?{urllib.parse.urlencode(params)}").splitlines()
+        if not lines or lines[0] != "OK" or len(lines) < 4:
+            reason = lines[0] if lines else "empty response"
+            hints = {
+                "BADAUTH": "wrong username or password hash",
+                "BADTIME": "your system clock is out of sync",
+                "BANNED": "this client or account is banned",
+            }
+            sys.exit(f"handshake failed: {reason}"
+                     + (f" ({hints[reason]})" if reason in hints else ""))
+        self.sid, self.sub_url = lines[1], lines[3]
+
+    def submit(self, tracks, retry=True):
+        data = {"s": self.sid}
+        for i, t in enumerate(tracks):
+            data.update({
+                f"a[{i}]": t["artist"], f"t[{i}]": t["title"],
+                f"i[{i}]": str(t["start"]), f"o[{i}]": "P", f"r[{i}]": "",
+                f"l[{i}]": str(t["length"]), f"b[{i}]": t["album"],
+                f"n[{i}]": str(t["number"] or ""), f"m[{i}]": t["mbid"],
+            })
+        resp = http(self.sub_url, data)
+        if resp.startswith("BADSESSION") and retry:
+            self.handshake()
+            return self.submit(tracks, retry=False)
+        if resp != "OK":
+            sys.exit(f"submission failed: {resp}")
+
+
+def setup():
+    """Ask for username and password, then save the username and MD5 hash."""
+    if os.path.isfile(CONFIG):
+        if input(f"{CONFIG} exists. Overwrite? [y/N] ").lower() != "y":
+            sys.exit("cancelled")
+    user = input("Libre.fm username: ").strip()
+    pw = getpass.getpass("Libre.fm password (hidden): ")
+    if not user or not pw:
+        sys.exit("username and password are required")
+    os.makedirs(os.path.dirname(CONFIG), exist_ok=True)
+    fd = os.open(CONFIG, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
+        f.write(f"user={user}\npassword_md5={md5(pw)}\n")
+    os.chmod(CONFIG, 0o600)
+    print(f"saved to {CONFIG} (only the hash is stored, not the password)")
+    print("test it with: librefm --check")
+
+
+def check(cli_user):
+    """Test the login with a handshake only. Nothing is scrobbled or logged."""
+    user, pw_md5 = get_credentials(cli_user)
+    session = Session(user, pw_md5)
+    host = urllib.parse.urlsplit(session.sub_url).netloc
+    print(f"login OK for '{user}' (submissions go to {host})")
+
+
+def first(tags, key):
+    v = tags.get(key)
+    return v[0].strip() if v else ""
+
+
+def leading_int(text):
+    digits = ""
+    for ch in text:
+        if ch.isdigit():
+            digits += ch
+        else:
+            break
+    return int(digits) if digits else 0
+
+
+def read_track(path):
+    try:
+        f = mutagen.File(path, easy=True)
+    except Exception as e:
+        print(f"skip (unreadable): {os.path.basename(path)} ({e})", file=sys.stderr)
+        return None
+    if f is None or f.info is None or not getattr(f.info, "length", 0):
+        print(f"skip (no audio info): {os.path.basename(path)}", file=sys.stderr)
+        return None
+    tags = f.tags or {}
+    title = first(tags, "title") or os.path.splitext(os.path.basename(path))[0]
+    artist = first(tags, "artist") or first(tags, "albumartist")
+    if not artist:
+        print(f"skip (no artist tag): {os.path.basename(path)}", file=sys.stderr)
+        return None
+    return {
+        "path": path, "title": title, "artist": artist,
+        "album": first(tags, "album"),
+        "number": leading_int(first(tags, "tracknumber")),
+        "disc": leading_int(first(tags, "discnumber")) or 1,
+        "mbid": first(tags, "musicbrainz_trackid"),
+        "length": int(round(f.info.length)),
+    }
+
+
+def collect(folder):
+    paths = sorted(
+        os.path.join(folder, n) for n in os.listdir(folder)
+        if os.path.splitext(n)[1].lower() in EXTENSIONS
+    )
+    tracks = [t for t in map(read_track, paths) if t]
+    tracks.sort(key=lambda t: (t["disc"], t["number"] or 9999, t["path"]))
+    for t in tracks:
+        if t["length"] < MIN_LENGTH:
+            print(f"skip (under {MIN_LENGTH}s): {t['title']}", file=sys.stderr)
+    return [t for t in tracks if t["length"] >= MIN_LENGTH]
+
+
+def fmt_len(s):
+    return f"{s // 60}:{s % 60:02d}"
+
+
+def log_stamp(ts):
+    return time.strftime(LOG_TIME, time.localtime(ts))
+
+
+def last_log_time():
+    """Timestamp of the last entry in the mpdscribble log, or None."""
+    if not os.path.isfile(LOG):
+        return None
+    last = ""
+    with open(LOG, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            if line.strip():
+                last = line
+    if not last:
+        return None
+    try:
+        return int(datetime.strptime(last.split(" ", 1)[0], LOG_TIME).timestamp())
+    except ValueError:
+        sys.exit(f"cannot parse the last line of {LOG}")
+
+
+def append_log(tracks):
+    os.makedirs(os.path.dirname(LOG), exist_ok=True)
+    with open(LOG, "a", encoding="utf-8") as f:
+        for t in tracks:
+            f.write(f"{log_stamp(t['start'])} {t['artist']} - {t['title']}\n")
+
+
+def preview(tracks):
+    for t in tracks:
+        print(f"{log_stamp(t['start'])}  {fmt_len(t['length']):>6}  "
+              f"{t['artist']} - {t['title']}")
+    total = sum(t["length"] for t in tracks)
+    print(f"\n{len(tracks)} tracks, {fmt_len(total)} total")
+
+
+def main():
+    p = argparse.ArgumentParser(
+        prog="librefm",
+        usage="librefm [FOLDER] [-d] [-y] [-u USER] | librefm --setup | "
+              "librefm --check",
+        description="Scrobble an album folder to Libre.fm from file metadata, "
+                    "timed to end now, and append it to the mpdscribble log.",
+        epilog=HELP_EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("folder", nargs="?", default=os.getcwd(),
+                   help="album folder (default: current directory)")
+    p.add_argument("-u", "--user", metavar="USER", help="Libre.fm username")
+    p.add_argument("-d", "--dry-run", action="store_true",
+                   help="show tracks and timestamps without scrobbling")
+    p.add_argument("-y", "--yes", action="store_true",
+                   help="skip the confirmation prompt")
+    p.add_argument("--setup", action="store_true",
+                   help="save your Libre.fm username and password hash")
+    p.add_argument("--check", action="store_true",
+                   help="test your login without scrobbling anything")
+    args = p.parse_args()
+
+    if args.setup:
+        setup()
+        return
+    if args.check:
+        check(args.user)
+        return
+
+    folder = os.path.abspath(os.path.expanduser(args.folder))
+    if not os.path.isdir(folder):
+        sys.exit(f"not a folder: {folder}")
+    tracks = collect(folder)
+    if not tracks:
+        sys.exit("no scrobbleable tracks found")
+
+    start = int(time.time()) - sum(t["length"] for t in tracks)
+    for t in tracks:
+        t["start"] = start
+        start += t["length"]
+
+    latest = last_log_time()
+    if latest is not None and tracks[0]["start"] < latest:
+        sys.exit(f"the album would start at {log_stamp(tracks[0]['start'])}, "
+                 f"before the last log entry ({log_stamp(latest)}); "
+                 "nothing scrobbled")
+
+    preview(tracks)
+    if args.dry_run:
+        return
+    if not args.yes and input("\nScrobble to Libre.fm? [y/N] ").lower() != "y":
+        sys.exit("cancelled")
+
+    user, pw_md5 = get_credentials(args.user)
+    session = Session(user, pw_md5)
+    for i in range(0, len(tracks), BATCH):
+        batch = tracks[i:i + BATCH]
+        session.submit(batch)
+        append_log(batch)
+    print(f"scrobbled {len(tracks)} tracks")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except BrokenPipeError:
+        pass
+    except KeyboardInterrupt:
+        sys.exit(130)

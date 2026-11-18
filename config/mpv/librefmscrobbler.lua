@@ -1,5 +1,5 @@
 --[[
-librefm-scrobbler.lua - offline-capable Libre.fm scrobbler for mpv.
+librefmscrobbler.lua - offline-capable Libre.fm scrobbler for mpv.
 
 IMPORTANT: place this file somewhere mpv does NOT auto-load (i.e. NOT
 directly in ~/.config/mpv/scripts/), then load it only from your music
@@ -8,15 +8,15 @@ profile in mpv.conf:
     [music]
     video=no
     stop-screensaver=no
-    scripts-append=~/.config/mpv/scripts-available/librefm-scrobbler.lua
+    scripts-append=~/.config/mpv/scripts-available/librefmscrobbler.lua
 
 This way the script is only active when you actually launch mpv with
 --profile=music - any other use of mpv (watching a video, a YouTube TUI
 scraper, etc.) never loads it and can never be scrobbled.
 
 Configure your credentials in:
-    ~/.config/mpv/script-opts/librefm-scrobbler.conf
-(see librefm-scrobbler.conf.example for the format). Keep credentials
+    ~/.config/mpv/script-opts/librefmscrobbler.conf
+(see librefmscrobbler.conf.example for the format). Keep credentials
 out of the command line / mpv.conf itself - anything on the command
 line is visible to other local users via `ps`.
 
@@ -41,14 +41,14 @@ local utils = require 'mp.utils'
 local msg = require 'mp.msg'
 
 -- =====================================================================
--- CONFIGURATION (overridable via script-opts/librefm-scrobbler.conf)
+-- CONFIGURATION (overridable via script-opts/librefmscrobbler.conf)
 -- =====================================================================
 local opts = {
     username = "YOUR_USERNAME",
     password = "YOUR_PASSWORD",
 
     log_file = "~/.cache/scrobbling-log",
-    cache_file = "~/.cache/librefm-scrobbler/queue.json",
+    cache_file = "~/.cache/librefmscrobbler/queue.json",
 
     scrobble_fraction = 0.8,        -- scrobble once this fraction of the track has played...
     scrobble_max_seconds = 240,     -- ...or after this many seconds, whichever comes first
@@ -60,7 +60,7 @@ local opts = {
     repeat_reset_threshold = 3,         -- position must drop below this to count as "back near the start"
     repeat_min_prior_position = 10,     -- ...and must have been at least this far in beforehand
 }
-options.read_options(opts, "librefm-scrobbler")
+options.read_options(opts, "librefmscrobbler")
 
 local function expand_home(path)
     if path:sub(1, 1) == "~" then
@@ -74,7 +74,7 @@ opts.cache_file = expand_home(opts.cache_file)
 
 local CONFIGURED = opts.username ~= "" and opts.username ~= "YOUR_USERNAME"
 if not CONFIGURED then
-    msg.warn("librefm-scrobbler: no credentials configured (see script-opts/librefm-scrobbler.conf) - disabled")
+    msg.warn("librefmscrobbler: no credentials configured (see script-opts/librefmscrobbler.conf) - disabled")
 end
 
 local function ensure_parent_dir(path)
@@ -128,12 +128,12 @@ local function handshake()
     local timestamp = os.time()
     local p_md5 = md5sum(opts.password)
     if not p_md5 then
-        msg.error("librefm-scrobbler: could not compute password hash (is md5sum installed?)")
+        msg.error("librefmscrobbler: could not compute password hash (is md5sum installed?)")
         return false
     end
     local auth = md5sum(p_md5 .. tostring(timestamp))
     if not auth then
-        msg.error("librefm-scrobbler: could not compute auth hash")
+        msg.error("librefmscrobbler: could not compute auth hash")
         return false
     end
 
@@ -153,7 +153,7 @@ local function handshake()
         capture_stdout = true,
     })
     if not res or res.status ~= 0 or not res.stdout then
-        msg.warn("librefm-scrobbler: handshake failed (network/curl error)")
+        msg.warn("librefmscrobbler: handshake failed (network/curl error)")
         return false
     end
 
@@ -163,10 +163,10 @@ local function handshake()
     if lines[1] and lines[1]:sub(1, 2) == "OK" then
         session_id = lines[2]
         submission_url = lines[4]
-        msg.info("librefm-scrobbler: handshake successful")
+        msg.info("librefmscrobbler: handshake successful")
         return true
     else
-        msg.error("librefm-scrobbler: handshake rejected: " .. (lines[1] or "no response"))
+        msg.error("librefmscrobbler: handshake rejected: " .. (lines[1] or "no response"))
         return false
     end
 end
@@ -192,21 +192,21 @@ local function submit_batch(tracks)
 
     local res = mp.command_native({ name = "subprocess", args = args, capture_stdout = true })
     if not res or res.status ~= 0 or not res.stdout then
-        msg.warn("librefm-scrobbler: scrobble submission failed (network/curl error)")
+        msg.warn("librefmscrobbler: scrobble submission failed (network/curl error)")
         return false
     end
 
     local body = res.stdout
     if body:sub(1, 2) == "OK" then
-        msg.info(string.format("librefm-scrobbler: scrobbled batch of %d track(s)", #tracks))
+        msg.info(string.format("librefmscrobbler: scrobbled batch of %d track(s)", #tracks))
         return true
     elseif body:sub(1, 10) == "BADSESSION" then
-        msg.warn("librefm-scrobbler: session expired, re-handshaking...")
+        msg.warn("librefmscrobbler: session expired, re-handshaking...")
         session_id = nil
         if handshake() then return submit_batch(tracks) end
         return false
     else
-        msg.error("librefm-scrobbler: server rejected batch: " .. body)
+        msg.error("librefmscrobbler: server rejected batch: " .. body)
         return false
     end
 end
@@ -229,7 +229,7 @@ local function save_queue(queue)
     local tmp = opts.cache_file .. ".tmp"
     local f = io.open(tmp, "w")
     if not f then
-        msg.error("librefm-scrobbler: could not write queue file")
+        msg.error("librefmscrobbler: could not write queue file")
         return
     end
     f:write(utils.format_json(queue))
@@ -240,7 +240,7 @@ end
 local function log_scrobbled(track)
     local f = io.open(opts.log_file, "a")
     if not f then
-        msg.error("librefm-scrobbler: could not write to log file: " .. opts.log_file)
+        msg.error("librefmscrobbler: could not write to log file: " .. opts.log_file)
         return
     end
     local stamp = os.date("%Y-%m-%dT%H:%M:%S%z")
@@ -266,7 +266,7 @@ local function trigger_scrobble()
         duration = state.duration,
         timestamp = state.started_at,
     }
-    msg.info(string.format("librefm-scrobbler: qualifying threshold met: %s - %s", track.artist, track.title))
+    msg.info(string.format("librefmscrobbler: qualifying threshold met: %s - %s", track.artist, track.title))
 
     if submit_batch({ track }) then
         log_scrobbled(track)
@@ -274,7 +274,7 @@ local function trigger_scrobble()
         local q = load_queue()
         table.insert(q, track)
         save_queue(q)
-        msg.info("librefm-scrobbler: offline - queued: " .. track.artist .. " - " .. track.title)
+        msg.info("librefmscrobbler: offline - queued: " .. track.artist .. " - " .. track.title)
     end
 end
 
@@ -305,7 +305,7 @@ local function maybe_flush_queue()
     if (now - last_flush_attempt) < opts.retry_interval_seconds then return end
     last_flush_attempt = now
 
-    msg.info(string.format("librefm-scrobbler: retrying %d queued scrobble(s)...", #q))
+    msg.info(string.format("librefmscrobbler: retrying %d queued scrobble(s)...", #q))
     while #q > 0 do
         local batch = {}
         for i = 1, math.min(50, #q) do batch[i] = q[i] end
@@ -317,7 +317,7 @@ local function maybe_flush_queue()
             q = remaining
             save_queue(q)
         else
-            msg.info(string.format("librefm-scrobbler: still failing, %d track(s) remain queued.", #q))
+            msg.info(string.format("librefmscrobbler: still failing, %d track(s) remain queued.", #q))
             break
         end
     end
@@ -347,18 +347,18 @@ local function on_file_loaded()
     state.artist = nil -- clear until we confirm this file is eligible
 
     if not artist or not title then
-        msg.info("librefm-scrobbler: no artist/title tags - not tracking this file")
+        msg.info("librefmscrobbler: no artist/title tags - not tracking this file")
         return
     end
     if duration < opts.min_track_duration then
         msg.info(string.format(
-            "librefm-scrobbler: track too short (%ds < %ds) - not tracking",
+            "librefmscrobbler: track too short (%ds < %ds) - not tracking",
             duration, opts.min_track_duration))
         return
     end
 
     start_new_play(artist, title, album, duration)
-    msg.info(string.format("librefm-scrobbler: track changed: %s - %s (%ds)", artist, title, duration))
+    msg.info(string.format("librefmscrobbler: track changed: %s - %s (%ds)", artist, title, duration))
 end
 
 local function on_tick()
@@ -377,7 +377,7 @@ local function on_tick()
     then
         check_and_trigger()
         start_new_play(state.artist, state.title, state.album, state.duration)
-        msg.info("librefm-scrobbler: repeat play detected: " .. state.artist .. " - " .. state.title)
+        msg.info("librefmscrobbler: repeat play detected: " .. state.artist .. " - " .. state.title)
     end
     state.last_position = pos
 
@@ -400,5 +400,5 @@ if CONFIGURED then
         if state.artist and not state.scrobble_triggered then check_and_trigger() end
     end)
     mp.add_periodic_timer(opts.tick_interval, on_tick)
-    msg.info("librefm-scrobbler: active for this session")
+    msg.info("librefmscrobbler: active for this session")
 end

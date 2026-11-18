@@ -1,14 +1,14 @@
-# ~/.config/mpv/script-opts/librefm-scrobbler.conf
+# ~/.config/mpv/script-opts/librefmscrobbler.conf
 #
-# Config file for librefm-scrobbler.lua. Format is plain key=value, one per
+# Config file for librefmscrobbler.lua. Format is plain key=value, one per
 # line - no section headers, no quotes needed around values.
 #
 # This file is matched by name to the identifier used in the script's
-# options.read_options(opts, "librefm-scrobbler") call, so it MUST be
-# named exactly librefm-scrobbler.conf and live in ~/.config/mpv/script-opts/
+# options.read_options(opts, "librefmscrobbler") call, so it MUST be
+# named exactly librefmscrobbler.conf and live in ~/.config/mpv/script-opts/
 #
 # Keep this file private, since it holds your password in plain text:
-#   chmod 600 ~/.config/mpv/script-opts/librefm-scrobbler.conf
+#   chmod 600 ~/.config/mpv/script-opts/librefmscrobbler.conf
 
 # --- Required ---
 username=YOUR_USERNAME
@@ -18,7 +18,7 @@ password=YOUR_PASSWORD
 # Point log_file at the same file mpdscribble uses if you want one shared,
 # unified scrobble history in mpdscribble's own plain-text format.
 log_file=~/.local/share/mpdscribble/log
-cache_file=~/.cache/librefm-scrobbler/queue.json
+cache_file=~/.cache/librefmscrobbler/queue.json
 
 # --- Optional: scrobble timing rules ---
 # Scrobble once this fraction of the track has played...

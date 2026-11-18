@@ -1,0 +1,125 @@
+#!/bin/bash
+# Resize the folder cover to 600x600 JPG and embed it in every track.
+# The original image is kept as <name>.orig.<ext>.
+
+shopt -s nullglob nocaseglob extglob
+
+usage() {
+    cat <<'EOF'
+Usage: arruma-capas [-g] [-n] [-y] [-h]
+
+Finds cover/front/folder (jpg, jpeg, png) in the current folder, saves a
+600x600 baseline sRGB cover.jpg, and embeds it in all mp3, flac and m4a
+files. The original image is kept as <name>.orig.<ext>.
+
+  -g   global: also process every subfolder (recursive)
+  -n   dry run: list what would be processed, change nothing
+  -y   skip the confirmation prompt in global mode
+  -h   show this help
+
+Safety in global mode:
+  - refuses to run from / or from your home folder
+  - lists the folders first and asks for confirmation (unless -y)
+  - hidden folders are skipped
+  - a backup is never overwritten, so reruns keep the true original
+EOF
+}
+
+find_image() {
+    local name matches
+    for name in cover front folder; do
+        matches=( "$name".@(jpg|jpeg|png) )
+        if (( ${#matches[@]} )); then
+            printf '%s\n' "${matches}"
+            return 0
+        fi
+    done
+    return 1
+}
+
+process_dir() {
+    local img audios audio tmp ext base backup ok=0
+    img=$(find_image) || return 0
+    audios=( *.@(mp3|flac|m4a) )
+    (( ${#audios[@]} )) || return 0
+
+    if (( dry )); then
+        echo "would process: $PWD ($img, ${#audios[@]} tracks)"
+        return 0
+    fi
+
+    ext="${img##*.}"
+    base="${img%.*}"
+    backup="$base.orig.$ext"
+    [[ -e $backup ]] || cp -p -- "$img" "$backup"
+
+    if ! magick "${img}" -resize 600x600^ -gravity center -extent 600x600 \
+            -colorspace sRGB -strip -interlace none -quality 90 ".cover_tmp.jpg"; then
+        echo "error: image conversion failed in $PWD" >&2
+        rm -f -- ".cover_tmp.jpg"
+        return 1
+    fi
+    [[ $img == cover.jpg ]] || rm -f -- "$img"
+    mv -f -- ".cover_tmp.jpg" "cover.jpg"
+
+    for audio in "${audios[@]}"; do
+        tmp=".tmp_$audio"
+        if ffmpeg -y -loglevel error -nostdin -i "./$audio" -i "cover.jpg" \
+                -map 0:a -map 1:v -c copy -disposition:v:0 attached_pic \
+                -id3v2_version 3 \
+                -metadata:s:v title="Album cover" \
+                -metadata:s:v comment="Cover (Front)" \
+                "$tmp"; then
+            mv -f -- "$tmp" "$audio"
+            ok=$((ok + 1))
+        else
+            rm -f -- "$tmp"
+            echo "error: failed to embed in $PWD/$audio" >&2
+        fi
+    done
+
+    echo "$PWD: $ok/${#audios[@]} tracks"
+    (( ok == ${#audios[@]} ))
+}
+
+run_all() {
+    local dir rc=0
+    while IFS= read -r -d '' dir; do
+        ( cd "$dir" && process_dir ) || rc=1
+    done < <(find . -name '.?*' -prune -o -type d -print0 | sort -z)
+    return $rc
+}
+
+global=0 dry=0 yes=0
+while getopts ":gnyh" opt; do
+    case $opt in
+        g) global=1 ;;
+        n) dry=1 ;;
+        y) yes=1 ;;
+        h) usage; exit 0 ;;
+        *) usage >&2; exit 2 ;;
+    esac
+done
+
+for tool in magick ffmpeg; do
+    command -v "$tool" >/dev/null || { echo "missing dependency: $tool" >&2; exit 1; }
+done
+
+if (( ! global )); then
+    process_dir
+    exit $?
+fi
+
+if [[ $PWD == / || $PWD == "$HOME" ]]; then
+    echo "refusing to run globally from $PWD" >&2
+    exit 1
+fi
+
+if (( ! dry && ! yes )); then
+    echo "Global mode from: $PWD"
+    dry=1 run_all
+    read -r -p "Process these folders? [y/N] " answer
+    [[ $answer == [yY] ]] || { echo "cancelled"; exit 1; }
+fi
+
+run_all

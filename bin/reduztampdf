@@ -1,12 +1,12 @@
 #!/bin/sh
 
-mkdir -p Comprimidos
+mkdir -p comprimidos
 
 for f in *.pdf; do
   gs -sDEVICE=pdfwrite \
      -dCompatibilityLevel=1.4 \
      -dPDFSETTINGS=/ebook \
      -dNOPAUSE -dQUIET -dBATCH \
-     -sOutputFile="Comprimidos/$f" \
+     -sOutputFile="comprimidos/$f" \
      "$f"
 done

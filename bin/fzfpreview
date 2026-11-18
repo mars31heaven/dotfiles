@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# fzf_preview
+# fzfpreview
 #
 # Wrapper used by fzf.
 # Uses the existing lf-compatible preview script defined in PREVIEW_SCRIPT.

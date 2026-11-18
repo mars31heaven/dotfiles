@@ -275,7 +275,7 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+F12 exec itoggle
 
-    bindsym $mod+Shift+Backspace exec fuzzpower-pc
+    bindsym $mod+Shift+Backspace exec fuzzpowerpc
 
     bindsym $mod+p exec fuzzpass
 
@@ -287,10 +287,10 @@ bindsym $mod+r mode "resize"
 
     bindsym Ctrl+Space exec makoctl dismiss --all
 
-    bindsym $mod+c exec foot --title="Date / Time / Weather" -e ~/.dotfiles/bin/date-time-weather
+    bindsym $mod+c exec foot --title="Date / Time / Weather" -e ~/.dotfiles/bin/datetimeweather
     for_window [title="Date / Time / Weather"] floating enable, resize set 400px 500px, move position center
 
-    bindsym $mod+Ctrl+c exec foot --title="Full Weather" -e ~/.dotfiles/bin/full-weather
+    bindsym $mod+Ctrl+c exec foot --title="Full Weather" -e ~/.dotfiles/bin/fullweather
     for_window [title="Full Weather"] floating enable, resize set 1200px 1000px, move position center
 
     # Windows borders
@@ -342,23 +342,23 @@ bindsym $mod+r mode "resize"
 
 # Persistent Foot + tmux workspace.
 #
-# If Foot is closed accidentally, tmux-go opens a new Foot window and
+# If Foot is closed accidentally, tmuxgo opens a new Foot window and
 # attaches it to the existing persistent workspace tmux session.
 
 # Return to whichever tmux window and pane were last active.
-    bindsym $mod+Return exec $bin/tmux-go focus
+    bindsym $mod+Return exec $bin/tmuxgo focus
 
 # Open dedicated tmux windows.
-    bindsym $mod+Shift+m exec $bin/tmux-go lf
-    bindsym $mod+Shift+e exec $bin/tmux-go nvim
-    bindsym $mod+Shift+n exec $bin/tmux-go wiki
+    bindsym $mod+Shift+m exec $bin/tmuxgo lf
+    bindsym $mod+Shift+e exec $bin/tmuxgo nvim
+    bindsym $mod+Shift+n exec $bin/tmuxgo wiki
 
 # Optional: open a fresh normal Zsh tmux window.
-    bindsym $mod+Shift+t exec $bin/tmux-go new
+    bindsym $mod+Shift+t exec $bin/tmuxgo new
 
 # rmpc remains outside tmux for better foot image rendering.
-    bindsym $mod+m exec $bin/focus-or-run rmpc foot --app-id=rmpc rmpc
+    bindsym $mod+m exec $bin/focusorrun rmpc foot --app-id=rmpc rmpc
 
 # Create the persistent tmux terminal and standalone rmpc window at login.
-    exec foot --app-id=foot-tmux -e $bin/tmux-attach
+    exec foot --app-id=foot-tmux -e $bin/tmuxattach
     exec foot --app-id=rmpc rmpc

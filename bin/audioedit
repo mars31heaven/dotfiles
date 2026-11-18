@@ -65,6 +65,8 @@ PROCESSES = {
     "layer": "Mix another file from this folder on top of this one.",
     "overdub": "Record live on top of this sound while it plays (looper).",
     "channel-switch": "Play one channel only, then the other, then stereo, for times you set.",
+    "peak-report": "Show peak and loudness facts and what cutting peaks would do (no file).",
+    "ceiling-clip": "Cut only the peaks above a level, then set the final peak (mastering).",
 }
 
 SPECIAL = {
@@ -88,6 +90,7 @@ HOW TO RUN
   audio_edit.py FOLDER           pick a file from FOLDER
   audio_edit.py FILE.wav         work on that file directly
   audio_edit.py --organize       move old recordings into day folders
+  audio_edit.py --album FOLDER   master a whole album with ONE shared gain
   audio_edit.py --keep-all ...   keep every render of the session
   audio_edit.py --plain ...      plain mpv window, no meter or spectrum
 
@@ -127,6 +130,24 @@ RECORDING
   mpv plays the take, then you choose:
       k  keep and edit    d  discard (deletes the file)
       r  re-record        l  listen again
+
+MASTERING (finished projects)
+  Goal: no digital clipping on other people's devices and formats, with
+  the sound unchanged.
+  1. Render from your DAW at 32-bit float, no limiter on the master.
+  2. peak-report shows peak, crest factor and what cutting would do.
+  3. normalize (-1 dB) is the safe default for a single track.
+  4. ceiling-clip cuts only the peaks above a level, then sets the final
+     peak. Use it when a few spikes set the level. To only cut, without
+     changing the level, set clip level 0 and final peak 0.
+  5. For an ALBUM do not normalize tracks one by one: every track would
+     end up with the same peak, and quiet tracks would become loud.
+     Use:  audio_edit.py --album FOLDER
+     It finds the highest peak of all tracks, applies the same dB change
+     to every track, and writes 24-bit copies into FOLDER/mastered/.
+     Relative levels between tracks stay as you composed them. The
+     originals are never changed. --album-peak DB sets the final peak of
+     the loudest track (default -1).
 
 OVERDUB (record on top of the current version)
   Choose "overdub" in the edit menu. The current version plays while the
@@ -221,6 +242,8 @@ EDITS
   overdub        record live on top of the current version
   channel-switch one channel only, then the other, then stereo, for times
                  you set. You choose which channel starts. Can repeat.
+  peak-report    facts about peaks and loudness. Makes no file.
+  ceiling-clip   cut only the peaks above a level, then set the final peak
 
 MPV WINDOW
   After each render mpv shows level bars with dB values above a scrolling
@@ -1133,6 +1156,85 @@ File length: {format_time(duration)}
     return out
 
 
+# ---------- mastering ----------
+
+def do_peak_report(audio, rate):
+    mag = np.abs(audio).max(axis=1)
+    peak = float(mag.max())
+    if peak <= 0:
+        raise EditError("The file is silent.")
+    total = len(mag)
+    peak_db = to_db(peak)
+    rms = float(np.sqrt(np.mean(audio.astype(np.float64) ** 2)))
+    over0 = int(np.count_nonzero(mag > 1.0))
+
+    print(f"""
+PEAK REPORT
+Length:        {format_time(total / rate)}
+Sample peak:   {peak_db:+.2f} dB
+Average (RMS): {to_db(rms):+.2f} dB
+Crest factor:  {peak_db - to_db(rms):.1f} dB  (peak minus average; a high
+               number means a few peaks set the level)
+Over 0 dB:     {over0} samples ({100.0 * over0 / total:.3f}%)
+
+If you cut the peaks at a level, then set the final peak to -1 dB:
+  Cut at (dB)   Samples cut   Louder than plain normalize""")
+    for drop in (0, 1, 3, 6, 9, 12):
+        level = peak / (10.0 ** (drop / 20.0))
+        cut = int(np.count_nonzero(mag > level))
+        print(f"  {to_db(level):+8.2f}     {100.0 * cut / total:9.4f}%      "
+              f"{'+' if drop else ''}{drop} dB")
+
+    seconds = total // rate
+    if seconds > 0:
+        blocks = mag[:seconds * rate].reshape(seconds, rate).max(axis=1)
+        near = int(np.count_nonzero(blocks >= peak * 0.708))
+        print(f"\nSeconds with a peak within 3 dB of the maximum: {near} of {seconds}")
+        print("(Few = isolated spikes set the level. Many = the sustained sound is that loud.)")
+        top = sorted(int(i) for i in np.argsort(blocks)[::-1][:8])
+        print("Loudest moments: " + ", ".join(
+            f"{format_time(i)} ({to_db(float(blocks[i])):+.1f})" for i in top))
+
+    raise EditError("Report only. No file was made.")
+
+
+def do_ceiling_clip(audio, rate):
+    peak = float(np.max(np.abs(audio)))
+    if peak <= 0:
+        raise EditError("The file is silent.")
+    peak_db = to_db(peak)
+    print(f"""
+CEILING CLIP
+Cuts only the samples above the clip level, flat and instantly (no
+release, no ducking). Everything below it is untouched. Then the file is
+scaled so the clip level becomes the final peak.
+
+Current peak: {peak_db:+.2f} dB
+
+  Clip level (dB): peaks above this are cut. 0 cuts only what is over full
+    scale. Lower values cut more and make the result louder. Run
+    peak-report first to see how many samples each level affects.
+  Final peak (dB): where the loudest sample ends up. -1 leaves safe room.
+    To only cut, without changing the level, set it equal to the clip
+    level (for example both 0).
+""")
+    default_clip = 0.0 if peak_db > 0 else peak_db - 3.0
+    clip_db = ask("Clip level (dB)", default_clip, -60, peak_db)
+    level = 10.0 ** (clip_db / 20.0)
+    target_db = ask("Final peak (dB)", -1.0, -30, 0)
+
+    mag = np.abs(audio).max(axis=1)
+    pct = 100.0 * np.count_nonzero(mag > level) / len(mag)
+    out = np.clip(audio, -level, level) * (10.0 ** (target_db / 20.0) / level)
+
+    print(f"Samples cut: {pct:.4f}%")
+    print(f"Gain applied: {target_db - clip_db:+.2f} dB "
+          f"(plain normalize would apply {target_db - peak_db:+.2f} dB)")
+    if pct > 1.0:
+        print("More than 1% of samples were cut. Listen for a clipped sound.")
+    return out
+
+
 # ---------- repair edits ----------
 
 def spectral_denoise(x, noise_mag, floor, n_fft, hop, window):
@@ -1330,6 +1432,8 @@ EDITS = {
     "layer": do_layer,
     "overdub": do_overdub,
     "channel-switch": do_channel_switch,
+    "peak-report": do_peak_report,
+    "ceiling-clip": do_ceiling_clip,
 }
 
 
@@ -1505,6 +1609,60 @@ def organize_recordings() -> None:
     print(f"\nMoved {moved} file(s), skipped {skipped}.")
 
 
+def album_master(folder: Path, target_db: float) -> None:
+    """Apply ONE shared gain to every track so relative levels are kept."""
+    if not folder.is_dir():
+        fail(f"Not a folder: {folder}")
+    names = sorted(find_audio_files(folder))
+    if not names:
+        fail(f"No WAV or FLAC files in: {folder}")
+
+    print(f"\nALBUM MASTER: {folder}")
+    print("Reading tracks...\n")
+    info: list[tuple[str, float, float]] = []
+    for name in names:
+        audio, _ = load_audio(folder / name)
+        peak = float(np.max(np.abs(audio)))
+        rms = float(np.sqrt(np.mean(audio.astype(np.float64) ** 2)))
+        info.append((name, to_db(peak), to_db(rms)))
+
+    loudest = max(p for _, p, _ in info)
+    gain_db = target_db - loudest
+    gain = 10.0 ** (gain_db / 20.0)
+
+    print(f"{'Track':<40} {'Peak':>8} {'Average':>9} {'New peak':>9}")
+    for name, p, r in info:
+        print(f"{name[:40]:<40} {p:+8.2f} {r:+9.2f} {p + gain_db:+9.2f}")
+    print(f"\nLoudest peak in the album: {loudest:+.2f} dB")
+    print(f"Shared gain for every track: {gain_db:+.2f} dB")
+    print(f"The loudest track will peak at {target_db:+.2f} dB. Relative levels "
+          "between tracks are unchanged.")
+    if gain_db > 0:
+        print("Note: the gain is positive, so the album gets louder.")
+
+    out_dir = folder / "mastered"
+    print(f"\nMastered copies go to: {out_dir}")
+    print("Originals are not changed.")
+    try:
+        answer = input("Write the mastered files? [y/N]: ").strip().lower()
+    except EOFError:
+        answer = ""
+    if answer != "y":
+        print("Nothing written.")
+        return
+
+    out_dir.mkdir(exist_ok=True)
+    for name, _, _ in info:
+        dest = out_dir / name
+        if dest.exists():
+            print(f"Skipped (already exists): {name}")
+            continue
+        audio, rate = load_audio(folder / name)
+        save_audio(dest, (audio * gain).astype(np.float32), rate)
+        print(f"Written: {dest.name}")
+    print("\nDone.")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="audio_edit.py",
@@ -1534,6 +1692,15 @@ def parse_args() -> argparse.Namespace:
         "--organize", action="store_true",
         help="Move existing recordings into YYYYMMDD folders, then exit.",
     )
+    parser.add_argument(
+        "--album", metavar="FOLDER",
+        help="Apply one shared gain to every track in FOLDER and write "
+             "24-bit copies into FOLDER/mastered/, then exit.",
+    )
+    parser.add_argument(
+        "--album-peak", type=float, default=-1.0, metavar="DB",
+        help="Final peak of the loudest album track in dB (default -1).",
+    )
     parser.add_argument("--info", metavar="FILE", help=argparse.SUPPRESS)
     parser.add_argument("--preview-play", metavar="FILE", help=argparse.SUPPRESS)
     return parser.parse_args()
@@ -1551,6 +1718,11 @@ def main() -> None:
         return
     if args.organize:
         organize_recordings()
+        return
+    if args.album:
+        if args.album_peak > 0:
+            fail("--album-peak must be 0 or lower.")
+        album_master(Path(args.album).expanduser().resolve(), args.album_peak)
         return
 
     if args.plain:
