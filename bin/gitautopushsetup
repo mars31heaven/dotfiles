@@ -1,0 +1,407 @@
+#!/bin/bash
+# Set up (or remove) a systemd user timer that pushes a Git repository to GitHub.
+#
+# Install:    gitautopushsetup [-t HH:MM | -s CALENDAR] [REPO_PATH]
+# Uninstall:  gitautopushsetup --uninstall [REPO_PATH]
+#
+# Env:  GITHUB_TOKEN   token to use instead of the prompt
+#       AUTO_COMMIT    1 or 0, skips the auto-commit question
+#       ENABLE_LINGER  1 or 0, skips the linger question
+#       SCHEDULE       same as --schedule
+set -euo pipefail
+
+BIN="$HOME/.local/bin"
+CONF="$HOME/.config/gitautopush"
+UNITS="$HOME/.config/systemd/user"
+TOKEN_FILE="$CONF/token"
+DEFAULT_TIME="22:00"
+
+say() { printf '%s\n' "$*"; }
+die() { printf 'error: %s\n' "$*" >&2; exit 1; }
+
+ask_yn() {  # ask_yn "question" default(y|n)
+    local ans="" def="$2" hint="[Y/n]"
+    [[ $def == n ]] && hint="[y/N]"
+    read -r -p "$1 $hint " ans || ans=""
+    ans="${ans:-$def}"
+    [[ $ans == [yY]* ]]
+}
+
+usage() {
+    cat <<EOF
+gitautopushsetup - push a Git repository to GitHub on a schedule
+
+Sets up a systemd user timer that, at the chosen time, commits local changes
+(optional) and pushes them to GitHub using a token. The token is stored in
+~/.config/gitautopush/token (mode 600) and never appears in the remote URL,
+the git config or the process list. Safe to run again: it updates the files
+and the schedule it owns.
+
+USAGE
+  gitautopushsetup [options] [REPO_PATH]      install or update a timer
+  gitautopushsetup --uninstall [REPO_PATH]    remove a timer
+
+OPTIONS
+  -t, --time HH:MM        run every day at this local time (24-hour)
+                          default: $DEFAULT_TIME
+  -s, --schedule EXPR     any systemd calendar expression (see SCHEDULES)
+  -u, --uninstall         remove the timer for REPO_PATH. Without a path,
+                          remove all gitautopush timers (asks first). When
+                          none are left, it offers to delete the token and
+                          helper scripts, and to disable linger.
+  -h, --help              show this help
+
+  Without -t or -s, the script asks for a schedule (Enter = $DEFAULT_TIME).
+  Without a terminal, it uses the default.
+
+ENVIRONMENT (for non-interactive use)
+  GITHUB_TOKEN     token to use instead of the hidden prompt
+  AUTO_COMMIT      1 = run "git add -A" and commit before pushing, 0 = push
+                   existing commits only
+  ENABLE_LINGER    1 = keep the timer running when logged out, 0 = do not
+  SCHEDULE         same as --schedule
+
+REQUIREMENTS
+  - The repository has an "origin" remote with an https:// URL.
+  - An upstream branch is set. If not, run once:
+      git -C REPO_PATH push -u origin BRANCH
+  - sudo is requested only to install git (pacman) or to enable linger.
+
+SCHEDULES
+  Times use the machine's local time zone (check with: timedatectl).
+  If the machine was off at the scheduled time, the check runs at the next
+  boot or login (Persistent=true).
+
+  22:00                      same as -t 22:00 (daily)
+  hourly                     every hour
+  daily                      every day at 00:00
+  *-*-* 06,18:00:00          twice a day, at 06:00 and 18:00
+  Mon..Fri *-*-* 09:00       weekdays at 09:00
+  Sun *-*-* 20:00            every Sunday at 20:00
+  *-*-* *:00/30:00           every 30 minutes
+
+  Test any expression before using it:
+    systemd-analyze calendar "Mon..Fri *-*-* 09:00"
+
+EXAMPLES
+  Install:
+    gitautopushsetup ~/.local/src/albumlog.m            # asks; Enter = daily at 22:00
+    gitautopushsetup -t 21:30 ~/.local/src/albumlog.m   # daily at 21:30
+    gitautopushsetup -s "*-*-* 06,18:00:00" ~/.local/src/albumlog.m   # twice a day
+    gitautopushsetup -s hourly ~/.local/src/albumlog.m
+
+  Change the schedule of an existing timer (run it again with a new time):
+    gitautopushsetup -t 23:15 ~/.local/src/albumlog.m
+
+  Non-interactive (for example on a new machine):
+    GITHUB_TOKEN=ghp_xxx AUTO_COMMIT=1 ENABLE_LINGER=1 \\
+      gitautopushsetup -t 22:00 ~/.local/src/albumlog.m
+
+  Uninstall:
+    gitautopushsetup --uninstall ~/.local/src/albumlog.m   # one repository
+    gitautopushsetup --uninstall                           # all timers
+
+AFTER INSTALLING
+  Each repository gets a timer and a service named gitautopush-<folder name>,
+  for example gitautopush-albumlog.m for ~/.local/src/albumlog.m
+
+  Next run:   systemctl --user list-timers gitautopush-albumlog.m.timer
+  All timers: systemctl --user list-timers 'gitautopush-*'
+  Logs:       journalctl --user -u gitautopush-albumlog.m.service -e
+  Run now:    systemctl --user start gitautopush-albumlog.m.service
+  Change:     gitautopushsetup -t HH:MM "/path/to/repository"
+  Remove:     gitautopushsetup --uninstall "/path/to/repository"
+
+NOTES
+  - With AUTO_COMMIT=1, every change in the folder is committed. Check your
+    .gitignore first, especially for files with credentials.
+  - A push is never forced. If GitHub has newer commits, the push fails and
+    the reason is shown in the logs.
+  - Fine-grained tokens expire. If pushes fail with an authentication error,
+    create a new token and run the setup again (answer n to "Keep it?").
+  - Two repositories with the same folder name share a unit name.
+EOF
+}
+
+unit_name() {  # unit_name REPO_PATH
+    printf 'gitautopush-%s' "$(basename "$1" | sed 's/[^A-Za-z0-9_.-]/-/g')"
+}
+
+time_to_calendar() {  # HH:MM -> "*-*-* HH:MM:00", or fail
+    local t="$1"
+    [[ $t =~ ^(?[0-9]|2[0-3]):([0-5][0-9])$ ]] || return 1
+    printf '*-*-* %02d:%s:00' "$((10#${BASH_REMATCH}))" "${BASH_REMATCH}"
+}
+
+# ---------- arguments ----------
+
+mode=install
+schedule="${SCHEDULE:-}"
+repo=""
+while (( $# )); do
+    case $1 in
+        -t|--time)
+            [[ -n ${2:-} ]] || die "$1 needs a value (HH:MM)"
+            schedule="$(time_to_calendar "$2")" || die "invalid time '$2' (use HH:MM, 24-hour)"
+            shift 2 ;;
+        -s|--schedule)
+            [[ -n ${2:-} ]] || die "$1 needs a value"
+            schedule="$2"; shift 2 ;;
+        -u|--uninstall) mode=uninstall; shift ;;
+        -h|--help) usage; exit 0 ;;
+        -*) usage >&2; die "unknown option: $1" ;;
+        *) [[ -z $repo ]] || die "only one repository path is allowed"
+           repo="$1"; shift ;;
+    esac
+done
+
+(( EUID != 0 )) || die "run this as your normal user, not as root (sudo is requested when needed)"
+command -v systemctl >/dev/null || die "systemd is required"
+systemctl --user show-environment >/dev/null 2>&1 \
+    || die "no systemd user session found; log in from a normal session and retry"
+
+# ---------- uninstall ----------
+
+remove_unit() {  # remove_unit UNIT_NAME
+    local u="$1"
+    systemctl --user disable --now "$u.timer" >/dev/null 2>&1 || true
+    systemctl --user stop "$u.service" >/dev/null 2>&1 || true
+    rm -f "$UNITS/$u.timer" "$UNITS/$u.service"
+    say "removed $u"
+}
+
+if [[ $mode == uninstall ]]; then
+    shopt -s nullglob
+    units=()
+    if [[ -n $repo ]]; then
+        repo="${repo/#\~/$HOME}"
+        u="$(unit_name "$repo")"
+        [[ -e $UNITS/$u.timer || -e $UNITS/$u.service ]] \
+            || die "no timer found for $repo (looked for $u)"
+        units=("$u")
+    else
+        for f in "$UNITS"/gitautopush-*.timer; do
+            b="$(basename "$f")"; units+=("${b%.timer}")
+        done
+        (( ${#units[@]} )) || say "no gitautopush timers found"
+        if (( ${#units[@]} )); then
+            say "This will remove: ${units[*]}"
+            ask_yn "Continue?" n || die "cancelled"
+        fi
+    fi
+    for u in "${units[@]}"; do remove_unit "$u"; done
+    systemctl --user daemon-reload
+    systemctl --user reset-failed >/dev/null 2>&1 || true
+
+    if ! compgen -G "$UNITS/gitautopush-*.timer" >/dev/null; then
+        if ask_yn "No timers left. Also delete the saved token and helper scripts?" y; then
+            rm -f "$TOKEN_FILE" "$BIN/gitautopush" "$BIN/gitaskpasstoken"
+            rmdir "$CONF" 2>/dev/null || true
+            say "removed token and helper scripts"
+        fi
+        if [[ $(loginctl show-user "$USER" -p Linger --value 2>/dev/null) == yes ]]; then
+            if ask_yn "Linger is enabled. Disable it?" n; then
+                loginctl disable-linger "$USER" 2>/dev/null \
+                    || sudo loginctl disable-linger "$USER"
+            fi
+        fi
+    fi
+    say "Done."
+    exit 0
+fi
+
+# ---------- install: checks ----------
+
+[[ -f /etc/arch-release ]] || say "note: this is not Arch Linux; continuing anyway"
+
+if ! command -v git >/dev/null; then
+    say "git is not installed; installing it with pacman (sudo required)"
+    command -v pacman >/dev/null || die "pacman not found; install git manually"
+    sudo pacman -S --needed --noconfirm git
+fi
+
+if [[ -z $repo ]]; then
+    read -r -e -p "Path of the Git repository: " repo
+fi
+repo="${repo/#\~/$HOME}"
+[[ -d $repo ]] || die "folder not found: $repo"
+repo="$(cd "$repo" && pwd -P)"
+git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1 \
+    || die "not a Git repository: $repo"
+
+remote_url="$(git -C "$repo" remote get-url origin 2>/dev/null)" \
+    || die "the repository has no 'origin' remote"
+case $remote_url in
+    https://*) ;;
+    *) die "origin is '$remote_url'; this setup needs an https:// GitHub URL (for SSH, use a deploy key instead)" ;;
+esac
+
+git -C "$repo" rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1 \
+    || die "no upstream branch set; run once: git -C '$repo' push -u origin BRANCH"
+
+# ---------- install: options ----------
+
+if [[ -z $schedule ]]; then
+    if [[ -t 0 ]]; then
+        say "Schedule: a time such as 22:00, or a systemd calendar expression"
+        say "  (examples: hourly | *-*-* 06,18:00:00 | Mon..Fri *-*-* 09:00)"
+        read -r -p "Schedule [$DEFAULT_TIME, daily, local time]: " answer || answer=""
+        answer="${answer:-$DEFAULT_TIME}"
+    else
+        answer="$DEFAULT_TIME"
+    fi
+    schedule="$(time_to_calendar "$answer")" || schedule="$answer"
+fi
+command -v systemd-analyze >/dev/null \
+    && { systemd-analyze calendar "$schedule" >/dev/null 2>&1 \
+         || die "invalid schedule: $schedule (test it with: systemd-analyze calendar \"...\")"; }
+
+if [[ -z ${AUTO_COMMIT:-} ]]; then
+    if ask_yn "Commit uncommitted changes automatically (git add -A)?" y; then
+        AUTO_COMMIT=1
+    else
+        AUTO_COMMIT=0
+    fi
+fi
+if [[ -z ${ENABLE_LINGER:-} ]]; then
+    if ask_yn "Keep the timer running when you are logged out (enable-linger)?" y; then
+        ENABLE_LINGER=1
+    else
+        ENABLE_LINGER=0
+    fi
+fi
+
+# ---------- install: token ----------
+
+mkdir -p "$CONF" "$BIN" "$UNITS"
+chmod 700 "$CONF"
+
+keep_token=0
+if [[ -z ${GITHUB_TOKEN:-} && -s $TOKEN_FILE ]]; then
+    ask_yn "A token already exists. Keep it?" y && keep_token=1
+fi
+if (( ! keep_token )); then
+    if [[ -z ${GITHUB_TOKEN:-} ]]; then
+        read -r -s -p "GitHub token (input is hidden): " GITHUB_TOKEN
+        echo
+    fi
+    [[ -n $GITHUB_TOKEN ]] || die "the token is empty"
+    ( umask 077; printf '%s' "$GITHUB_TOKEN" > "$TOKEN_FILE" )
+    unset GITHUB_TOKEN
+fi
+chmod 600 "$TOKEN_FILE"
+
+# ---------- install: helper scripts ----------
+
+cat > "$BIN/gitaskpasstoken" <<'EOF'
+#!/bin/sh
+case "$1" in
+    Username*) echo "x-access-token" ;;
+    *) cat "$HOME/.config/gitautopush/token" ;;
+esac
+EOF
+
+cat > "$BIN/gitautopush" <<'EOF'
+#!/bin/bash
+# Commit local changes (optional) and push them if the branch is ahead.
+set -euo pipefail
+
+REPO="${1:?usage: gitautopush REPO_PATH}"
+AUTO_COMMIT="${AUTO_COMMIT:-1}"
+
+export GIT_ASKPASS="$HOME/.local/bin/gitaskpasstoken"
+export GIT_TERMINAL_PROMPT=0
+
+cd "$REPO"
+git rev-parse --is-inside-work-tree >/dev/null
+
+if [[ $AUTO_COMMIT == 1 && -n $(git status --porcelain) ]]; then
+    git add -A
+    git commit -q -m "Auto-commit $(date -Iseconds)"
+    echo "committed local changes"
+fi
+
+upstream=$(git rev-parse --abbrev-ref '@{u}' 2>/dev/null) \
+    || { echo "no upstream branch set (run: git push -u origin BRANCH)" >&2; exit 1; }
+
+ahead=$(git rev-list --count "$upstream"..HEAD)
+if (( ahead == 0 )); then
+    echo "nothing to push"
+    exit 0
+fi
+
+git -c credential.helper= push
+echo "pushed $ahead commit(s)"
+EOF
+
+chmod 755 "$BIN/gitaskpasstoken" "$BIN/gitautopush"
+
+# ---------- install: check the token ----------
+
+say "Checking access to $remote_url ..."
+if GIT_ASKPASS="$BIN/gitaskpasstoken" GIT_TERMINAL_PROMPT=0 \
+        git -C "$repo" -c credential.helper= ls-remote --heads origin >/dev/null 2>&1; then
+    say "access OK"
+else
+    say "warning: GitHub did not accept the token (wrong token, no access to this repo, or offline)"
+    ask_yn "Continue with the setup anyway?" n || die "setup cancelled"
+fi
+
+# ---------- install: systemd units ----------
+
+unit="$(unit_name "$repo")"
+name="${unit#gitautopush-}"
+
+cat > "$UNITS/$unit.service" <<EOF
+[Unit]
+Description=Push $repo to GitHub
+
+[Service]
+Type=oneshot
+Environment=AUTO_COMMIT=$AUTO_COMMIT
+ExecStart="$BIN/gitautopush" "$repo"
+EOF
+
+cat > "$UNITS/$unit.timer" <<EOF
+[Unit]
+Description=GitHub push check for $name
+
+[Timer]
+OnCalendar=$schedule
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable "$unit.timer"
+systemctl --user restart "$unit.timer"   # applies a changed schedule on re-runs
+
+if (( ENABLE_LINGER )); then
+    if [[ $(loginctl show-user "$USER" -p Linger --value 2>/dev/null) != yes ]]; then
+        loginctl enable-linger "$USER" 2>/dev/null \
+            || { say "linger needs elevated rights (sudo required)"; sudo loginctl enable-linger "$USER"; }
+    fi
+fi
+
+# ---------- install: summary and test run ----------
+
+tz="$(timedatectl show -p Timezone --value 2>/dev/null || true)"
+say
+say "Schedule: $schedule${tz:+ ($tz)}"
+systemctl --user list-timers "$unit.timer" --no-pager 2>/dev/null | sed -n '1,2p' || true
+
+if ask_yn "Run a push check now?" y; then
+    systemctl --user start "$unit.service" || true
+    journalctl --user -u "$unit.service" -n 10 --no-pager || true
+fi
+
+say
+say "Done."
+say "  Next run:   systemctl --user list-timers $unit.timer"
+say "  Logs:       journalctl --user -u $unit.service -e"
+say "  Run now:    systemctl --user start $unit.service"
+say "  Change:     gitautopushsetup -t HH:MM \"$repo\""
+say "  Remove:     gitautopushsetup --uninstall \"$repo\""
+say "  Full help:  gitautopushsetup --help"
