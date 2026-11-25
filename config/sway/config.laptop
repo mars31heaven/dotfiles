@@ -326,7 +326,7 @@ bindsym $mod+r mode "resize"
 
     exec wl-paste --type text --watch cliphist store
 
-    exec_always swaybg -i /home/mrcl/.local/share/wallpapers/mar.jpg -m fill
+    exec_always swaybg -c 313131
 
     exec mako
     exec dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus
