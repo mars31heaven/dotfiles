@@ -330,8 +330,6 @@ bindsym $mod+r mode "resize"
 
     exec wlsunset -t 4000 -T 4200
 
-    exec python3 ~/.dotfiles/bin/smart_active.py
-
 # Persistent terminal workspace
 
     set $bin ~/.dotfiles/bin

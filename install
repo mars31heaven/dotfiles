@@ -1,71 +1,210 @@
 #!/bin/bash
-
 # ============================================================
-# Arch Linux / Artix Linux + Sway
-# install
+# Arch Linux / Artix Linux + Sway: install
 #
-# Base environment installation for Arch Linux or Artix Linux.
+# Run as the normal user:   ./install
+# Expects the repository at ~/.dotfiles.
+# Arch uses systemd, Artix uses runit.
 #
-# The script can be used for both laptops and desktop PCs.
-# Machine-specific configuration is selected automatically.
-#
-# Arch Linux uses systemd.
-# Artix Linux uses runit.
-#
-# Run as the normal user:
-#
-#     ./install
-#
-# The script assumes that the dotfiles repository is already
-# located at:
-#
-#     $HOME/.dotfiles
+# TO UPDATE LATER (only the top of this file normally changes):
+#   - new package        -> add it to a PKGS_* or AUR_PKGS list
+#   - new config symlink -> add a line to a LINKS_* list
+#   - new service        -> SYSTEMD_* lists, or RUNIT_PKGS_* lists
 # ============================================================
 
 set -e
 
-# ------------------------------------------------------------
-# Helpers
-# ------------------------------------------------------------
+DOTFILES="$HOME/.dotfiles"
 
-info() {
-    :
-}
+# ============================================================
+# 1. PACKAGE LISTS
+# ============================================================
 
-success() {
-    printf '\033[1;32m==> %s\033[0m\n' "$1"
-}
+# Both machines, both distributions.
+PKGS_COMMON=(
+    7zip autotiling base base-devel bat bc bluetui bluez bluez-utils
+    brightnessctl chafa cliphist cups cups-pk-helper efibootmgr exiv2
+    expac eza fastfetch fatsort fd foot fuzzel fzf gdu git grim
+    gst-plugin-pipewire gvfs gvfs-mtp highlight imagemagick jq
+    kdeconnect keepassxc lf libjpeg-turbo libpulse libreoffice-still
+    libretro-core-info libretro-genesis-plus-gx libretro-mgba
+    libretro-overlays libretro-snes9x libva-utils mako man-db
+    mediainfo mkinitcpio moreutils mpv mpv-mpris neovim newsboat
+    nicotine+ nmap noto-fonts noto-fonts-cjk noto-fonts-emoji ntfs-3g
+    odt2txt openssh otf-font-awesome otf-hermit pamixer pass
+    pipewire pipewire-alsa pipewire-jack pipewire-pulse playerctl
+    python-adblock python-pykeepass qutebrowser reaper retroarch
+    retroarch-assets-ozone ripgrep rsync scrcpy slurp smartmontools
+    sshfs sudo sway swaybg swappy swayidle swayimg swaylock syncthing
+    system-config-printer tmux torbrowser-launcher translate-shell
+    tree ttf-dejavu ttf-liberation ufw unrar unzip urlscan w3m waybar
+    wdisplays wf-recorder wget wiremix wireplumber wl-clipboard wlopm
+    wlsunset wmenu woff2-font-awesome wtype xdg-utils xorg-xwayland
+    yt-dlp zathura zathura-pdf-mupdf zip zoxide zsh zsh-autosuggestions
+    zsh-completions zsh-history-substring-search zsh-syntax-highlighting
+)
 
-error() {
-    printf '\033[1;31m==> %s\033[0m\n' "$1"
-}
+# Desktop PC (AMD).
+PKGS_PC=(
+    amd-ucode btop calibre cdrtools chromium csound figlet gimp
+    kdenlive mpc mpd mpd-mpris mpdscribble nano networkmanager
+    pavucontrol pfetch-rs python-docx python-matplotlib python-mpd2
+    python-openpyxl python-pandas python-pedalboard python-pip
+    python-pipx python-pydbus python-soundfile python-xlrd
+    qbittorrent reapack rmpc sox systemctl-tui thunderbird typst
+    virtualbox virtualbox-guest-iso vulkan-radeon webkit2gtk-4.1
+    wpa_supplicant xf86-video-amdgpu xf86-video-ati ydotool
+)
 
-# ------------------------------------------------------------
-# Runit service helpers (Artix)
+# Desktop PC on Arch only (an Artix base install chooses its own kernel).
+PKGS_PC_ARCH=(linux-zen linux-zen-headers linux-firmware)
+
+# Laptop (Intel).
+PKGS_LAPTOP=(
+    batsignal bluez-plugins cropgui dhcpcd intel-ucode iwd pcmanfm
+)
+
+# Arch laptop only (Artix deliberately skips power management).
+PKGS_ARCH_LAPTOP=(cpupower powertop thermald tlp tlp-rdw)
+
+# Artix only: runit service definitions, common to both machines.
+PKGS_ARTIX=(bluez-runit cups-runit ufw-runit rsm)
+PKGS_ARTIX_LAPTOP=(dhcpcd-runit iwd-runit)
+
+# AUR (yay also accepts repo packages). One by one, so a failure
+# does not stop the rest.
+AUR_PKGS=(
+    batdoc-bin duckstation-qt-bin fsearch google-chrome htop-vim mdcat
+    nvimpager pass-import pmount puddletag task-spooler timr-bin
+    waterfox-bin wayclip zapzap
+)
+
+# ============================================================
+# 2. SERVICES
 #
-# Runit service *directory* names do not always match the
-# package name (e.g. bluez-runit provides "bluetoothd", not
-# "bluez"), so the service name is resolved from the package's
-# own file list instead of being hardcoded.
-# ------------------------------------------------------------
+# PC networking: NetworkManager. It is enabled, but the installer
+# never restarts it, so the connection does not drop.
+# ============================================================
 
+SYSTEMD_NOW_COMMON=(bluetooth.service cups.service)
+SYSTEMD_NOW_LAPTOP=(dhcpcd.service iwd.service)
+SYSTEMD_KEEP_PC=(NetworkManager.service)
+SYSTEMD_ENABLE=(ufw.service)
+
+# systemd user services, PC only
+SYSTEMD_USER_PC=(mpd.service)
+
+# runit services are resolved from these packages
+RUNIT_PKGS_COMMON=(bluez-runit cups-runit ufw-runit)
+RUNIT_PKGS_LAPTOP=(dhcpcd-runit iwd-runit)
+
+# ============================================================
+# 3. SYMLINK LISTS
+#
+# "path inside ~/.dotfiles : path inside $HOME"
+# @MACHINE@ becomes "laptop" or "pc". Real files in the way are
+# renamed to *.bak.TIMESTAMP, never deleted.
+# ============================================================
+
+LINKS_COMMON=(
+    "zshenv:.zshenv"
+    "config/zsh/zshrc:.config/zsh/.zshrc"
+    "config/zsh/zprofile:.config/zsh/.zprofile"
+    "config/fontconfig:.config/fontconfig"
+    "config/git:.config/git"
+    "config/gtk-2.0:.config/gtk-2.0"
+    "config/gtk-3.0:.config/gtk-3.0"
+    "config/htop/htoprc:.config/htop/htoprc"
+    "config/lf:.config/lf"
+    "config/lf/preview:.local/bin/preview"
+    "config/mako:.config/mako"
+    "config/mpv/input.conf:.config/mpv/input.conf"
+    "config/mpv/mpv.conf:.config/mpv/mpv.conf"
+    "config/mpv/librefmscrobbler.lua:.config/mpv/librefmscrobbler.lua"
+    "config/newsboat/config:.config/newsboat/config"
+    "config/nvim:.config/nvim"
+    "config/qutebrowser/config.py:.config/qutebrowser/config.py"
+    "config/qutebrowser/greasemonkey:.config/qutebrowser/greasemonkey"
+    "config/shell/aliasrc:.config/shell/aliasrc"
+    "config/shell/functionrc:.config/shell/functionrc"
+    "config/shell/shortcutrc:.config/shell/shortcutrc"
+    "config/shell/@MACHINE@:.config/shell/@MACHINE@"
+    "config/swayimg:.config/swayimg"
+    "config/tmux/tmux.conf:.config/tmux/tmux.conf"
+    "config/urlscan:.config/urlscan"
+    "config/zathura:.config/zathura"
+    # Machine-specific variants
+    "config/foot/foot.ini.@MACHINE@:.config/foot/foot.ini"
+    "config/fuzzel/fuzzel.ini.@MACHINE@:.config/fuzzel/fuzzel.ini"
+    "config/sway/config.@MACHINE@:.config/sway/config"
+    "config/waybar/config.jsonc.@MACHINE@:.config/waybar/config.jsonc"
+    "config/waybar/style.css.@MACHINE@:.config/waybar/style.css"
+    # ~/.local/share
+    "share/applications:.local/share/applications"
+    "share/wallpapers:.local/share/wallpapers"
+    "share/sound-notifications/batterylow.opus:.local/share/sound-notifications/batterylow.opus"
+)
+
+LINKS_PC=(
+    "config/mpd/mpd.conf:.config/mpd/mpd.conf"
+    "config/rmpc:.config/rmpc"
+)
+
+LINKS_LAPTOP=()
+
+# ============================================================
+# 4. HELPERS
+# ============================================================
+
+info()    { printf '\033[1;34m==> %s\033[0m\n' "$1"; }
+success() { printf '\033[1;32m==> %s\033[0m\n' "$1"; }
+error()   { printf '\033[1;31m==> %s\033[0m\n' "$1" >&2; }
+
+# A wrong symlink is replaced; a real file or directory is moved aside.
+link() {
+    local src="$DOTFILES/$1" dst="$HOME/$2"
+
+    if [ ! -e "$src" ]; then
+        error "Missing in the repository, skipped: $1"
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$dst")"
+
+    if [ -L "$dst" ]; then
+        [ "$(readlink "$dst")" = "$src" ] && return 0
+        rm "$dst"
+    elif [ -e "$dst" ]; then
+        mv "$dst" "$dst.bak.$(date +%s)"
+        info "Backed up existing $2"
+    fi
+
+    ln -s "$src" "$dst"
+}
+
+link_all() {
+    local entry
+    for entry in "$@"; do
+        entry="${entry//@MACHINE@/$MACHINE}"
+        link "${entry%%:*}" "${entry#*:}"
+    done
+}
+
+# runit directory names do not always match the package name
+# (bluez-runit provides "bluetoothd"), so read them from the package.
 runit_service_name() {
-    local pkg="$1"
-
-    pacman -Qlq "$pkg" 2>/dev/null \
+    pacman -Qlq "$1" 2>/dev/null \
         | grep -E '^/etc/runit/sv/[^/]+/$' \
         | head -n1 \
         | sed -E 's#^/etc/runit/sv/([^/]+)/$#\1#'
 }
 
 enable_runit_service() {
-    local pkg="$1"
     local svc
-
-    svc="$(runit_service_name "$pkg")"
+    svc="$(runit_service_name "$1")"
 
     if [ -z "$svc" ]; then
-        error "Could not determine the runit service provided by $pkg"
+        error "Could not determine the runit service provided by $1"
         return 1
     fi
 
@@ -75,9 +214,9 @@ enable_runit_service() {
     fi
 }
 
-# ------------------------------------------------------------
-# Checks
-# ------------------------------------------------------------
+# ============================================================
+# 5. CHECKS
+# ============================================================
 
 if [ "$EUID" -eq 0 ]; then
     error "Do not run this script as root."
@@ -89,32 +228,16 @@ if ! command -v pacman >/dev/null 2>&1; then
     exit 1
 fi
 
-DOTFILES="$HOME/.dotfiles"
-
 if [ ! -d "$DOTFILES" ]; then
-    error "Dotfiles directory not found:"
-    error "$DOTFILES"
+    error "Dotfiles directory not found: $DOTFILES"
     error "Clone your repository first."
     exit 1
 fi
 
-# ------------------------------------------------------------
-# Verify sudo access
-#
-# On a fresh manual install, the user is not in the sudoers
-# file yet. The script cannot fix this itself: it runs as this
-# same unprivileged user, so every sudo call below would fail
-# the same way. This must be done as root first, e.g.:
-#
-#     su -
+# On a fresh manual install the user is not in sudoers yet. Fix it
+# as root first:
 #     usermod -aG wheel <user>
-#     EDITOR=nvim visudo   # uncomment %wheel ALL=(ALL:ALL) ALL
-#
-# or by creating /etc/sudoers.d/10-<user> (mode 0440) containing:
-#
-#     <user> ALL=(ALL) ALL
-# ------------------------------------------------------------
-
+#     EDITOR=nvim visudo     # uncomment %wheel ALL=(ALL:ALL) ALL
 if ! sudo -v 2>/dev/null; then
     error "This user does not have sudo access yet."
     error "Fix this as root before running the installer, e.g.:"
@@ -127,23 +250,14 @@ if ! id -nG "$USER" | tr ' ' '\n' | grep -qx wheel; then
     sudo usermod -aG wheel "$USER"
 fi
 
-# ------------------------------------------------------------
-# Detect init system
-# ------------------------------------------------------------
-
 if [ -d /run/runit/service ]; then
     INIT="runit"
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ]; then
     INIT="systemd"
 else
-    error "Could not determine the init system."
-    error "This installer supports systemd and runit."
+    error "Could not determine the init system (supported: systemd, runit)."
     exit 1
 fi
-
-# ------------------------------------------------------------
-# Detect distribution
-# ------------------------------------------------------------
 
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -153,22 +267,13 @@ else
 fi
 
 case "$ID" in
-    arch)
-        DISTRO="arch"
-        ;;
-    artix)
-        DISTRO="artix"
-        ;;
+    arch)  DISTRO="arch" ;;
+    artix) DISTRO="artix" ;;
     *)
-        error "Unsupported distribution: $ID"
-        error "This installer supports Arch Linux and Artix Linux."
+        error "Unsupported distribution: $ID (supported: Arch, Artix)"
         exit 1
         ;;
 esac
-
-# ------------------------------------------------------------
-# Verify the expected init system for the distribution
-# ------------------------------------------------------------
 
 if [ "$DISTRO" = "arch" ] && [ "$INIT" != "systemd" ]; then
     error "Arch Linux was detected without systemd."
@@ -183,9 +288,7 @@ fi
 info "Detected $DISTRO with $INIT"
 
 # ============================================================
-# PACMAN
-#
-# Configure pacman before installing any software.
+# 6. PACMAN
 # ============================================================
 
 info "Configuring pacman"
@@ -195,29 +298,17 @@ sudo sed -i \
     -e 's/^[[:space:]]*#\?[[:space:]]*ParallelDownloads[[:space:]]*=.*$/ParallelDownloads = 10/' \
     /etc/pacman.conf
 
-# ============================================================
-# ARCH REPOSITORIES ON ARTIX
-#
-# Artix does not have direct access to Arch's package
-# repositories by default. Every package installed later in
-# this script is expected to be available on both distributions,
-# so the Arch "extra" and "multilib" repositories are enabled
-# here before any packages are installed.
-#
-# See: https://wiki.artixlinux.org/Main/Repositories
-# ============================================================
+# Artix has no access to Arch's repositories by default. Every package
+# below must exist on both, so enable Arch's extra and multilib first.
+# See https://wiki.artixlinux.org/Main/Repositories
+if [ "$DISTRO" = "artix" ] && ! grep -q '^\[extra\]' /etc/pacman.conf; then
 
-if [ "$DISTRO" = "artix" ]; then
+    info "Enabling Arch Linux repositories on Artix"
 
-    if ! grep -q '^\[extra\]' /etc/pacman.conf; then
+    sudo pacman -S --needed artix-archlinux-support
+    sudo pacman-key --populate archlinux
 
-        info "Enabling Arch Linux repositories on Artix"
-
-        sudo pacman -S --needed artix-archlinux-support
-
-        sudo pacman-key --populate archlinux
-
-        sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
+    sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
 
 [extra]
 Include = /etc/pacman.d/mirrorlist-arch
@@ -226,431 +317,161 @@ Include = /etc/pacman.d/mirrorlist-arch
 Include = /etc/pacman.d/mirrorlist-arch
 EOF
 
-        info "Synchronizing package databases"
-
-        sudo pacman -Syu
-
-    fi
-
+    sudo pacman -Syu
 fi
 
 # ============================================================
-# INSTALLATION TARGET
+# 7. MACHINE TYPE
 # ============================================================
 
-printf '\n'
-printf '%s\n' "Select installation type:"
-printf '%s\n' "  1) Laptop"
-printf '%s\n' "  2) Desktop PC"
-printf '\n'
+printf '\nSelect installation type:\n  1) Laptop\n  2) Desktop PC\n\n'
 
 while true; do
     read -r -p "Choice [1-2]: " INSTALL_TYPE
-
     case "$INSTALL_TYPE" in
-        1)
-            LAPTOP=true
-            MACHINE="laptop"
-            break
-            ;;
-        2)
-            LAPTOP=false
-            MACHINE="pc"
-            break
-            ;;
-        *)
-            printf '%s\n' "Please enter 1 or 2."
-            ;;
+        1) LAPTOP=true;  MACHINE="laptop"; break ;;
+        2) LAPTOP=false; MACHINE="pc";     break ;;
+        *) echo "Please enter 1 or 2." ;;
     esac
 done
 
-# ------------------------------------------------------------
-# Detect CPU architecture/vendor
-# ------------------------------------------------------------
-
+# Laptop = Intel, desktop = AMD. Safety check.
 CPU_VENDOR="$(lscpu | awk -F: '/Vendor ID:/ {gsub(/^[ \t]+/, "", $2); print $2}')"
 
 if [ "$LAPTOP" = true ] && [ "$CPU_VENDOR" != "GenuineIntel" ]; then
-    error "The laptop installation is expected to use an Intel CPU."
-    error "Detected CPU vendor: $CPU_VENDOR"
+    error "The laptop installation expects an Intel CPU (found: $CPU_VENDOR)."
     exit 1
 fi
 
 if [ "$LAPTOP" = false ] && [ "$CPU_VENDOR" != "AuthenticAMD" ]; then
-    error "The desktop PC installation is expected to use an AMD CPU."
-    error "Detected CPU vendor: $CPU_VENDOR"
+    error "The desktop PC installation expects an AMD CPU (found: $CPU_VENDOR)."
     exit 1
 fi
 
 # ============================================================
-# OFFICIAL REPOSITORIES
+# 8. PACKAGES
 # ============================================================
 
 info "Installing packages from the official repositories"
 
-# ------------------------------------------------------------
-# Common packages
-#
-# These packages are installed on both laptops and desktop PCs.
-# --needed prevents packages that are already installed from
-# being unnecessarily reinstalled.
-#
-# ly is intentionally not included. It is installed by
-# archinstall when a graphical desktop is selected, but it is
-# not part of this environment.
-# ------------------------------------------------------------
-
-sudo pacman -S --needed \
-    7zip \
-    autotiling \
-    base \
-    base-devel \
-    bat \
-    bc \
-    bluetui \
-    bluez \
-    bluez-utils \
-    bluez-plugins \
-    brightnessctl \
-    chafa \
-    cliphist \
-    cropgui \
-    cups \
-    cups-pk-helper \
-    efibootmgr \
-    exiv2 \
-    expac \
-    eza \
-    fastfetch \
-    fatsort \
-    fd \
-    foot \
-    fuzzel \
-    fzf \
-    gdu \
-    git \
-    grim \
-    gst-plugin-pipewire \
-    gvfs \
-    gvfs-mtp \
-    highlight \
-    imagemagick \
-    jq \
-    kdeconnect \
-    keepassxc \
-    lf \
-    libjpeg-turbo \
-    libpulse \
-    libreoffice-still \
-    libretro-core-info \
-    libretro-genesis-plus-gx \
-    libretro-mgba \
-    libretro-overlays \
-    libretro-snes9x \
-    libva-utils \
-    mako \
-    man-db \
-    mediainfo \
-    mkinitcpio \
-    moreutils \
-    mpv \
-    mpv-mpris \
-    neovim \
-    newsboat \
-    nicotine+ \
-    nmap \
-    noto-fonts \
-    noto-fonts-cjk \
-    noto-fonts-emoji \
-    ntfs-3g \
-    odt2txt \
-    openssh \
-    otf-font-awesome \
-    otf-hermit \
-    pamixer \
-    pass \
-    pcmanfm \
-    pipewire \
-    pipewire-alsa \
-    pipewire-jack \
-    pipewire-pulse \
-    python-adblock \
-    python-pykeepass \
-    qutebrowser \
-    reaper \
-    retroarch \
-    retroarch-assets-ozone \
-    ripgrep \
-    rsync \
-    scrcpy \
-    slurp \
-    smartmontools \
-    sshfs \
-    sudo \
-    sway \
-    swaybg \
-    swappy \
-    swayidle \
-    swayimg \
-    swaylock \
-    syncthing \
-    system-config-printer \
-    tmux \
-    torbrowser-launcher \
-    tree \
-    ttf-dejavu \
-    ttf-liberation \
-    translate-shell \
-    ufw \
-    unrar \
-    unzip \
-    urlscan \
-    w3m \
-    waybar \
-    wdisplays \
-    wf-recorder \
-    wget \
-    wiremix \
-    wireplumber \
-    wlopm \
-    wlsunset \
-    wmenu \
-    woff2-font-awesome \
-    wtype \
-    xdg-utils \
-    xorg-xwayland \
-    yt-dlp \
-    zathura \
-    zathura-pdf-mupdf \
-    zip \
-    zoxide \
-    zsh \
-    zsh-autosuggestions \
-    zsh-completions \
-    zsh-history-substring-search \
-    zsh-syntax-highlighting
-
-# ------------------------------------------------------------
-# Networking
-#
-# dhcpcd + iwd are used on every machine and every distribution.
-# NetworkManager is intentionally not installed.
-# ------------------------------------------------------------
-
-info "Installing networking packages"
-
-sudo pacman -S --needed \
-    dhcpcd \
-    iwd
-
-# ------------------------------------------------------------
-# Artix runit service packages
-#
-# Arch's systemd units are already provided by the packages
-# above and by bluez/cups/ufw in the common package list.
-# Artix additionally needs the *-runit packages that ship the
-# corresponding runit service definitions.
-# ------------------------------------------------------------
-
-if [ "$DISTRO" = "artix" ]; then
-
-    info "Installing Artix runit service packages"
-
-    sudo pacman -S --needed \
-        dhcpcd-runit \
-        iwd-runit \
-        bluez-runit \
-        cups-runit \
-        ufw-runit \
-        rsm
-
-fi
-
-# ------------------------------------------------------------
-# CPU-specific packages
-# ------------------------------------------------------------
-
-if [ "$CPU_VENDOR" = "GenuineIntel" ]; then
-
-    info "Installing Intel-specific packages"
-
-    sudo pacman -S --needed \
-        intel-ucode
-
-elif [ "$CPU_VENDOR" = "AuthenticAMD" ]; then
-
-    info "Installing AMD-specific packages"
-
-    sudo pacman -S --needed \
-        amd-ucode
-
-fi
-
-# ------------------------------------------------------------
-# Laptop-only packages
-# ------------------------------------------------------------
+PKGS=("${PKGS_COMMON[@]}")
 
 if [ "$LAPTOP" = true ]; then
-
-    sudo pacman -S --needed \
-        batsignal
-
+    PKGS+=("${PKGS_LAPTOP[@]}")
+    [ "$DISTRO" = "arch" ] && PKGS+=("${PKGS_ARCH_LAPTOP[@]}")
+else
+    PKGS+=("${PKGS_PC[@]}")
+    [ "$DISTRO" = "arch" ] && PKGS+=("${PKGS_PC_ARCH[@]}")
 fi
 
-# ------------------------------------------------------------
-# Arch laptop power-management packages
-#
-# Artix intentionally does not install this stack.
-# ------------------------------------------------------------
-
-if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
-
-    sudo pacman -S --needed \
-        cpupower \
-        powertop \
-        thermald \
-        tlp \
-        tlp-rdw
-
+if [ "$DISTRO" = "artix" ]; then
+    PKGS+=("${PKGS_ARTIX[@]}")
+    [ "$LAPTOP" = true ] && PKGS+=("${PKGS_ARTIX_LAPTOP[@]}")
 fi
 
-# ============================================================
-# DESKTOP PC MUSIC
-#
-# MPD and rmpc are used only on the desktop PC.
-# The laptop uses mpv for music playback.
-# ============================================================
-
-if [ "$LAPTOP" = false ]; then
-
-    info "Installing desktop music software"
-
-    sudo pacman -S --needed \
-        mpd \
-        rmpc
-
-fi
-
-# ============================================================
-# AUR
-#
-# Used on both Arch and Artix. On Artix this relies on the
-# Arch repositories enabled earlier in the script.
-# ============================================================
-
-info "Installing AUR helper"
+sudo pacman -S --needed "${PKGS[@]}"
 
 if ! command -v yay >/dev/null 2>&1; then
+    info "Installing yay"
     tmpdir="$(mktemp -d)"
-
-    git clone \
-        https://aur.archlinux.org/yay-bin.git \
-        "$tmpdir/yay-bin"
-
-    (
-        cd "$tmpdir/yay-bin"
-        makepkg -si --noconfirm
-    )
-
+    git clone https://aur.archlinux.org/yay-bin.git "$tmpdir/yay-bin"
+    ( cd "$tmpdir/yay-bin" && makepkg -si --noconfirm )
     rm -rf "$tmpdir"
 fi
 
 info "Installing packages from the AUR"
 
-AUR_PACKAGES="
-    batdoc-bin
-    duckstation-qt-bin
-    fsearch
-    google-chrome
-    htop-vim
-    mdcat
-    nvimpager
-    pass-import
-    pmount
-    puddletag
-    task-spooler
-    timr-bin
-    waterfox-bin
-    wayclip
-    zapzap
-"
-
-AUR_FAILED=""
-
-for pkg in $AUR_PACKAGES; do
-    if ! yay -S --needed --noconfirm "$pkg"; then
+AUR_FAILED=()
+for pkg in "${AUR_PKGS[@]}"; do
+    yay -S --needed --noconfirm "$pkg" || {
         error "Failed to install AUR package: $pkg"
-        AUR_FAILED="$AUR_FAILED $pkg"
-    fi
+        AUR_FAILED+=("$pkg")
+    }
 done
 
-if [ -n "$AUR_FAILED" ]; then
-    error "The following AUR packages failed to install:$AUR_FAILED"
+if [ "${#AUR_FAILED[@]}" -gt 0 ]; then
+    error "AUR packages that failed: ${AUR_FAILED[*]}"
     error "Continuing with the rest of the installation."
 fi
 
 # ============================================================
-# SERVICES
+# 9. SERVICES
 #
-# Arch uses systemd units. Artix uses the *-runit packages
-# installed earlier; their service names are resolved
-# dynamically since they don't always match the package name
-# (e.g. bluez-runit -> bluetoothd).
-#
-# elogind-runit (seat management, required for Sway under
-# runit) is expected to already be enabled as part of a manual
-# Artix base install, so it is not touched here.
+# elogind-runit (needed by Sway under runit) is expected to be
+# enabled already by the manual Artix base install.
 # ============================================================
+
+SYSTEMD_NOW=("${SYSTEMD_NOW_COMMON[@]}")
+RUNIT_PKGS=("${RUNIT_PKGS_COMMON[@]}")
+
+if [ "$LAPTOP" = true ]; then
+    SYSTEMD_NOW+=("${SYSTEMD_NOW_LAPTOP[@]}")
+    RUNIT_PKGS+=("${RUNIT_PKGS_LAPTOP[@]}")
+fi
 
 if [ "$INIT" = "systemd" ]; then
 
-    info "Enabling Arch system services"
+    info "Enabling systemd services"
 
-    sudo systemctl enable --now dhcpcd.service
-    sudo systemctl enable --now iwd.service
-    sudo systemctl enable --now bluetooth.service
-    sudo systemctl enable --now cups.service
+    for unit in "${SYSTEMD_NOW[@]}"; do
+        sudo systemctl enable --now "$unit"
+    done
+    for unit in "${SYSTEMD_ENABLE[@]}"; do
+        sudo systemctl enable "$unit"
+    done
 
-    # UFW is installed and enabled, but its service does not need
-    # to remain running as a conventional daemon.
-    sudo systemctl enable ufw.service
+    if [ "$LAPTOP" = false ]; then
+        for unit in "${SYSTEMD_KEEP_PC[@]}"; do
+            sudo systemctl enable --now "$unit"
+        done
+    fi
 
-elif [ "$INIT" = "runit" ]; then
+else
 
-    info "Enabling Artix runit services"
+    info "Enabling runit services"
 
-    for pkg in dhcpcd-runit iwd-runit bluez-runit cups-runit ufw-runit; do
+    for pkg in "${RUNIT_PKGS[@]}"; do
         enable_runit_service "$pkg"
     done
 
 fi
 
 # ============================================================
-# UFW
+# 10. AUTOLOGIN ON TTY1 (systemd)
+#
+# No display manager: tty1 logs in automatically and zprofile
+# starts Sway. On Artix this is part of the base install.
+# ============================================================
+
+if [ "$INIT" = "systemd" ]; then
+
+    info "Configuring tty1 autologin for $USER"
+
+    sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+    sudo tee /etc/systemd/system/getty@tty1.service.d/autologin.conf >/dev/null <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin @USER@ - $TERM
+EOF
+    sudo sed -i "s/@USER@/$USER/" \
+        /etc/systemd/system/getty@tty1.service.d/autologin.conf
+fi
+
+# ============================================================
+# 11. UFW
 # ============================================================
 
 info "Configuring UFW"
 
-# Open ports for KDE Connect to work.
-sudo ufw allow 1714:1764/udp
+sudo ufw allow 1714:1764/udp     # KDE Connect
 sudo ufw allow 1714:1764/tcp
-
-# Allow SSH.
 sudo ufw allow ssh
-
-# Turn off UFW logging.
 sudo ufw logging off
-
-# Enable UFW.
 sudo ufw --force enable
-
-# Reload the rules.
 sudo ufw reload
 
 # ============================================================
-# SYSTEMD-JOURNALD
-#
-# This section exists only on Arch/systemd.
+# 12. SYSTEMD-JOURNALD (Arch only)
 # ============================================================
 
 if [ "$INIT" = "systemd" ]; then
@@ -658,455 +479,103 @@ if [ "$INIT" = "systemd" ]; then
     info "Configuring systemd-journald"
 
     sudo mkdir -p /etc/systemd/journald.conf.d
-
     sudo tee /etc/systemd/journald.conf.d/99-reduce-journal-writes.conf >/dev/null <<'EOF'
 [Journal]
 Storage=volatile
 SystemMaxUse=50M
 ForwardToSyslog=no
 EOF
-
     sudo systemctl restart systemd-journald
-
 fi
 
 # ============================================================
-# SUDOERS
-#
-# Passwordless commands used by the dotfiles.
+# 13. SUDOERS (passwordless commands used by the dotfiles)
 # ============================================================
 
 info "Configuring sudoers"
 
-PACMAN_PATH="$(command -v pacman)"
-REBOOT_PATH="$(command -v reboot)"
-POWEROFF_PATH="$(command -v poweroff)"
-NVIM_PATH="$(command -v nvim)"
 sudo tee /etc/sudoers.d/passwordless-commands >/dev/null <<EOF
-$USER ALL=(ALL) NOPASSWD: $PACMAN_PATH, $REBOOT_PATH, $POWEROFF_PATH, $NVIM_PATH
+$USER ALL=(ALL) NOPASSWD: $(command -v pacman), $(command -v reboot), $(command -v poweroff), $(command -v nvim)
 EOF
 
 sudo chmod 440 /etc/sudoers.d/passwordless-commands
-
 sudo visudo -cf /etc/sudoers.d/passwordless-commands
 
 # ============================================================
-# DOTFILES
+# 14. DOTFILES
 # ============================================================
 
-info "Installing dotfiles"
+info "Linking configuration"
 
-cd "$DOTFILES"
+link_all "${LINKS_COMMON[@]}"
 
-# ------------------------------------------------------------
-# Create configuration directories
-# ------------------------------------------------------------
-
-mkdir -p "$HOME/.config"
-
-# ------------------------------------------------------------
-# Remove old managed configuration
-#
-# This prevents conflicts with previous installations while
-# leaving unrelated user files untouched.
-# ------------------------------------------------------------
-
-info "Preparing configuration directories"
-
-for directory in \
-    fontconfig \
-    foot \
-    fuzzel \
-    git \
-    gtk-2.0 \
-    gtk-3.0 \
-    lf \
-    mako \
-    nvim \
-    sway \
-    swayimg \
-    waybar \
-    zathura
-do
-    rm -rf "$HOME/.config/$directory"
-done
-
-# Applications that may contain local/private state.
-mkdir -p "$HOME/.config/mpd"
-mkdir -p "$HOME/.config/mpv/script-opts"
-mkdir -p "$HOME/.config/newsboat"
-mkdir -p "$HOME/.config/qutebrowser"
-mkdir -p "$HOME/.config/shell"
-mkdir -p "$HOME/.config/zsh"
-
-# ------------------------------------------------------------
-# Symlink complete configuration directories
-# ------------------------------------------------------------
-
-info "Linking configuration directories"
-
-ln -s "$DOTFILES/config/fontconfig" \
-    "$HOME/.config/fontconfig"
-
-ln -s "$DOTFILES/config/git" \
-    "$HOME/.config/git"
-
-ln -s "$DOTFILES/config/gtk-2.0" \
-    "$HOME/.config/gtk-2.0"
-
-ln -s "$DOTFILES/config/gtk-3.0" \
-    "$HOME/.config/gtk-3.0"
-
-ln -s "$DOTFILES/config/lf" \
-    "$HOME/.config/lf"
-
-ln -s "$DOTFILES/config/mako" \
-    "$HOME/.config/mako"
-
-ln -s "$DOTFILES/config/nvim" \
-    "$HOME/.config/nvim"
-
-ln -s "$DOTFILES/config/swayimg" \
-    "$HOME/.config/swayimg"
-
-ln -s "$DOTFILES/config/urlscan" \
-    "$HOME/.config/urlscan"
-
-ln -s "$DOTFILES/config/zathura" \
-    "$HOME/.config/zathura"
-
-# ------------------------------------------------------------
-# Desktop PC music configuration
-# ------------------------------------------------------------
-
-if [ "$LAPTOP" = false ]; then
-
-    info "Linking MPD and rmpc configuration"
-
-    ln -s "$DOTFILES/config/mpd/mpd.conf" \
-        "$HOME/.config/mpd/mpd.conf"
-
-    ln -s "$DOTFILES/config/rmpc" \
-        "$HOME/.config/rmpc"
-
+if [ "$LAPTOP" = true ]; then
+    link_all "${LINKS_LAPTOP[@]}"
+else
+    link_all "${LINKS_PC[@]}"
 fi
 
-# ------------------------------------------------------------
-# Machine-specific configuration
-#
-# The repository contains:
-#
-#     config/foot/foot.ini.laptop
-#     config/foot/foot.ini.pc
-#
-# and equivalent machine-specific files for Sway, Fuzzel and
-# Waybar.
-# ------------------------------------------------------------
-
-info "Linking machine-specific configuration"
-
-ln -sf "$DOTFILES/config/foot/foot.ini.$MACHINE" \
-    "$HOME/.config/foot/foot.ini"
-
-ln -sf "$DOTFILES/config/fuzzel/fuzzel.ini.$MACHINE" \
-    "$HOME/.config/fuzzel/fuzzel.ini"
-
-mkdir -p "$HOME/.config/sway"
-
-ln -sf "$DOTFILES/config/sway/config.$MACHINE" \
-    "$HOME/.config/sway/config"
-
-ln -sf "$DOTFILES/config/waybar/config.jsonc.$MACHINE" \
-    "$HOME/.config/waybar/config.jsonc"
-
-ln -sf "$DOTFILES/config/waybar/style.css.$MACHINE" \
-    "$HOME/.config/waybar/style.css"
-
-# ------------------------------------------------------------
-# mpv
-#
-# Only configuration files and scripts are linked. Generated
-# state and private files remain in the local configuration
-# directory.
-# ------------------------------------------------------------
-
-if [ -f "$DOTFILES/config/mpv/input.conf" ]; then
-    ln -sf "$DOTFILES/config/mpv/input.conf" \
-        "$HOME/.config/mpv/input.conf"
-fi
-
-if [ -f "$DOTFILES/config/mpv/mpv.conf" ]; then
-    ln -sf "$DOTFILES/config/mpv/mpv.conf" \
-        "$HOME/.config/mpv/mpv.conf"
-fi
-
-if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
-    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
-        "$HOME/.config/mpv/librefm-scrobbler.lua"
-fi
-
-if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
-    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
-        "$HOME/.config/mpv/librefm-scrobbler.lua"
-fi
-
-if [ -f "$DOTFILES/config/mpv/librefm-scrobbler.lua" ]; then
-    ln -sf "$DOTFILES/config/mpv/librefm-scrobbler.lua" \
-        "$HOME/.config/mpv/librefm-scrobbler.lua"
-fi
-
-# ------------------------------------------------------------
-# newsboat
-#
-# Only configuration file is linked
-# ------------------------------------------------------------
-
-if [ -f "$DOTFILES/config/newsboat/config" ]; then
-    ln -sf "$DOTFILES/config/newsboat/config" \
-        "$HOME/.config/newsboat/config"
-fi
-
-# ------------------------------------------------------------
-# qutebrowser
-#
-# Only the version-controlled configuration is linked.
-# History, bookmarks and other private state remain local.
-# ------------------------------------------------------------
-
-if [ -f "$DOTFILES/config/qutebrowser/config.py" ]; then
-    ln -sf "$DOTFILES/config/qutebrowser/config.py" \
-        "$HOME/.config/qutebrowser/config.py"
-fi
-
-if [ -d "$DOTFILES/config/qutebrowser/greasemonkey" ]; then
-    rm -rf "$HOME/.config/qutebrowser/greasemonkey"
-    ln -sfn "$DOTFILES/config/qutebrowser/greasemonkey" \
-        "$HOME/.config/qutebrowser/greasemonkey"
-fi
-
-# ------------------------------------------------------------
-# Shell configuration
-#
-# Machine-specific shell files are selected using the same
-# laptop/pc naming convention as the other configuration files.
-# ------------------------------------------------------------
-
-if [ -f "$DOTFILES/config/shell/aliasrc" ]; then
-    ln -sf "$DOTFILES/config/shell/aliasrc" \
-        "$HOME/.config/shell/aliasrc"
-fi
-
-if [ -f "$DOTFILES/config/shell/functionrc" ]; then
-    ln -sf "$DOTFILES/config/shell/functionrc" \
-        "$HOME/.config/shell/functionrc"
-fi
-
-if [ -f "$DOTFILES/config/shell/shortcutrc" ]; then
-    ln -sf "$DOTFILES/config/shell/shortcutrc" \
-        "$HOME/.config/shell/shortcutrc"
-fi
-
-if [ -f "$DOTFILES/config/shell/$MACHINE" ]; then
-    ln -sf "$DOTFILES/config/shell/$MACHINE" \
-        "$HOME/.config/shell/$MACHINE"
-fi
-
-# ------------------------------------------------------------
-# zshenv and zshrc
-# ------------------------------------------------------------
-
-info "Linking zshenv"
-
-ln -sf "$DOTFILES/zshenv" \
-    "$HOME/.zshenv"
-
-info "Linking zshrc"
-
-ln -sf "$DOTFILES/config/zsh/zshrc" \
-    "$HOME/.config/zsh/.zshrc"
-
-# ------------------------------------------------------------
-# zprofile
-#
-# Starts Sway on tty1 login. Only needed where there is no
-# display manager handling this already; Arch uses ly for that,
-# so this is Artix-only.
-# ------------------------------------------------------------
-
-if [ "$DISTRO" = "artix" ] && [ -f "$DOTFILES/config/zsh/zprofile" ]; then
-    info "Linking zprofile"
-
-    ln -sf "$DOTFILES/config/zsh/zprofile" \
-        "$HOME/.config/zsh/.zprofile"
-fi
-
-# ============================================================
-# VIMWIKI
-#
-# Vimwiki is installed as a native Neovim package because the
-# Neovim configuration does not use a plugin manager.
-# ============================================================
-
-info "Installing Vimwiki"
-
-VIMWIKI_DIR="$HOME/.local/share/nvim/site/pack/plugins/start/vimwiki"
-
-if [ ! -d "$VIMWIKI_DIR/.git" ]; then
-    mkdir -p "$(dirname "$VIMWIKI_DIR")"
-    rm -rf "$VIMWIKI_DIR"
-    git clone https://github.com/vimwiki/vimwiki.git "$VIMWIKI_DIR"
-fi
-
-# ============================================================
-# WALLPAPERS
-# ============================================================
-
-info "Installing wallpapers"
-
-mkdir -p "$HOME/.local/share"
-
-# ------------------------------------------------------------
-# Password-store and GnuPG directories
-#
-# The directories are intentionally empty. Offline files can be
-# copied into them later.
-# ------------------------------------------------------------
-
-mkdir -p "$HOME/.local/share/password-store"
-mkdir -p "$HOME/.local/share/gnupg"
-
-chmod 700 "$HOME/.local/share/password-store"
-chmod 700 "$HOME/.local/share/gnupg"
-
-# ------------------------------------------------------------
-# Battery notification sound
-# ------------------------------------------------------------
-
-if [ -f "$DOTFILES/share/sound-notifications/batterylow.opus" ]; then
-    mkdir -p "$HOME/.local/share/sound-notifications"
-    ln -sfn "$DOTFILES/share/sound-notifications/batterylow.opus" \
-        "$HOME/.local/share/sound-notifications/batterylow.opus"
-fi
-
-# ------------------------------------------------------------
-# Desktop PC MPD state
-# ------------------------------------------------------------
-
-if [ "$LAPTOP" = false ]; then
-    mkdir -p "$HOME/.local/cache"
-    touch "$HOME/.local/cache/librefm.journal"
-    mkdir -p "$HOME/.local/share/mpdscribble"
-fi
-
-if [ -d "$DOTFILES/share/wallpapers" ]; then
-    ln -sfn "$DOTFILES/share/wallpapers" \
-        "$HOME/.local/share/wallpapers"
-fi
-
-# ============================================================
-# APPLICATION DESKTOP FILES
-# ============================================================
-
-info "Installing application desktop files"
-
-if [ -d "$DOTFILES/share/applications" ]; then
-    ln -sfn "$DOTFILES/share/applications" \
-        "$HOME/.local/share/applications"
-fi
-
-xdg-mime default lf.desktop inode/directory
-
-# ============================================================
-# ZSH
-# ============================================================
-
-info "Preparing Zsh history"
-
+# Local state that is not version-controlled.
 mkdir -p "$HOME/.cache/zsh"
 touch "$HOME/.cache/zsh/history"
 
-info "Changing user's shell to Zsh"
+mkdir -p "$HOME/.local/share/password-store" "$HOME/.local/share/gnupg"
+chmod 700 "$HOME/.local/share/password-store" "$HOME/.local/share/gnupg"
 
+if [ "$LAPTOP" = false ]; then
+    # mpdscribble state (its config, with credentials, stays local);
+    # librefm.journal belongs to librefmscrobbler.
+    mkdir -p "$HOME/.local/cache" "$HOME/.local/share/mpdscribble"
+    touch "$HOME/.local/cache/librefm.journal"
+
+    # MPD runs as a user service (needs a normal login session).
+    mkdir -p "$HOME/.config/mpd/playlists"
+    if [ "$INIT" = "systemd" ]; then
+        for unit in "${SYSTEMD_USER_PC[@]}"; do
+            systemctl --user enable --now "$unit" \
+                || error "Could not enable $unit; later run: systemctl --user enable --now $unit"
+        done
+    fi
+fi
+
+# Neovim plugins, at the versions pinned in lazy-lock.json.
+info "Installing Neovim plugins"
+nvim --headless "+Lazy! restore" +qa \
+    || error "Neovim plugin install failed; open nvim once to finish it."
+
+xdg-mime default lf.desktop inode/directory
+
+info "Changing the login shell to Zsh"
 chsh -s "$(command -v zsh)" "$USER"
 
 # ============================================================
-# ARCH LAPTOP POWER MANAGEMENT
-#
-# Artix laptop installations intentionally skip this entire
-# section for now.
+# 15. ARCH LAPTOP: POWER MANAGEMENT
 # ============================================================
 
 if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
 
-    # --------------------------------------------------------
-    # TLP
-    #
-    # TLP provides the primary laptop power-management policy.
-    # power-profiles-daemon must not run alongside it.
-    #
-    # The system uses TLP's own defaults. Only settings that
-    # are actually customized on the current laptop are
-    # reproduced below.
-    # --------------------------------------------------------
-
-    info "Configuring TLP"
+    info "Configuring TLP and thermald"
 
     sudo systemctl enable tlp.service
 
-    # Disable power-profiles-daemon if it is installed.
+    # power-profiles-daemon must not run next to TLP.
     if systemctl list-unit-files | grep -q '^power-profiles-daemon.service'; then
         sudo systemctl disable --now power-profiles-daemon.service || true
     fi
 
-    # --------------------------------------------------------
-    # TLP USB exception
-    #
-    # Prevent USB autosuspend for the M-Audio Fast Track Pro
-    # (0763:2012).
-    # --------------------------------------------------------
-
-    info "Configuring TLP USB exceptions"
-
+    # No USB autosuspend for the M-Audio Fast Track Pro.
     sudo mkdir -p /etc/tlp.d
-
     sudo tee /etc/tlp.d/10-audio.conf >/dev/null <<'EOF'
 USB_DENYLIST="0763:2012"
 EOF
-
     sudo tlp start
-
-    # --------------------------------------------------------
-    # Thermald
-    #
-    # Enable Intel thermal management.
-    # --------------------------------------------------------
-
-    info "Enabling thermald"
 
     sudo systemctl enable --now thermald.service
 
-    # --------------------------------------------------------
-    # Powertop
-    #
-    # Powertop is installed for diagnostics and manual use,
-    # but is intentionally NOT enabled as a service.
-    # --------------------------------------------------------
-
-    info "Leaving Powertop disabled"
-
+    # Powertop stays installed for manual use, not as a service.
     sudo systemctl disable --now powertop.service 2>/dev/null || true
 
-    # --------------------------------------------------------
-    # Bluetooth radio blocking
-    #
-    # Bluetooth remains installed and bluetooth.service remains
-    # enabled and running normally.
-    #
-    # Only the Bluetooth radio is blocked with rfkill.
-    # --------------------------------------------------------
-
-    info "Configuring laptop Bluetooth radio blocking"
-
+    # Block only the Bluetooth radio; bluetooth.service keeps running.
     sudo tee /etc/systemd/system/bluetooth-block.service >/dev/null <<'EOF'
 [Unit]
 Description=Block Bluetooth radio
@@ -1124,22 +593,15 @@ EOF
 
     sudo systemctl daemon-reload
     sudo systemctl enable bluetooth-block.service
-
 fi
 
 # ============================================================
-# ARTIX LAPTOP
+# 16. ARTIX LAPTOP
 #
-# No battery/power-management stack (TLP, thermald, etc.) is
-# installed here. This is a deliberate choice: battery life on
-# this hardware has consistently been better without it.
-#
-# elogind does not manage backlight permissions on this setup,
-# so the user is added to "video" and a udev rule grants that
-# group write access to the backlight brightness file.
-#
-# Sets bluetoothd to only start on demand without radio
-# blocking.
+# No TLP/thermald stack: battery life is better without it on
+# this hardware. elogind does not manage backlight permissions
+# here, so the "video" group and a udev rule do it. bluetoothd
+# starts only on demand.
 # ============================================================
 
 if [ "$LAPTOP" = true ] && [ "$DISTRO" = "artix" ]; then
@@ -1155,79 +617,37 @@ EOF
     sudo udevadm control --reload-rules
     sudo udevadm trigger --subsystem-match=backlight
 
-fi
-
-sudo touch /etc/runit/runsvdir/default/bluetoothd/down
-
-# ============================================================
-# DESKTOP PC
-# ============================================================
-
-if [ "$LAPTOP" = false ]; then
-
-    info "Desktop installation selected"
-
+    sudo touch /etc/runit/runsvdir/default/bluetoothd/down
 fi
 
 # ============================================================
-# FINALIZATION
+# 17. FINALIZATION
 # ============================================================
 
 info "Refreshing font cache"
-
 fc-cache -f
-
-# ------------------------------------------------------------
-# Systemd finalization
-# ------------------------------------------------------------
 
 if [ "$INIT" = "systemd" ]; then
 
-    info "Reloading systemd"
-
     sudo systemctl daemon-reload
 
-    # --------------------------------------------------------
-    # Ensure common services are running.
-    # --------------------------------------------------------
+    for unit in "${SYSTEMD_NOW[@]}"; do
+        sudo systemctl restart "$unit"
+    done
 
-    sudo systemctl restart dhcpcd.service
-    sudo systemctl restart iwd.service
-    sudo systemctl restart bluetooth.service
-    sudo systemctl restart cups.service
-
-    # --------------------------------------------------------
-    # Apply laptop Bluetooth radio blocking immediately.
-    #
-    # bluetooth.service itself remains enabled and running.
-    # --------------------------------------------------------
-
-    if [ "$LAPTOP" = true ]; then
+    if [ "$LAPTOP" = true ] && [ "$DISTRO" = "arch" ]; then
         sudo systemctl start bluetooth-block.service
     fi
 
-fi
+else
 
-# ------------------------------------------------------------
-# Runit finalization
-# ------------------------------------------------------------
-
-if [ "$INIT" = "runit" ]; then
-
-    info "Restarting Artix runit services"
-
-    for pkg in dhcpcd-runit iwd-runit bluez-runit cups-runit ufw-runit; do
+    for pkg in "${RUNIT_PKGS[@]}"; do
         svc="$(runit_service_name "$pkg")"
-
         if [ -n "$svc" ] && [ -e "/run/runit/service/$svc" ]; then
             sudo sv restart "$svc" 2>/dev/null || true
         fi
     done
 
 fi
-
-# ============================================================
-# COMPLETION
-# ============================================================
 
 success "Completed."

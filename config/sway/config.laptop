@@ -260,7 +260,7 @@ bindsym $mod+r mode "resize"
     bindsym $mod+F3 exec swaymsg 'output eDP-1 enable; output HDMI-A-2 enable' && pkill wlsunset
 
     # Other shorcuts
-    bindsym $mod+Shift+w exec librewolf
+    bindsym $mod+Shift+w exec waterfox
 
     bindsym $mod+F4 exec wlsunset -t 4000 -T 4200
     bindsym $mod+shift+F4 exec pkill wlsunset
@@ -278,7 +278,7 @@ bindsym $mod+r mode "resize"
 
     bindsym $mod+Shift+m exec foot lf
 
-    bindsym $mod+Shift+g exec play
+    bindsym $mod+Shift+g exec fuzzplay
 
     bindsym $mod+Shift+v exec foot wiremix
 
@@ -313,7 +313,6 @@ bindsym $mod+r mode "resize"
 
     for_window [app_id="reaper"] inhibit_idle open
     for_window [app_id="duckstation-qt"] inhibit_idle open
-    for_window [title="kew"] inhibit_idle open
     for_window [title="mpv"] inhibit_idle open
 
     # Autostart
