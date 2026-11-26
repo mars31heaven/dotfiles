@@ -32,7 +32,3 @@ Files that differ per machine end in `.pc` or `.laptop`, or are named `pc` and `
 - **Shell:** `config/shell/` (aliases, shortcuts, functions) and `config/zsh/`.
 - **Scripts:** `bin/`. Each script starts with a comment that says what it does.
 - **Neovim:** plugins are locked in `config/nvim/lazy-lock.json`.
-
-## Not version-controlled
-
-Passwords and GnuPG data, browser history, app state, credentials, shell history and `config/shell/private` stay local.
