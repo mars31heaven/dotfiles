@@ -350,6 +350,8 @@ bindsym $mod+r mode "resize"
     bindsym $mod+Shift+m exec $bin/tmuxgo lf
     bindsym $mod+Shift+e exec $bin/tmuxgo nvim
     bindsym $mod+Shift+n exec $bin/tmuxgo wiki
+    bindsym $mod+Home exec $bin/tmuxgo htop
+    bindsym $mod+Shift+v exec $bin/tmuxgo wiremix
 
 # Optional: open a fresh normal Zsh tmux window.
     bindsym $mod+Shift+t exec $bin/tmuxgo new

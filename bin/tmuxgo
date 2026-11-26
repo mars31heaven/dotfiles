@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+!/usr/bin/env sh
 #
 # tmuxgo
 #
@@ -27,7 +27,7 @@ BIN_DIR="$HOME/.dotfiles/bin"
 
 usage() {
     printf '%s\n' \
-        "Usage: ${0##*/} focus | shell | lf | nvim | wiki | new" \
+        "Usage: ${0##*/} focus | shell | lf | nvim | wiki | htop | wiremix | new" \
         >&2
     exit 1
 }
@@ -143,6 +143,26 @@ new_shell_window() {
         zsh -i
 }
 
+select_or_create_htop() {
+    if ! tmux select-window -t "$SESSION:htop" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "htop" \
+            -c "$HOME" \
+            htop
+    fi
+}
+
+select_or_create_wiremix() {
+    if ! tmux select-window -t "$SESSION:wiremix" 2>/dev/null; then
+        tmux new-window \
+            -t "$SESSION:" \
+            -n "wiremix" \
+            -c "$HOME" \
+            wiremix
+    fi
+}
+
 [ "$#" -eq 1 ] || usage
 
 action=$1
@@ -168,6 +188,14 @@ case "$action" in
 
     wiki)
         select_or_create_wiki
+        ;;
+
+    htop)
+        select_or_create_htop
+        ;;
+
+    wiremix)
+        select_or_create_wiremix
         ;;
 
     new)

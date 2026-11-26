@@ -99,10 +99,3 @@ alias \
     als="albumlog stats" \
     aw="albumlog wish" \
     awd="albumlog wish add"
-
-
-# mpd / mpc
-
-alias \
-    mpfile="mpc -f '%file%' current" \
-    mpinfo="mpc -f '%artist% — %album% — %title%\n%file%' current"
